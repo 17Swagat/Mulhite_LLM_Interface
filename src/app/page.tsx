@@ -10,6 +10,9 @@ export default function Home() {
       <Link href="/profile" className="text-white bg-purple-400 p-2 rounded-[10px] ml-10 text-3xl">
         Profile
       </Link>
+      <Link href="/blog" className="text-white bg-purple-400 p-2 rounded-[10px] ml-10 text-3xl">
+        Blogs
+      </Link>
     </div>
   );
 }

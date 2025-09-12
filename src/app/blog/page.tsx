@@ -1,0 +1,22 @@
+import Link from "next/link";
+export default function About() {
+    return (
+        <div className="h-screen w-screen flex flex-col items-center justify-center bg-green-900 gap-4">
+            <h1>Blogs</h1>
+            <p>This is the blogs page of our application.</p>
+            <Link
+                href="/"
+                className="text-white bg-purple-400 p-2 rounded-[10px] ml-10 text-3xl"
+            >
+                Home
+            </Link>
+
+            <Link
+                href="/blog/first"
+                className="text-white bg-purple-400 p-2 rounded-[10px] ml-10 text-3xl"
+            >
+                First Blog
+            </Link>
+        </div>
+    );
+}
