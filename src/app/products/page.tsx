@@ -25,6 +25,11 @@ export default function ProductsPage() {
                 Product 4
                 </Link>
             </h2>
+            <h2 className="text-5xl bg-blue-400">
+                <Link href='/products/iphone'>
+                Product IPHONE
+                </Link>
+            </h2>
         </div>
     );
 }
