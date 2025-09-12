@@ -1,6 +1,8 @@
 // export default function ProductIdPage({params} : {params: {productId: string}}) {
 
 // Tutorial: Uses Promise to handle params
+// Grok: Correct
+// Copilot: Incorrect
 export default async function ProductIdPage({params} : {params: Promise<{productId: string}>}) {
     
     const productId = (await params).productId;
