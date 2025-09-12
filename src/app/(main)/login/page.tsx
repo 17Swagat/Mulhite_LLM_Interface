@@ -1,6 +1,8 @@
 import Link from "next/link";
 export default function Login(){
     return (
+
+    <div className="h-screen w-screen flex items-center justify-center bg-green-900">
         <div className="flex flex-col items-center">
             <h1>Login Page</h1>
             <label htmlFor="username">
@@ -11,5 +13,8 @@ export default function Login(){
                 Go Back
             </Link>
         </div>
+
+        {/* {children} */}
+    </div>
     );
 }
