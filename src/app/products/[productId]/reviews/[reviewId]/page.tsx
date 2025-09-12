@@ -4,8 +4,9 @@ export default async function ProductIdReviewsPage(
     {params}: {params: Promise<{productId: string, reviewId: string}>}
 ) {
     // const rparams = await params; 
-    const productId = (await params).productId;
-    const reviewId = (await params).reviewId;
+    // const productId = (await params).productId;
+    // const reviewId = (await params).reviewId;
+    const {productId, reviewId} = await params;
 
     return (
         <div className="h-screen w-screen flex flex-col gap-2 items-center justify-center bg-gradient-to-r from-blue-900 via-purple-400 to-blue-500">
