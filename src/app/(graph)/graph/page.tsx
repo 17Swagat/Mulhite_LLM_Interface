@@ -8,6 +8,7 @@ import {
   Node,
   OnNodesChange,
   Edge,
+  Controls,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
@@ -21,7 +22,9 @@ const nodes: Node[] = [
   { id: "2", position: { x: 100, y: 100 }, data: { label: "Node 2" }, style: { color: "blue", backgroundColor: 'rgba(16, 211, 110, 1)' } },
 ];
 
-const edges: Edge[] = [];
+const edges: Edge[] = [
+    {id: 'e1-2', source: '1', target: '2', animated: true, style: { stroke: 'red'}},
+];
 
 export default function Graph() {
 
@@ -29,8 +32,9 @@ export default function Graph() {
   return (
     // <div className="w-[85%] h-[90%] bg-gray-700  text-6xl rounded-2xl">
     <div className="w-screen h-screen bg-gray-700  text-6xl rounded-2xl">
-      <ReactFlow fitView nodes={nodes}>
+      <ReactFlow fitView nodes={nodes} edges={edges}>
         <Background color="rgba(255, 255, 0)" size={3} />
+        <Controls style={{ color: 'black' }} />
       </ReactFlow>
     </div>
   );
