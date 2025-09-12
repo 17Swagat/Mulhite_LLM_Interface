@@ -53,12 +53,12 @@ export default function Graph() {
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
     const onConnect = useCallback((connection: Connection) => {
+        console.log(connection);
         const edge:Edge = { ...connection, animated: true, id: `${edges.length + 1}`, style: { stroke: "red" } };
         setEdges(prevEdges => addEdge(edge, prevEdges))
     }, [setEdges]);
 
     return (
-        // <div className="w-[85%] h-[90%] bg-gray-700  text-6xl rounded-2xl">
         <div className="w-screen h-screen bg-gray-700  text-6xl rounded-2xl">
             <ReactFlow fitView nodes={nodes} edges={edges} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect} >
                 <Background color="rgba(255, 255, 0)" size={3} />
