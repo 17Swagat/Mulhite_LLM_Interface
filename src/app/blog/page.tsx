@@ -17,6 +17,13 @@ export default function About() {
             >
                 First Blog
             </Link>
+
+            <Link
+                href="/blog/second"
+                className="text-white bg-purple-400 p-2 rounded-[10px] ml-10 text-3xl"
+            >
+                Second Blog
+            </Link>
         </div>
     );
 }
