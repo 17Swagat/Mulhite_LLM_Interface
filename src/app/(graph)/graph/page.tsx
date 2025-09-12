@@ -34,7 +34,7 @@ export default function Graph() {
     <div className="w-screen h-screen bg-gray-700  text-6xl rounded-2xl">
       <ReactFlow fitView nodes={nodes} edges={edges}>
         <Background color="rgba(255, 255, 0)" size={3} />
-        <Controls style={{ color: 'black' }} />
+        <Controls style={{ color: 'black', blockSize: '200px',padding: '10px', backgroundColor: 'darkcyan',  justifyContent: 'center' }} />
       </ReactFlow>
     </div>
   );
