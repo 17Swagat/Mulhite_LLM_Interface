@@ -6,6 +6,7 @@ import {
   Background,
   MiniMap,
   Node,
+  OnNodesChange,
   Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
@@ -23,8 +24,11 @@ const nodes: Node[] = [
 const edges: Edge[] = [];
 
 export default function Graph() {
+
+
   return (
-    <div className="w-[85%] h-[90%] bg-gray-700  text-6xl">
+    // <div className="w-[85%] h-[90%] bg-gray-700  text-6xl rounded-2xl">
+    <div className="w-screen h-screen bg-gray-700  text-6xl rounded-2xl">
       <ReactFlow fitView nodes={nodes}>
         <Background color="rgba(255, 255, 0)" size={3} />
       </ReactFlow>

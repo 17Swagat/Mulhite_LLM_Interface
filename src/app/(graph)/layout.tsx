@@ -10,7 +10,7 @@ export default function Layout({
     <html>
       <body>
         <Link href="/">
-          <div className="fixed top-2 left-2 p-2 bg-transparent rounded-full text-5xl size-10 hover:brightness-150 hover:cursor-pointer select-none active:brightness-75">
+          <div className="fixed top-2 left-2 p-2 bg-white rounded-[10px]  text-5xl  hover:brightness-150 hover:cursor-pointer select-none active:brightness-75 z-3000">
             🔙
           </div>
         </Link>
