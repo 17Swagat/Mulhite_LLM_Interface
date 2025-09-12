@@ -1,3 +1,4 @@
+// [FOLLOWING TUTORIAL]:=> https://youtu.be/k7o9R6eaSes
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
