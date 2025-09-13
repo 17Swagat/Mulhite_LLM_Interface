@@ -6,10 +6,7 @@ export default async function DocsPage(
     let url_p2:string | null = null;
     url_p1 = slug?.length >= 1 ? slug[0] : null;
     url_p2 = slug?.length >= 2 ? slug[1] : null;
-    // if (slug?.length == 2) {
-    //     url_p1 = slug[0];
-    //     url_p2 = slug[1];
-    // }
+    
     return (
         <div className="w-screen h-screen flex flex-col justify-center items-center">
             <h1 className="text-4xl">Documentation</h1>
