@@ -1,5 +1,8 @@
-// [reviewId]
 import Link from "next/link"
+
+// Progamatically going to the Page Not Found:
+import { notFound } from "next/navigation";
+
 export default async function ProductIdReviewsPage(
     {params}: {params: Promise<{productId: string, reviewId: string}>}
 ) {
@@ -7,6 +10,11 @@ export default async function ProductIdReviewsPage(
     // const productId = (await params).productId;
     // const reviewId = (await params).reviewId;
     const {productId, reviewId} = await params;
+
+    if (parseInt(productId) > 1000) {
+        // If productId is greater than 1000, show the 404 page
+        notFound();
+    }
 
     return (
         <div className="h-screen w-screen flex flex-col gap-2 items-center justify-center bg-gradient-to-r from-blue-900 via-purple-400 to-blue-500">
