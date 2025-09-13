@@ -11,8 +11,8 @@ export default async function DocsPage(
         <div className="w-screen h-screen flex flex-col justify-center items-center">
             <h1 className="text-4xl">Documentation</h1>
             <hr className="my-4 border-2 border-gray-300 w-[500px]" />
-            <p className="text-2xl">Slug 01: {url_p1 ? url_p1 : "N/A"}</p>
-            <p className="text-2xl">Slug 02: {url_p2 ? url_p2 : "N/A"}</p>
+            {slug?.length >= 1 && <p className="text-2xl">Slug 01: {url_p1 ? url_p1 : "N/A"}</p>}
+            {slug?.length >= 1 && <p className="text-2xl">Slug 02: {url_p2 ? url_p2 : "N/A"}</p>}
             <ul className="text-2xl">
                 <li>Getting Started</li>
                 <li>API Reference</li>
