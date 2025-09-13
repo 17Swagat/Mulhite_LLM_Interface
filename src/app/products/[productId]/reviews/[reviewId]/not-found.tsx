@@ -1,3 +1,9 @@
+// NOTE:
+// * The NotFound component does not support any props or arguments.
+//
+// Q: What about cases if I need to show different 404 pages message based on the route parameters?
+// A: For that we will rely on usePathname() hook from NextJS.
+
 import Image from "next/image";
 export default function NotFound() {
 
