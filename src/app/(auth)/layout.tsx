@@ -21,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
+    // <html lang="en">
+      <div
         className={`${protestGuerrilla.variable} antialiased`}
       >
         <Link href='/' className="fixed bg-gray-600 m-2 p-2 text-4xl rounded-[10px]">
@@ -30,7 +30,7 @@ export default function RootLayout({
         </Link>
         {/* <h1 className="text-4xl">Auth Stuff</h1> */}
         {children}
-      </body>
-    </html>
+      </div>
+    // </html>
   );
 }
