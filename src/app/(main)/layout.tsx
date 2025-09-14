@@ -35,8 +35,21 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <nav className="fixed bg-gray-600 w-full p-2 text-4xl">
+        <nav className="fixed bg-gray-600 w-full p-2 text-4xl flex justify-between">
           <Link href="/">N A V B A R</Link>
+          <div>
+            <ul className="flex gap-5">
+              <li>
+                <Link href={'/'}>Home</Link>
+              </li>
+              <li>
+                <Link href={'/profile'}>Profile</Link>
+              </li>
+              <li>
+                <Link href={'/login'}>Auth</Link>
+              </li>
+            </ul>
+          </div>
         </nav>
         {children}
       </body>

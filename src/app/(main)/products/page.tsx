@@ -18,7 +18,8 @@ export default function ProductsPage() {
                 </h2>
             <h2 className="text-5xl bg-blue-400">
 
-                <Link href='/products/3' replace>
+                <Link href='/products/3'>
+                {/* // replace> */}
                 Product 3
                 </Link>
             </h2>
