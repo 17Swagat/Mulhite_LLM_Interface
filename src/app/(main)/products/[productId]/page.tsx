@@ -5,6 +5,7 @@ type Props = {
     params: Promise<{ productId: string }>;
 }
 
+// Write the function with this exact name: `generateMetadata`
 export const generateMetadata = async ({params}: Props): Promise<Metadata> => {
     const id = (await params).productId;
     return {
