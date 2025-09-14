@@ -1,11 +1,20 @@
 import "@/app/globals.css";
 import { Metadata } from "next";
+// import { generateMetadata } from "./[productId]/page";
 
 
-export const metadata: Metadata = {
-  title: "Products",
-  description: "This is the products page.",
-};
+// export const metadata: Metadata = {
+//   title: "Products",
+//   description: "This is the products page.",
+// };
+
+export const generateMetadata = async (): Promise<Metadata> => {
+    // const id = (await params).productId;
+    return {
+        title: 'xProducts',
+        description: 'This is the page for product'
+    };
+}
 
 
 export default function ProductLayout({
