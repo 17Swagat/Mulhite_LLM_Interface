@@ -1,14 +1,10 @@
 import Link from "next/link"
 import { Metadata } from "next";
-
-// Progamatically going to the Page Not Found:
 import { notFound } from "next/navigation";
-
 
 type Props = {
     params: Promise<{productId: string, reviewId: string}>;
 }
-
 
 export const generateMetadata = async({params}: Props): Promise<Metadata> => {
     const {productId, reviewId} = await params;
@@ -19,18 +15,11 @@ export const generateMetadata = async({params}: Props): Promise<Metadata> => {
 }
 
 
-
 export default async function ProductIdReviewsPage(
     // {params}: {params: Promise<{productId: string, reviewId: string}>}
     {params}: Props
 ) {
     const {productId, reviewId} = await params;
-
-
-    // const x = (await params).params;
-    // console.log(x);
-    // const productId = x.productId;
-    // const reviewId = (await x).reviewId;
 
     if (parseInt(productId) > 1000) {
         // If productId is greater than 1000, show the 404 page

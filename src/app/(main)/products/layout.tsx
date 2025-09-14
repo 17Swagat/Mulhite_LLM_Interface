@@ -1,5 +1,12 @@
-
 import "@/app/globals.css";
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  title: "Products",
+  description: "This is the products page.",
+};
+
 
 export default function ProductLayout({
   children,
