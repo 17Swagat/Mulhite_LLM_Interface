@@ -1,9 +1,9 @@
+// NOTE: "To access [params] and [search-params] inside a client component we use `use()` hook, since we can't use async/await in a Client Component."
+
+'use client';
 import Link from "next/link";
 
-// type Props = {
-//     params: Promise<{articleId: string}>
-// }
-
+import { use } from "react";
 
 type Props = {
     params: Promise<{ articleId: string }>;
@@ -12,10 +12,11 @@ type Props = {
 };
 
 // export default function Articles({params} : {params: Promise<{articleId: string}>}) {
-export default async function Articles({params, searchParams} : Props) {
+// export default async function Articles({params, searchParams} : Props) {
+export default function Articles({params, searchParams} : Props) {
 
-    const {articleId} = (await params);
-    const {lang} = (await searchParams); //?.lang;
+    const {articleId} = use(params); //(await params);
+    const {lang} = use(searchParams); //(await searchParams); //?.lang;
 
     return (
         <div className="h-screen w-screen flex flex-col items-center justify-center bg-pink-600 text-white gap-4">
