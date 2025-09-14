@@ -1,3 +1,8 @@
+// NOTE:
+// params & searchParams:
+// [params]:=> "Its is a promise that resolves to an object containing the dynamic route parameters (like id)"
+// [searchParams]:=> "It is a promise that resolves to an object containing the query parameters (like filters & sorting)"
+
 import Link from "next/link";
 
 export default function Home() {
