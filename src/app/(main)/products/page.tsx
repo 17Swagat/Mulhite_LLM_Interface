@@ -1,6 +1,8 @@
 import Link from "next/link";
 
+
 export default function ProductsPage() {
+    
     return (
         <div className="flex flex-col gap-4">
             <h1 className="text-5xl bg-blue-400">

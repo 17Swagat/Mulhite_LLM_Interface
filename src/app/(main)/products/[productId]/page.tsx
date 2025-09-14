@@ -1,9 +1,23 @@
 import Link from "next/link";
+import { Metadata } from "next";
+
+type Props = {
+    params: Promise<{ productId: string }>;
+}
+
+export const generateMetadata = async ({params}: Props): Promise<Metadata> => {
+    const id = (await params).productId;
+    return {
+        title: `Product ${id}`,
+        description: `This is the page for product ${id}`,
+    };
+}
 
 export default async function ProductIdPage(
-    {params} : {params: Promise<{productId: string}>}
+    {params} : Props
 ) {
     const rparams = await params; 
+    
     return (
         <div className="h-screen w-screen flex flex-col gap-2 items-center justify-center bg-gradient-to-r from-blue-900 via-purple-400 to-blue-500">
             <h1 className="text-7xl">Product Details Page</h1>
