@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function ProductsPage() {
     return (
-        <div className="h-screen w-screen flex flex-col gap-2 items-center justify-center bg-gradient-to-r from-blue-900 via-purple-400 to-blue-500">
+        <div className="flex flex-col gap-4">
             <h1 className="text-5xl bg-blue-400">
                 <Link href='/products/1'>
                 Product 1
