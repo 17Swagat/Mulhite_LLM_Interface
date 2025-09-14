@@ -6,13 +6,18 @@ type Props = {
 }
 
 // Write the function with this exact name: `generateMetadata`
-export const generateMetadata = async ({params}: Props): Promise<Metadata> => {
-    const id = (await params).productId;
-    return {
-        title: `Product ${id}`,
-        description: `This is the page for product ${id}`,
-    };
-}
+// export const generateMetadata = async ({params}: Props): Promise<Metadata> => {
+//     const id = (await params).productId;
+//     return {
+//         title: `Product ${id}`,
+//         description: `This is the page for product ${id}`,
+//     };
+// }
+export const metadata: Metadata = {
+  // title: "Learn Next.js",
+  title: 'Product YP',
+  description: "Learn Next.js with this comprehensive guide",
+};
 
 export default async function ProductIdPage(
     {params} : Props
