@@ -9,17 +9,17 @@ export function Navbar(){
     const navLinks = [
         {linkName: 'Home', href: '/'},
         {linkName: 'Profile', href: '/profile'},
-        {linkName: 'Auth', href: '/login'}
+        {linkName: 'Products', href: '/products'},
+        {linkName: 'Auth', href: '/login'},
     ];
 
     return (
-
         <nav className="fixed bg-gray-600 w-full p-2 text-4xl flex justify-between">
           <Link href="/">N A V B A R</Link>
           <div>
             <ul className="flex gap-5">
                 {navLinks.map(navItem => {
-                    const isActive = (navItem.href == pathname) 
+                    const isActive = (navItem.href == pathname) || (pathname.includes(navItem.href) && navItem.href != '/'); 
                     return (
                     <li key={navItem.linkName}>
                         <Link href={navItem.href} className={`${(isActive) ? "text-blue-500": ""}`} 
