@@ -6,6 +6,9 @@ type Props = {
     params: Promise<{productId: string, reviewId: string}>;
 }
 
+// NOTE: "We can't have `metadata` object & `generateMetadata` function in the same page. Its either one or the other. Not Both"
+
+// Helps in Dyamically giving Meta Data
 export const generateMetadata = async({params}: Props): Promise<Metadata> => {
     const {productId, reviewId} = await params;
     return {
