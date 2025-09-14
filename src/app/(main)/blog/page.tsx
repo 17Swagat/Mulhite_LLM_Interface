@@ -1,5 +1,5 @@
 import Link from "next/link";
-export default function About() {
+export default function Blogs() {
     return (
         <div className="h-screen w-screen flex flex-col items-center justify-center bg-green-900 gap-4">
             <h1>Blogs</h1>
