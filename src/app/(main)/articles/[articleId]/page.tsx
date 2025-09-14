@@ -1,5 +1,8 @@
 // NOTE: "To access [params] and [search-params] inside a client component we use `use()` hook, since we can't use async/await in a Client Component."
 
+// NOTE: "While `page.tsx` has access to both Params & Search-Params"
+// "`layout.tsx` has access to only Params."
+
 'use client';
 import Link from "next/link";
 
