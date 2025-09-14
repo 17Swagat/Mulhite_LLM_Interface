@@ -1,4 +1,13 @@
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  // title: "Learn Next.js",
+  title: 'Profile',
+  description: "Profile Page",
+};
+
+
 export default function Profile() {
     return (
         <div className="h-screen w-screen flex flex-col items-center justify-center bg-purple-900 ">

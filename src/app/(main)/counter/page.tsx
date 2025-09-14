@@ -10,6 +10,6 @@ export const metadata: Metadata = {
 };
 
 
-export default function CounterPage(){
+export default function CounterPage() {
     return <Counter/>
 }

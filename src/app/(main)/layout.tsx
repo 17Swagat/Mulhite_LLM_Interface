@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: {
     default: 'NextJS-Learn',
     template: 'NextJS-Learn | %s',
-    absolute: '',
+    // absolute: '',
   },
   description: "Learn Next.js with this comprehensive guide",
 };
