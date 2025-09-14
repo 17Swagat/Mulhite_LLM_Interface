@@ -14,8 +14,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Learning More About `MetaData <title>`
 export const metadata: Metadata = {
-  title: "Learn Next.js",
+  // title: "Learn Next.js",
+  title: {
+    default: 'NextJS-Learn',
+    template: 'NextJS-Learn | %s',
+    absolute: '',
+  },
   description: "Learn Next.js with this comprehensive guide",
 };
 
