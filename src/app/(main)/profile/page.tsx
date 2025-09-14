@@ -2,8 +2,10 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  // title: "Learn Next.js",
-  title: 'Profile',
+//   title: 'Profile',
+  title: {
+    absolute: 'Profile'
+  },
   description: "Profile Page",
 };
 
