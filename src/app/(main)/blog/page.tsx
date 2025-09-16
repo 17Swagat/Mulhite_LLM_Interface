@@ -1,11 +1,15 @@
-'use client';
-import { 
-    // useRouter, 
-    // redirect,
-    permanentRedirect } from "next/navigation";
+// 'use client';
+// import { permanentRedirect } from "next/navigation";
 import Link from "next/link";
-export default function Blogs() {
-    // const router = useRouter();
+
+export default async function Blogs() {
+
+    await new Promise((resolve)=>{
+        setTimeout(()=>{
+            resolve('Intentional Delay')
+        }, 1200);
+    });
+
     return (
         <div className="h-screen w-screen flex flex-col items-center justify-center bg-green-900 gap-4">
             <h1>Blogs</h1>
@@ -16,22 +20,12 @@ export default function Blogs() {
             >
                 Home
             </Link> */}
-            <button
-                type="button"
-                onClick={()=>{
-                    permanentRedirect('/')
-                    // window.location.replace('/')
-                    // router.push('/')
-                    // router.refresh()
-                    // router.replace('/')
-                    // window.location.replace('/');
-                    //   window.history.replaceState({}, '', '/');
-                    // window.location.reload();
-                }}
+            <Link
+                href={'/'}
                 className="text-white bg-purple-400 p-2 rounded-[10px] ml-10 text-3xl"
             >
                 Home
-            </button>
+            </Link>
 
             <Link
                 href="/blog/first"
