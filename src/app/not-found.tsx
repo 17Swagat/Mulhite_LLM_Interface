@@ -1,4 +1,4 @@
-'use client';
+// 'use client';
 import Image from "next/image";
 import '@/app/globals.css';
 import { Navbar } from "@/components/my/navbar";
