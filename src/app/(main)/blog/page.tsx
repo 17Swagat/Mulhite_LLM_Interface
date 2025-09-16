@@ -5,9 +5,12 @@ import Link from "next/link";
 export default async function Blogs() {
 
     await new Promise((resolve)=>{
+    // new Promise((resolve)=>{
         setTimeout(()=>{
-            resolve('Intentional Delay')
+            resolve('Intentional Delay Complete')
         }, 1200);
+    }).then((res)=>{
+        console.log(res)
     });
 
     return (
