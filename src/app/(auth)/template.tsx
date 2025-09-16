@@ -1,3 +1,14 @@
+/*
+
+"We can have template.tsx inside a layout.tsx. They can co-exist."
+[
+  <layout.tsx>
+  ->  <template.tsx>
+]
+
+
+*/
+
 'use client';
 import { Geist, Geist_Mono, Protest_Guerrilla } from "next/font/google";
 import "@/app/globals.css";
