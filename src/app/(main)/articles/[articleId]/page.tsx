@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 type Props = {
     params: Promise<{ articleId: string }>;
     // searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

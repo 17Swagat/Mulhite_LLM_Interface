@@ -10,10 +10,13 @@
 */
 
 'use client';
-import { Geist, Geist_Mono, Protest_Guerrilla } from "next/font/google";
+import { 
+  // Geist, 
+  // Geist_Mono, 
+  Protest_Guerrilla } from "next/font/google";
 import "@/app/globals.css";
 import Link from "next/link";
-import { Metadata } from "next";
+// import { Metadata } from "next";
 import { useState } from "react";
 
 const protestGuerrilla = Protest_Guerrilla({
@@ -52,7 +55,7 @@ export default function RootLayout({
           type="text" 
           placeholder="Enter text" 
           onChange={(e)=>{
-            let text = e.target.value;
+            const text = e.target.value;
             setInputValue(text);
           }}
           className="border-2 text-3xl p-1.5 rounded-[8px]" 

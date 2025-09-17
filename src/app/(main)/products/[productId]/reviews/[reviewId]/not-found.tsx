@@ -4,10 +4,10 @@ import { usePathname } from "next/navigation";
 
 export default function NotFound() {
 
-    let imgURL_linkNotFound = 'https://static.vecteezy.com/system/resources/previews/008/255/803/non_2x/page-not-found-error-404-system-updates-uploading-computing-operation-installation-programs-system-maintenance-a-hand-drawn-layout-template-of-a-broken-robot-illustration-vector.jpg';
+    const imgURL_linkNotFound = 'https://static.vecteezy.com/system/resources/previews/008/255/803/non_2x/page-not-found-error-404-system-updates-uploading-computing-operation-installation-programs-system-maintenance-a-hand-drawn-layout-template-of-a-broken-robot-illustration-vector.jpg';
     
     const pathname = usePathname();
-    let productId: string = pathname.split('/')[2];
+    const productId: string = pathname.split('/')[2];
 
     return (
         <div className="w-screen h-screen flex flex-col justify-center items-center">

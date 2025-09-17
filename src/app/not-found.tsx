@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default function NotFound() {
 
-    let imgURL_linkNotFound = 'https://img.freepik.com/free-vector/hand-drawn-404-error_23-2147746234.jpg?semt=ais_incoming&w=740&q=80';
+    const imgURL_linkNotFound = 'https://img.freepik.com/free-vector/hand-drawn-404-error_23-2147746234.jpg?semt=ais_incoming&w=740&q=80';
     // let imgURL_linkNotFound = 'https://static.vecteezy.com/system/resources/previews/008/255/803/non_2x/page-not-found-error-404-system-updates-uploading-computing-operation-installation-programs-system-maintenance-a-hand-drawn-layout-template-of-a-broken-robot-illustration-vector.jpg';
     
 
