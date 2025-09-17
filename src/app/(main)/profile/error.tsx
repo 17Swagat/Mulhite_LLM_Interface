@@ -5,6 +5,7 @@ About `error.tsx`:=>
 -> "It automatically wraps route segments and their nested children in a React Error Boundary."
 -> "You can create custom error UIs for specific segments using the file-system hierarchy."
 -> "It isolates errors to affected segments while keeping the rest of your app functional."
+-> "It enables you to attempt to recover from an error without requiring a full page reload."
 */
 
 export default function ProfilePage_Error({error}: {error: Error}){
