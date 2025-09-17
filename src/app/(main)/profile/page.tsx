@@ -2,16 +2,12 @@
 import Link from "next/link";
 import { useState } from "react";
 import { LoadingCircle } from "@/components/3rdParty/loading";
-// import { Metadata } from "next";
 
-// export const metadata: Metadata = {
-// //   title: 'Profile',
-//   title: {
-//     absolute: 'Profile'
-//   },
-//   description: "Profile Page",
-// };
-
+function getRandomInt(count: number){
+    return Math.floor(
+        Math.random() * count
+    )
+}
 
 export default function Profile() {
 
@@ -22,6 +18,13 @@ export default function Profile() {
             setIsLoading(false)
         }, 1200);
     }
+
+    const random = getRandomInt(2);
+    if (random == 1) {
+        throw new Error('Error Loading Page')
+    }
+
+
 
     return (
         <div className="h-screen w-screen flex flex-col items-center justify-center bg-purple-900 ">
