@@ -21,7 +21,7 @@ export default function Profile() {
 
     const random = getRandomInt(2);
     if (random == 1) {
-        throw new Error('Error Loading Page')
+        throw new Error('Error Loading Page');
     }
 
 
