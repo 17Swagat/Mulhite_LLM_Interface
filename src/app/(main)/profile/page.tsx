@@ -27,6 +27,7 @@ export default function Profile() {
 
     return (
         <div className="h-screen w-screen flex flex-col items-center justify-center bg-purple-900 ">
+
             <h1>Profile Page</h1>
             <p>This is the profile page of our application.</p> 
 
@@ -40,6 +41,7 @@ export default function Profile() {
                 {!isLoading && <button type="button" onClick={onBtnClick} className="bg-red-400 p-1 hover:brightness-75">Loading Text button</button>}
                 {isLoading && <LoadingCircle/>}
             </div>
-        </div>
+         
+         </div>
     );
 }
