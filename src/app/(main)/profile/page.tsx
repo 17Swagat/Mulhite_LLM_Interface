@@ -3,11 +3,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { LoadingCircle } from "@/components/3rdParty/loading";
 
-function getRandomInt(count: number){
-    return Math.floor(
-        Math.random() * count
-    )
-}
+// function getRandomInt(count: number){
+//     return Math.floor(
+//         Math.random() * count
+//     )
+// }
 
 export default function Profile() {
 
@@ -19,10 +19,10 @@ export default function Profile() {
         }, 1200);
     }
 
-    const random = getRandomInt(2);
-    if (random == 1) {
-        throw new Error('Error Loading Page');
-    }
+    // const random = getRandomInt(2);
+    // if (random == 1) {
+    //     throw new Error('Error Loading Page');
+    // }
 
 
     return (

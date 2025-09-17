@@ -5,13 +5,10 @@ import { startTransition } from "react";
 
 /*
 About `error.tsx`:=>
--> "It automatically wraps route segments and their nested children in a React Error Boundary."
--> "You can create custom error UIs for specific segments using the file-system hierarchy."
--> "It isolates errors to affected segments while keeping the rest of your app functional."
--> "It enables you to attempt to recover from an error without requiring a full page reload."
+-> NOTE: error.tsx won't get trigger for error in a layout.tsx in the same segment.
 */
 
-export default function ProfilePage_Error({error, reset}: {error: Error, reset: ()=> void}){
+export default function ProductPage_Error({error, reset}: {error: Error, reset: ()=> void}){
     // NOTE: "Here, the `re-try` function will attempt to re-render Client Side."
 
     // Let's Try to hit server side Re-Trying:->

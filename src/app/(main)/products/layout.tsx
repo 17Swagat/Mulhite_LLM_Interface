@@ -17,11 +17,25 @@ export const generateMetadata = async (): Promise<Metadata> => {
 }
 
 
+
+function getRandomInt(count: number){
+    return Math.floor(
+        Math.random() * count
+    )
+}
+
 export default function ProductLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
+  const random = getRandomInt(2);
+  if (random == 1) {
+      throw new Error('Error Loading Page');
+  }
+
   return (
         <div className="h-screen w-screen flex justify-center items-center bg-gradient-to-r from-blue-900 via-purple-400 to-blue-500">
             {children}
