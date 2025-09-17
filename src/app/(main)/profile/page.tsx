@@ -16,7 +16,6 @@ export default function Profile() {
         setIsLoading(true)
         setTimeout(()=>  {
             setIsLoading(false)
-
         }, 1200);
     }
 
