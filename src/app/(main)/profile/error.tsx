@@ -9,6 +9,8 @@ About `error.tsx`:=>
 */
 
 export default function ProfilePage_Error({error, reset}: {error: Error, reset: ()=> void}){
+    // NOTE: "Here, the `re-try` function will attempt to re-render Client Side."
+
     return (
         <div className="w-screen h-screen bg-pink-400 flex flex-col justify-center items-center">
             <h1 className="text-5xl font-bold">Error - Occured</h1>
