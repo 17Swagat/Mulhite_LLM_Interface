@@ -14,7 +14,7 @@ export default function Profile() {
     const [isLoading, setIsLoading] = useState(false)
     const onBtnClick = ()=> {
         setIsLoading(true)
-        setTimeout(()=>{
+        setTimeout(()=>  {
             setIsLoading(false)
         }, 1200);
     }
