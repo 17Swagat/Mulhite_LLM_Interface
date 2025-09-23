@@ -1,15 +1,6 @@
 import { Card } from "@/components/my/card";
 import Link from "next/link";
-export default async function ComplexDashboard_Notifications(){
-
-    await new Promise((resolve)=>{
-    // new Promise((resolve)=>{
-        setTimeout(()=>{
-            resolve('Intentional Delay Complete')
-        }, 1200);
-    }).then((res)=>{
-        console.log(res)
-    });
+export default function ComplexDashboard_Notifications(){
 
     return (
         <Card>
