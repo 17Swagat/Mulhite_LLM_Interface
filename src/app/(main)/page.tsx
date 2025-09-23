@@ -22,7 +22,7 @@ export default function Home() {
         Products
       </Link>
       
-      <Link href="/login" className="text-white bg-purple-400 p-2 rounded-[10px] ml-10 text-3xl">
+      {/* <Link href="/login" className="text-white bg-purple-400 p-2 rounded-[10px] ml-10 text-3xl">
         Login
       </Link>
       
@@ -32,7 +32,11 @@ export default function Home() {
 
       <Link href="/forget-password" className="text-white bg-purple-400 p-2 rounded-[10px] ml-10 text-3xl">
         Forget Password
-      </Link>
+      </Link> */}
+
+      <Link href="/complex-dashboard" className="text-white bg-purple-900 p-2 rounded-[10px] ml-10 text-3xl">
+        Dashboard
+      </Link> 
 
       {/* Examples to learn about `params` & `searchParams` :=> */}
       <Link href="/articles/breaking-news-123?lang=en" className="text-white bg-purple-400 p-2 rounded-[10px] ml-10 text-3xl">

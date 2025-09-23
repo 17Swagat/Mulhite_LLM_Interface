@@ -9,19 +9,17 @@ import { Metadata } from "next";
 // };
 
 export const generateMetadata = async (): Promise<Metadata> => {
-    // const id = (await params).productId;
-    return {
-        title: 'xProducts',
-        description: 'This is the page for product'
-    };
+  // const id = (await params).productId;
+  return {
+    title: 'xProducts',
+    description: 'This is the page for product'
+  };
 }
 
-
-
-function getRandomInt(count: number){
-    return Math.floor(
-        Math.random() * count
-    )
+function getRandomInt(count: number) {
+  return Math.floor(
+    Math.random() * count
+  )
 }
 
 export default function ProductLayout({
@@ -30,15 +28,14 @@ export default function ProductLayout({
   children: React.ReactNode;
 }>) {
 
-
-  const random = getRandomInt(2);
-  if (random == 1) {
-      throw new Error('Error Loading Page');
-  }
+  // const random = getRandomInt(2);
+  // if (random == 1) {
+  //     throw new Error('Error Loading Page');
+  // }
 
   return (
-        <div className="h-screen w-screen flex justify-center items-center bg-gradient-to-r from-blue-900 via-purple-400 to-blue-500">
-            {children}
-        </div>
+    <div className="h-screen w-screen flex justify-center items-center bg-gradient-to-r from-blue-900 via-purple-400 to-blue-500">
+      {children}
+    </div>
   );
 }

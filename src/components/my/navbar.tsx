@@ -14,7 +14,8 @@ export function Navbar(){
     ];
 
     return (
-        <nav className="fixed bg-gray-600 w-full p-2 text-4xl flex justify-between">
+        // <nav className="fixed bg-gray-600 w-full p-2 text-4xl flex justify-between">
+        <nav className="bg-gray-600 w-full p-2 text-4xl flex justify-between">
           <Link href="/">N A V B A R</Link>
           <div>
             <ul className="flex gap-5">
