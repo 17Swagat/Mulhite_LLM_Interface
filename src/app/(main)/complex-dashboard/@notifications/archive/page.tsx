@@ -1,3 +1,7 @@
+// [Unmatached Routes]:=>
+// * "When you are in the link: <http://localhost:3000/complex-dashboard/archive> and try to reload, we will encounter a [Page-Note-Found: 404]"
+// * For encontering this we need a `default.tsx` file in each unmatched slot. This file is critical as it serves as a fallback to render content when the framework cannot retrieve a slot's active state from teh current URL. Without the fiel, you'll get a 404 error.
+
 import { Card } from "@/components/my/card";
 import Link from "next/link";
 export default async function ComplexDashboard_NotificationsArchive(){
