@@ -13,7 +13,8 @@ export default function NotFound() {
 
     return (
         <div className="w-screen h-screen flex flex-col bg-blue-300 justify-center items-center">
-            <div className="fixed top-0 left-0">
+            {/* <div className="fixed top-0 left-0"> */}
+            <div className="absolute top-0 right-0 left-0">
                 <Navbar/>
             </div>
             <h1 className="text-4xl">404 - Page Not Found</h1>
