@@ -22,30 +22,24 @@ export default function Home() {
         Products
       </Link>
       
-      {/* <Link href="/login" className="text-white bg-purple-400 p-2 rounded-[10px] ml-10 text-3xl">
-        Login
-      </Link>
-      
-      <Link href="/register" className="text-white bg-purple-400 p-2 rounded-[10px] ml-10 text-3xl">
-        Register
-      </Link>
-
-      <Link href="/forget-password" className="text-white bg-purple-400 p-2 rounded-[10px] ml-10 text-3xl">
-        Forget Password
-      </Link> */}
-
       <Link href="/complex-dashboard" className="text-white bg-purple-900 p-2 rounded-[10px] ml-10 text-3xl">
         Dashboard
       </Link> 
 
-      {/* Examples to learn about `params` & `searchParams` :=> */}
-      <Link href="/articles/breaking-news-123?lang=en" className="text-white bg-purple-400 p-2 rounded-[10px] ml-10 text-3xl">
-        Article Read (en)
-      </Link>
+      <Link href="/f1" className="text-white bg-green-400/40 p-2 rounded-[10px] text-3xl">
+        Goto F1
+      </Link> 
 
-      <Link href= "/articles/breaking-news-123?lang=fr" className="text-white bg-purple-400 p-2 rounded-[10px] ml-10 text-3xl">
-        Article Read (fr)
-      </Link>
+      {/* Examples to learn about `params` & `searchParams` :=> */}
+      <div className="flex gap-5.5 bg-pink-400/40 p-4">
+        <Link href="/articles/breaking-news-123?lang=en" className="text-white bg-purple-400 p-2 rounded-[10px] text-3xl">
+          Article Read (en)
+        </Link>
+
+        <Link href= "/articles/breaking-news-123?lang=fr" className="text-white bg-purple-400 p-2 rounded-[10px] text-3xl">
+          Article Read (fr)
+        </Link>
+      </div>
     
     </div>
   );
