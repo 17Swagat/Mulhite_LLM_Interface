@@ -16,6 +16,7 @@ export default function Home() {
           return (
           <Link key={id} href={`/photo-feed/${id}`}>
             <div className="relative">
+
               {isLoading && (
                 <div className="w-full aspect-square bg-gray-200 animate-pulse" />
               )}
@@ -26,6 +27,8 @@ export default function Home() {
                 onLoad={() => {setIsLoading(false)}}
                 onError={() => setIsLoading(false)} // Handle error case
               />
+              
+
             </div>
             
           </Link>

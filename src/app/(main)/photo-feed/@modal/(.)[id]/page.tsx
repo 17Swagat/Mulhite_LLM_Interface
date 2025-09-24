@@ -1,6 +1,6 @@
 import Image from "next/image";
 // import wondersImages, { WonderImage } from "@/app/photo-feed/wonders";
-import wondersImages, {WonderImage} from "../../wonders";
+import wondersImages, { WonderImage } from "../../wonders";
 import Modal from "@/components/modal";
 
 export default async function PhotoModal({
@@ -11,6 +11,7 @@ export default async function PhotoModal({
   const { id } = await params;
   const photo: WonderImage = wondersImages.find((p) => p.id === id)!;
 
+
   return (
     <Modal>
       <Image
@@ -18,12 +19,12 @@ export default async function PhotoModal({
         src={photo.src}
         className="w-full object-cover aspect-square"
       />
-
-      <div className="bg-white p-4">
+      <div className="bg-white p-4 text-black">
         <h2 className="text-xl font-semibold">{photo.name}</h2>
         <h3>{photo.photographer}</h3>
         <h3>{photo.location}</h3>
       </div>
+
     </Modal>
   );
 }
