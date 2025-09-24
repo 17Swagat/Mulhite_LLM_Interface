@@ -3,12 +3,14 @@ import "@/app/globals.css";
 export default function ComplexDashBoardLayout({
     children,
     // NOTE: "The parallel routes names here should matching their @folder-names."
-    notifications, revenue, userAnalytics
+    notifications, revenue, userAnalytics, 
+    login
 }: Readonly<{
     children: React.ReactNode;
     notifications: React.ReactNode;
     revenue: React.ReactNode;
     userAnalytics: React.ReactNode;
+    login:React.ReactNode;
 }>) {
     return (
         <div className="w-full h-screen flex justify-center items-center
@@ -18,6 +20,7 @@ export default function ComplexDashBoardLayout({
                 <div style={{ display: "flex", flexDirection: "column" }}>
                     <div>{userAnalytics}</div>
                     <div>{revenue}</div>
+                    <div>{login}</div>
                 </div>
                 <div style={{ display: "flex", flex: 1 }}>{notifications}</div>
             </div>
