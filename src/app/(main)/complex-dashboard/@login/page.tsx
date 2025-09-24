@@ -1,6 +1,5 @@
 import { Card } from "@/components/my/card";
 export default function ComplexDashboard_Login(){
-
     return (
         <Card>
             <div className="flex flex-col items-center">

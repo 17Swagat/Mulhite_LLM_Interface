@@ -12,7 +12,10 @@ export default function ComplexDashBoardLayout({
     userAnalytics: React.ReactNode;
     login:React.ReactNode;
 }>) {
-    return (
+    
+    const isLoggedIn = false;
+
+    return isLoggedIn ? (
         <div className="w-full h-screen flex justify-center items-center
         bg-gradient-to-br from-green-800 to-purple-900">
             <div>{children}</div>
@@ -25,5 +28,5 @@ export default function ComplexDashBoardLayout({
                 <div style={{ display: "flex", flex: 1 }}>{notifications}</div>
             </div>
         </div>
-    );
+    ) : login;
 }
