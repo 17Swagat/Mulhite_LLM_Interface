@@ -1,7 +1,7 @@
 import { comments } from "../../data";
 
 export async function GET(
-    request: Request, 
+    // request: Request, 
     {params}: {params: Promise<{id: string}>}) {
     
     const {id} = await params;
