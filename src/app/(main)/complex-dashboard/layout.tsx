@@ -23,7 +23,7 @@ export default function ComplexDashBoardLayout({
                 <div style={{ display: "flex", flexDirection: "column" }}>
                     <div>{userAnalytics}</div>
                     <div>{revenue}</div>
-                    <div>{login}</div>
+                    {/* <div>{login}</div> */}
                 </div>
                 <div style={{ display: "flex", flex: 1 }}>{notifications}</div>
             </div>
