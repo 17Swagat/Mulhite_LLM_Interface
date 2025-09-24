@@ -1,4 +1,4 @@
-// import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -12,13 +12,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// export const metadata: Metadata = {
-//   title: {
-//     default: 'NextJS-Learn',
-//     template: 'NextJS-Learn | %s',
-//   },
-//   description: "Learn Next.js with this comprehensive guide",
-// };
+export const metadata: Metadata = {
+  title: 'Learning NextJS',
+  description: "Now Learning about Route Handlers",
+};
 
 export default function RootLayout({
   children,
