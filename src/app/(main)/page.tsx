@@ -9,6 +9,9 @@ export default function Home() {
   return (
     <div className="h-screen w-screen flex flex-col gap-2 items-center justify-center bg-blue-900 text-9xl">
       Home Page
+      <Link href="/photo-feed" className="text-white bg-green-700 p-2 rounded-[10px] ml-10 text-3xl">
+        PhotoFeed
+      </Link>
       <Link href="/about" className="text-white bg-purple-400 p-2 rounded-[10px] ml-10 text-3xl">
         About
       </Link>
