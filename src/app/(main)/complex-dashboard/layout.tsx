@@ -15,7 +15,7 @@ export default function ComplexDashBoardLayout({
     
     const isLoggedIn = false;
 
-    return isLoggedIn ? (
+    return !isLoggedIn ? (
         <div className="w-full h-screen flex justify-center items-center
         bg-gradient-to-br from-green-800 to-purple-900">
             <div>{children}</div>
