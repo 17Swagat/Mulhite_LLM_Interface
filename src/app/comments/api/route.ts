@@ -1,15 +1,9 @@
 import { comments } from "../data";
-import { NextRequest } from "next/server";
 
-export async function GET(request: NextRequest) {
-	const searchParams = request.nextUrl.searchParams;
-	const task = searchParams.get("task");
-	if (task === 'comments-count') {
-		return Response.json({
-			"comments-count": comments.length
-		});
-	}
-	return Response.json(comments);
+export async function GET(request: Request) {
+  console.log(comments)
+  return Response.json(comments, {status: 200})
+  
 }
 
 export async function POST(request: Request) {
