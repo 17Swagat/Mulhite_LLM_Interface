@@ -1,7 +1,6 @@
 import { comments } from "../data";
 
 export async function GET(request: Request) {
-  console.log(comments)
   return Response.json(comments, {status: 200})
   
 }

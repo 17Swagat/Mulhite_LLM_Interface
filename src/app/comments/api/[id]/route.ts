@@ -5,7 +5,7 @@ export async function GET(
     request: Request,
     { params }: { params: Promise<{ id: string }> }) {
 
-        console.log(comments);
+    console.log(comments);
 
     const { id } = await params;
     const comment_ = comments.find((comment) =>
@@ -42,9 +42,6 @@ export async function PATCH(
         const index = comments.findIndex((item) => (item.id.toString() == id))
         // comments[index].text = newText;
         comments[index].text = newText;
-        // console.log(index)
-        // console.log(typeof index)
-        console.log(comments)
 
         return Response.json(
             comments[index],
@@ -62,4 +59,29 @@ export async function PATCH(
         }, { status: 400 });
     }
 
+}
+
+export async function DELETE(
+    request: Request,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    const { id } = await params;
+    const index = comments.findIndex((item) => (item.id == parseInt(id)))
+    
+    if (index < 0) {
+        return Response.json({
+            "message": "Comment Not Found"
+        }, {
+            status: 404,
+            headers: { "Content-Type": "application/json" }
+        })
+    }
+    
+    comments.splice(index, 1);
+    return new Response(
+    null,
+    {
+        status: 204,
+        headers: { "Content-Type": "application/json" }
+    })
 }
