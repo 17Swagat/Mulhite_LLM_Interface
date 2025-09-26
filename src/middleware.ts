@@ -9,14 +9,8 @@
 import { NextResponse, NextRequest } from "next/server";
 
 export function middleware(request: NextRequest){
-    if (request.nextUrl.pathname == '/profile') {
-        // console.log(request.url) // 'http://localhost:3000/profile'
+    // Adding Multiple Routes :
+    if (['/profile', '/time2'].includes(request.nextUrl.pathname)){
         return NextResponse.redirect(new URL('/', request.url))
     }
-
-    // return NextResponse.redirect(new URL('/', request.url))
 }
-
-// export const config = {
-//     matcher: ["/profile", "/time2"]
-// }
