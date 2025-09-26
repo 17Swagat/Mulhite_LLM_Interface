@@ -1,8 +1,17 @@
+import { NextRequest } from "next/server";
 import { comments } from "../data";
 
-export async function GET(request: Request) {
+/*
+[URL Query Parameter]:
+*/
 
-  return Response.json(comments, {status: 200})
+export async function GET(request: NextRequest) {
+  const searchParam = request.nextUrl.searchParams;
+  const query = searchParam.get('text')
+  // returning comment containing `text`
+  const filtered_comment = query ? comments.filter(comment => comment.text.includes(query)) : comments
+  
+  return Response.json(filtered_comment, { status: 200 })
 }
 
 export async function POST(request: Request) {
