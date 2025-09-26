@@ -3,6 +3,8 @@
 // NOTE: 
 // "1 middleware file per Project."
 
+// Approach 01:
+
 import { NextResponse, NextRequest } from "next/server";
 
 export function middleware(request: NextRequest){
