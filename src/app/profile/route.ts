@@ -21,8 +21,6 @@ export async function GET(request: NextRequest){
     
     // "Reading Cookies"
     console.log(cookieStore.get('version')) // { name: 'version', value: '1.23.1', path: '/' }
-    console.log(cookieStore.get('version')?.value) 
-    console.log(cookieStore.get('Non-Availabe-Key')) // undefined
 
     return new Response('<h1> Profile API data </h1>', {headers: {
         'Content-Type': 'text/html; charset=utf-8',
