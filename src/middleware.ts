@@ -11,6 +11,7 @@ import { NextResponse, NextRequest } from "next/server";
 export function middleware(request: NextRequest){
     // Adding Multiple Routes :
     if (['/profile', '/time2'].includes(request.nextUrl.pathname)){
-        return NextResponse.redirect(new URL('/', request.url))
+        // return NextResponse.redirect(new URL('/', request.url))
+        return NextResponse.rewrite(new URL('/dashboard', request.url))
     }
 }
