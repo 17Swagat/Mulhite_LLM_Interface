@@ -8,6 +8,7 @@ export async function GET(request: NextRequest){
 
     // Way #2
     const headersList = await headers();
+    /*NOTE: "Headers returned from the `headers()` function is READONLY." */
     console.log(headersList.get('Authorization'))
     return new Response('Profile API data')
 }
