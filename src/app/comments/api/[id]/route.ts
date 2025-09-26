@@ -67,8 +67,8 @@ export async function DELETE(
 ) {
     const { id } = await params;
     const index = comments.findIndex((item) => (item.id == parseInt(id)))
-    
-    if (index < 0) {
+
+    if (index == -1) {
         return Response.json({
             "message": "Comment Not Found"
         }, {
@@ -76,12 +76,17 @@ export async function DELETE(
             headers: { "Content-Type": "application/json" }
         })
     }
-    
+
+    console.log("Index= " + index)
+
+    // const deleted_comment = comments[index]
     comments.splice(index, 1);
     return new Response(
-    null,
-    {
-        status: 204,
-        headers: { "Content-Type": "application/json" }
-    })
+        null,
+        {
+            status: 204,
+            // status: 200,
+            headers: { "Content-Type": "application/json" }
+        }
+    )
 }

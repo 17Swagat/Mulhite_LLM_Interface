@@ -12,3 +12,5 @@ export const comments = [
     text: "This is the third comment",
   },
 ];
+
+export const DATA_FILEPATH = './data_.json'

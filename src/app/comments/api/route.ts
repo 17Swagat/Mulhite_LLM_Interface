@@ -1,8 +1,8 @@
 import { comments } from "../data";
 
 export async function GET(request: Request) {
+
   return Response.json(comments, {status: 200})
-  
 }
 
 export async function POST(request: Request) {
