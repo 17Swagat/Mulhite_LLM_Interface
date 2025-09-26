@@ -12,11 +12,16 @@ export async function GET(request: NextRequest){
     // console.log(theme)
     
     // #Way 2
-    // NextJS's cookies() funciton
+    // NextJS's cookies() funciton :=>
+    
     // "Setting Up Cookie"
     const cookieStore = await cookies()
     cookieStore.set('resultsPerPage', '20')
     cookieStore.set('version', '1.23.1')
+    
+    // "Reading Cookies"
+    console.log(cookieStore.get('version')) // { name: 'version', value: '1.23.1', path: '/' }
+    console.log(cookieStore.get('Non-Availabe-Key')) // undefined
 
     return new Response('<h1> Profile API data </h1>', {headers: {
         'Content-Type': 'text/html; charset=utf-8',
