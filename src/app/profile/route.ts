@@ -16,6 +16,7 @@ export async function GET(request: NextRequest){
     // "Setting Up Cookie"
     const cookieStore = await cookies()
     cookieStore.set('resultsPerPage', '20')
+    cookieStore.set('version', '1.23.1')
 
     return new Response('<h1> Profile API data </h1>', {headers: {
         'Content-Type': 'text/html; charset=utf-8',
