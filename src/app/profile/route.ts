@@ -7,9 +7,10 @@ export async function GET(request: NextRequest){
     // console.log(requestHeaders.get('Authorization'))
 
     // Way #2
-    /*<Handling headers from a INCOMING REQUEST> */
+    // Setting Outgoing Headers|:|==>
     const headersList = await headers();
-    /*NOTE: "Headers returned from the `headers()` function is READONLY." */
     console.log(headersList.get('Authorization'))
-    return new Response('Profile API data')
+    return new Response('<h1> Profile API data </h1>', {headers: {
+        'content-type': 'text/html; charset=utf-8'
+    }})
 }
