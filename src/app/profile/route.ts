@@ -6,6 +6,6 @@ export async function GET(request: NextRequest){
     console.log(headersList.get('Authorization'))
     return new Response('<h1> Profile API data </h1>', {headers: {
         'Content-Type': 'text/html; charset=utf-8',
-        'Set-Cookie': 'theme=dark'
+        'Set-Cookie': ['theme=dark', 'version=1'].join(', ')
     }})
 }
