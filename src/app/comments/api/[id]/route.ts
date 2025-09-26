@@ -55,7 +55,7 @@ export async function PATCH(
 
     } catch (error) {
         return Response.json({
-            message: "Invalid Body!!"
+            message: `Invalid Body!! ${error}`
         }, { status: 400 });
     }
 
