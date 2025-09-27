@@ -11,5 +11,8 @@ export function middleware(request: NextRequest){
     if (!themePreference) {
         response.cookies.set('theme', 'dark')
     }
+    // Setting Up Header
+    response.headers.set('Custom-Header', 'custom-value')
+    
     return response;
 }
