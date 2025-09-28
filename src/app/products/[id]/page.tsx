@@ -1,13 +1,10 @@
-// Specify that dynamic routes should be rendered dynamically
-export const revalidate = 1; // Revalidate static pages every 1second (Even though the routes refreshs after 1 second, but once a route is generated, it will get store in the .next/sever/app/products/ directory and won't disappear. )
-export const dynamicParams = true;//'force-dynamic';
+export const revalidate = 1; // ISR: revalidate this page every 1 second
+export const dynamicParams = false; // if params(id) not in the list of generateStaticParams, show 404 page Not Found
 
 // Static Generation for these specific paths(id):
 export async function generateStaticParams() {
     return [{id: '1'}, {id: '2'}, {id: '3'}];
 }
-
-
 
 export default async function ProductPage_Id({
   params,
