@@ -1,6 +1,6 @@
 // Specify that dynamic routes should be rendered dynamically
-// export const revalidate = 1; // Revalidate static pages every hour
-// export const dynamicParams = true;//'force-dynamic';
+export const revalidate = 1; // Revalidate static pages every hour
+export const dynamicParams = true;//'force-dynamic';
 
 // Static Generation for these specific paths(id):
 export async function generateStaticParams() {
