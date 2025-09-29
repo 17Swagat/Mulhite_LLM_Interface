@@ -11,6 +11,9 @@ importers:
       '@xyflow/react':
         specifier: ^12.8.4
         version: 12.8.4(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      client-only:
+        specifier: ^0.0.1
+        version: 0.0.1
       next:
         specifier: 15.5.3
         version: 15.5.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
