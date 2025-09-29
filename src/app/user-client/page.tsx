@@ -65,6 +65,7 @@ export default function UserClientPage() {
                         <li key={user.id} className="p-5 bg-white/55 rounded shadow">
                             <h2 className="text-2xl">{user.name}</h2>
                             <p className="text-gray-600">{user.email}</p>
+                            <p className="text-gray-600">{user.address.city}</p>
                         </li>
                     ))}
                 </ul>
