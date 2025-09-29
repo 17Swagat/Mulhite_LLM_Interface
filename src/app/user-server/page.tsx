@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-// export const dynamic = 'force-dynamic'; // this page will be revalidated on every request
+export const dynamic = 'force-dynamic'; // this page will be revalidated on every request
 
 type User = {
     id: number;
