@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Author } from "../user/[userId]/author";
 
 export const dynamic = 'force-dynamic'; // this page will be revalidated on every request
 
@@ -62,17 +63,18 @@ export default async function PostSequentialPage() {
                     //     </ul>
                     // </details>
 
-                    <li>
+                    <li key={userId}>
                         <details className="group">
                             <summary className="cursor-pointer hover:bg-gray-700 transition duration-300 p-2 rounded grid grid-cols-[auto_1fr] items-center gap-2">
                                 <svg className="w-4 h-4 transition-transform duration-300 group-open:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                 </svg>
-                                <h2 className="text-2xl">Posts by User {userId}</h2>
+                                {/* <h2 className="text-2xl">Posts by User </h2> */}
+                                <Author userId={userId}/>
                             </summary>
                             <ul>
                                 {posts.filter((post: Post) => post.userId === userId).map((post: Post) => (
-                                    <li key={post.id} className="p-5 bg-white/55 rounded shadow">
+                                    <li key={`${userId}->${post.id}`} className="p-5 bg-white/55 rounded shadow">
                                         <Link href={`/user/${post.userId}/`} className="block hover:bg-gray-700 transition duration-300 p-2 rounded">
                                             <h2 className="text-2xl">{post.title}</h2>
                                             <p className="text-gray-200">{post.body}</p>
