@@ -26,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      {/* Even the layout is wrapped in a theme provider, server components down the tree will have access to the theme context */}
         <ThemeProvider>
           {children}
         </ThemeProvider>
