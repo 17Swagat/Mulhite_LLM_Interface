@@ -1,5 +1,7 @@
 import { Suspense } from "react";
 
+// export const dynamic = 'force-dynamic'; // this page will be revalidated on every request
+
 type User = {
     id: number;
     name: string;
@@ -61,14 +63,15 @@ export default async function UserServer() {
     return (
         <div className="w-screen bg-purple-600/30 p-10">
             <h1 className="text-4xl underline">User List</h1>
+            <h1 className="text-4xl underline">Data: {new Date().toLocaleTimeString()}</h1>
             <ul className="mt-5 space-y-3">
                 {users.map(async (user) => {
                     return (
                         // <Suspense fallback={<LoadingSpinner />} key={user.id}>
                         <Suspense fallback={
-                        <li className="p-5 bg-white/55 rounded shadow">
-                            <LoadingSpinner />
-                        </li>
+                            <li className="p-5 bg-white/55 rounded shadow">
+                                <LoadingSpinner />
+                            </li>
                         } key={user.id}>
                             <UserItem userPromise={Promise.resolve(user)} />
                         </Suspense>
