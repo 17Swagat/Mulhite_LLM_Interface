@@ -11,7 +11,7 @@ export default function ServerComponent1() {
         <div className='bg-green-600 p-3'>
             <h1>Server Component 1</h1>
             <ServerComponent2/>
-            <ClientComponent1/>
+            {/* <ClientComponent1/> */}
         </div>
     )
 }
