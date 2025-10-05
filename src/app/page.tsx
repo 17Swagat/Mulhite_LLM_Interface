@@ -16,22 +16,21 @@ export default function Home() {
       <header className="bg-black/90 shadow-sm p-2">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-white">NodyChat➡️</h1>
-          <div className='space-x-10 text-2xl'>
-            <Link href="/features" className="text-gray-300 hover:text-white transition duration-300">Features</Link>
-            <Link href="/pricing" className="text-gray-300 hover:text-white transition duration-300">Pricing</Link>
-            <Link href="/changelog" className="text-gray-300 hover:text-white transition duration-300">Changelog</Link>
+          <div className='space-x-10 text-xl text-gray-500'>
+            <Link href="/features" className=" hover:text-white transition duration-300">Features</Link>
+            <Link href="/pricing" className=" hover:text-white transition duration-300">Pricing</Link>
+            <Link href="/changelog" className=" hover:text-white transition duration-300">Tutorial</Link>
+            <Link href="/changelog" className=" hover:text-white transition duration-300">Changelog</Link>
           </div>
-          <div className="space-x-4">
-            <Link href="/signin" className="text-gray-200 hover:text-white transition duration-300 text-2xl">Login</Link>
-            <Link href="/signup" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-2xl">Get Started</Link>
+          <div className="space-x-4 text-xl">
+            <Link href="/signin" className="text-gray-200 hover:text-white transition duration-300 ">Login</Link>
+            <Link href="/signup" className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition duration-300">Get Started</Link>
           </div>
         </nav>
       </header>
 
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-        {/* <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4"> */}
-        {/* text-4xl font-bold bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 bg-clip-text text-transparent */}
 
         <h2 className="text-4xl leading-tight md:text-5xl font-bold bg-gradient-to-r from-purple-400 via-blue-500 to-purple-500 bg-clip-text text-transparent
         mb-4">
@@ -39,7 +38,6 @@ export default function Home() {
         </h2>
 
         <p className="text-2xl text-gray-600 mb-8">
-          {/* Track, maintain, and streamline every aspect of your side projects with ProjectPlannerAI */}
           Use LLMs to help you study and learn better!
         </p>
 
@@ -54,6 +52,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+
 
       {/* Problem vs Solution Section */}
       <section className="bg-white py-16">
