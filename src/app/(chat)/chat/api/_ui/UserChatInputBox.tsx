@@ -35,7 +35,8 @@ const Example = ({ input, handleInputChange, handleSubmit, isLoading, setInput }
   const [model, setModel] = useState<string>(models[0].id);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 w-full max-w-3xl mx-auto p-4 bg-white shadow-md">
+    <div 
+    className="fixed bottom-2 left-0 right-0 w-full max-w-3xl mx-auto py-4 px-2 bg-gradient-to-r from-blue-500 via-green-400 to-purple-500 shadow-md rounded-2xl">
       <PromptInput
         onSubmit={(e) => {
           e.preventDefault();
