@@ -20,6 +20,7 @@
     "dotenv": "^17.2.3",
     "lucide-react": "^0.544.0",
     "next": "15.5.3",
+    "ollama-ai-provider-v2": "^1.4.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "tailwind-merge": "^3.3.1",

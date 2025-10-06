@@ -1,9 +1,14 @@
-import { openai } from '@ai-sdk/openai';
+// import { openai } from '@ai-sdk/openai';
 import { google } from '@ai-sdk/google'
 import { streamText, UIMessage, convertToModelMessages } from 'ai';
+import { createOllama } from 'ollama-ai-provider-v2';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
+
+const ollama = createOllama({
+  baseURL: 'http://localhost:11434/api',
+});
 
 export async function POST(req: Request) {
   try {
@@ -12,8 +17,12 @@ export async function POST(req: Request) {
 
 
     const result = streamText({
-      // model: openai('gpt-4o'),
-      model: google("gemini-2.5-flash"),
+      // #1
+      // model: openai('gpt-4o'), // NOTE: Need To buy API
+      // #2
+      // model: google("gemini-2.5-flash"), // NOTE: Works!!
+      // #3
+      model: ollama('deepseek-r1:1.5b'),
       prompt: prompt
       // messages: convertToModelMessages(messages),
     });
