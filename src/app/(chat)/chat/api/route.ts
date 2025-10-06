@@ -37,9 +37,9 @@ export async function POST(req: Request) {
       });
     });
 
-    result.content.then((content) => {
-      console.log("\nFinal content:\n", content);
-    });
+    // result.content.then((content) => {
+    //   console.log("\nFinal content:\n", content);
+    // });
 
     return result.toUIMessageStreamResponse();
   } catch (error) {
