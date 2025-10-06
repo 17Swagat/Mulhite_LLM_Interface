@@ -1,6 +1,6 @@
-// #2
-'use client';
-import { useState } from 'react';
+// #3
+"use client";
+
 import {
   PromptInput,
   PromptInputButton,
@@ -13,14 +13,14 @@ import {
   PromptInputTextarea,
   PromptInputToolbar,
   PromptInputTools,
-} from '@/components/ui/shadcn-io/ai/prompt-input';
-import { MicIcon, PaperclipIcon } from 'lucide-react';
-import { type FormEventHandler, ChangeEventHandler } from 'react';
+} from "@/components/ui/shadcn-io/ai/prompt-input";
+import { MicIcon, PaperclipIcon } from "lucide-react";
+import { type FormEventHandler, ChangeEventHandler, useState } from "react";
 
 const models = [
-  { id: 'gpt-4o', name: 'GPT-4o' },
-  { id: 'claude-3-5-sonnet-20241022', name: 'Claude 3.5 Sonnet' },
-  { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro' },
+  { id: "gpt-4o", name: "GPT-4o" },
+  { id: "claude-3-5-sonnet-20241022", name: "Claude 3.5 Sonnet" },
+  { id: "gemini-1.5-pro", name: "Gemini 1.5 Pro" },
 ];
 
 interface ExampleProps {
@@ -28,25 +28,27 @@ interface ExampleProps {
   handleInputChange: ChangeEventHandler<HTMLTextAreaElement>;
   handleSubmit: FormEventHandler<HTMLFormElement>;
   isLoading: boolean;
-  stop: () => void;
   setInput: (value: string) => void;
 }
 
-const Example = ({ input, handleInputChange, handleSubmit, isLoading, stop, setInput }: ExampleProps) => {
+const Example = ({ input, handleInputChange, handleSubmit, isLoading, setInput }: ExampleProps) => {
   const [model, setModel] = useState<string>(models[0].id);
 
   return (
-    <div className="fixed bottom-0 py-3 px-100 w-full">
-      <PromptInput onSubmit={(e) => {
-        e.preventDefault();
-        if (!input) return;
-        handleSubmit(e);
-        setInput(''); // Clear input after submission
-      }}>
+    <div className="fixed bottom-0 left-0 right-0 w-full max-w-3xl mx-auto p-4 bg-white shadow-md">
+      <PromptInput
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!input) return;
+          handleSubmit(e);
+          setInput("");
+        }}
+      >
         <PromptInputTextarea
           onChange={handleInputChange}
           value={input}
           placeholder="Type your message..."
+          className="resize-none"
         />
         <PromptInputToolbar>
           <PromptInputTools>
@@ -55,7 +57,7 @@ const Example = ({ input, handleInputChange, handleSubmit, isLoading, stop, setI
             </PromptInputButton>
             <PromptInputButton>
               <MicIcon size={16} />
-              <span>Voice</span>
+              <span className="sr-only">Voice</span>
             </PromptInputButton>
             <PromptInputModelSelect onValueChange={setModel} value={model}>
               <PromptInputModelSelectTrigger>
@@ -72,8 +74,8 @@ const Example = ({ input, handleInputChange, handleSubmit, isLoading, stop, setI
           </PromptInputTools>
           <PromptInputSubmit
             disabled={!input || isLoading}
-            status={isLoading ? 'streaming' : 'ready'}
-            className="bg-pink-600 active:brightness-125"
+            status={isLoading ? "streaming" : "ready"}
+            className="bg-blue-500 hover:bg-blue-600 text-white"
           />
         </PromptInputToolbar>
       </PromptInput>
@@ -82,6 +84,95 @@ const Example = ({ input, handleInputChange, handleSubmit, isLoading, stop, setI
 };
 
 export default Example;
+
+
+
+
+
+// #2
+// 'use client';
+// import { useState } from 'react';
+// import {
+//   PromptInput,
+//   PromptInputButton,
+//   PromptInputModelSelect,
+//   PromptInputModelSelectContent,
+//   PromptInputModelSelectItem,
+//   PromptInputModelSelectTrigger,
+//   PromptInputModelSelectValue,
+//   PromptInputSubmit,
+//   PromptInputTextarea,
+//   PromptInputToolbar,
+//   PromptInputTools,
+// } from '@/components/ui/shadcn-io/ai/prompt-input';
+// import { MicIcon, PaperclipIcon } from 'lucide-react';
+// import { type FormEventHandler, ChangeEventHandler } from 'react';
+
+// const models = [
+//   { id: 'gpt-4o', name: 'GPT-4o' },
+//   { id: 'claude-3-5-sonnet-20241022', name: 'Claude 3.5 Sonnet' },
+//   { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro' },
+// ];
+
+// interface ExampleProps {
+//   input: string;
+//   handleInputChange: ChangeEventHandler<HTMLTextAreaElement>;
+//   handleSubmit: FormEventHandler<HTMLFormElement>;
+//   isLoading: boolean;
+//   stop: () => void;
+//   setInput: (value: string) => void;
+// }
+
+// const Example = ({ input, handleInputChange, handleSubmit, isLoading, stop, setInput }: ExampleProps) => {
+//   const [model, setModel] = useState<string>(models[0].id);
+
+//   return (
+//     <div className="fixed bottom-0 py-3 px-100 w-full">
+//       <PromptInput onSubmit={(e) => {
+//         e.preventDefault();
+//         if (!input) return;
+//         handleSubmit(e);
+//         setInput(''); // Clear input after submission
+//       }}>
+//         <PromptInputTextarea
+//           onChange={handleInputChange}
+//           value={input}
+//           placeholder="Type your message..."
+//         />
+//         <PromptInputToolbar>
+//           <PromptInputTools>
+//             <PromptInputButton>
+//               <PaperclipIcon size={16} />
+//             </PromptInputButton>
+//             <PromptInputButton>
+//               <MicIcon size={16} />
+//               <span>Voice</span>
+//             </PromptInputButton>
+//             <PromptInputModelSelect onValueChange={setModel} value={model}>
+//               <PromptInputModelSelectTrigger>
+//                 <PromptInputModelSelectValue />
+//               </PromptInputModelSelectTrigger>
+//               <PromptInputModelSelectContent>
+//                 {models.map((model) => (
+//                   <PromptInputModelSelectItem key={model.id} value={model.id}>
+//                     {model.name}
+//                   </PromptInputModelSelectItem>
+//                 ))}
+//               </PromptInputModelSelectContent>
+//             </PromptInputModelSelect>
+//           </PromptInputTools>
+//           <PromptInputSubmit
+//             disabled={!input || isLoading}
+//             status={isLoading ? 'streaming' : 'ready'}
+//             className="bg-pink-600 active:brightness-125"
+//           />
+//         </PromptInputToolbar>
+//       </PromptInput>
+//     </div>
+//   );
+// };
+
+// export default Example;
 
 
 
