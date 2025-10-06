@@ -70,6 +70,7 @@
 
 import { useCompletion } from "@ai-sdk/react";
 import { Response } from "@/components/ui/shadcn-io/ai/response";
+import Example from "./api/_ui/UserChatInputBox";
 
 export default function CompletionStreamPage() {
   const {
@@ -86,27 +87,17 @@ export default function CompletionStreamPage() {
   });
 
   return (
-    <div className="flex flex-col w-full max-w-4xl py-24 mx-auto stretch">
-      {error && <div className="text-red-500 mb-4">{error.message}</div>}
-      {isLoading && !completion && <div>Loading...</div>}
+    <>
+      <div className="flex flex-col w-full max-w-4xl py-24 mx-auto stretch">
+        {error && <div className="text-red-500 mb-4">{error.message}</div>}
+        {isLoading && !completion && <div>Loading...</div>}
 
-      {/* {completion && <div className="whitespace-pre-wrap">{completion}</div>} */}
-      {completion && <Response>
-        {completion}
-        {/* {
-        `$a^2 + b^2 = c^2$  
-        $E = mc^2$ 
-        $\\frac{a}{b} = c$  
-        $\\int_a^b f(x)dx = F(b) - F(a)$  
-        $\\int_a^b f(x)dx = F(b) - F(a)$
-        `
+        {/* {completion && <div className="whitespace-pre-wrap">{completion}</div>} */}
+        {completion && <Response>
+          {completion}
+        </Response>}
 
-
-        } */}
-
-      </Response>}
-
-      <form
+        {/* <form
         onSubmit={(e) => {
           e.preventDefault();
           setInput(""); // temporary fix to clear the input after submission
@@ -121,6 +112,7 @@ export default function CompletionStreamPage() {
             onChange={handleInputChange}
             placeholder="How can I help you?"
           />
+
           {isLoading ? (
             <button
               type="submit"
@@ -139,8 +131,20 @@ export default function CompletionStreamPage() {
             </button>
           )}
         </div>
-      </form>
-    </div>
+      </form> */}
+
+      </div>
+
+      {/* <Example /> */}
+      <Example
+        input={input}
+        handleInputChange={handleInputChange}
+        handleSubmit={handleSubmit}
+        isLoading={isLoading}
+        stop={stop}
+        setInput={setInput}
+      />
+    </>
   );
 }
 
