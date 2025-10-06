@@ -14,8 +14,6 @@ export async function POST(req: Request) {
   try {
     // const { messages }: { messages: UIMessage[] } = await req.json();
     const { prompt } = await req.json();
-
-
     const result = streamText({
       // #1
       // model: openai('gpt-4o'), // NOTE: Need To buy API
@@ -30,12 +28,17 @@ export async function POST(req: Request) {
     // return result.toUIMessageStreamResponse();
 
     // Log token usage after streaming completes
+    
     result.usage.then((usage) => {
       console.log({
         inputTokens: usage.inputTokens,
         outputTokens: usage.outputTokens,
         totalTokens: usage.totalTokens,
       });
+    });
+
+    result.content.then((content) => {
+      console.log("\nFinal content:\n", content);
     });
 
     return result.toUIMessageStreamResponse();

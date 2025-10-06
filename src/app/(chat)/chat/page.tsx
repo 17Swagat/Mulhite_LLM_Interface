@@ -69,6 +69,7 @@
 "use client";
 
 import { useCompletion } from "@ai-sdk/react";
+import { Response } from "@/components/ui/shadcn-io/ai/response";
 
 export default function CompletionStreamPage() {
   const {
@@ -85,11 +86,26 @@ export default function CompletionStreamPage() {
   });
 
   return (
-    <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
+    <div className="flex flex-col w-full max-w-4xl py-24 mx-auto stretch">
       {error && <div className="text-red-500 mb-4">{error.message}</div>}
       {isLoading && !completion && <div>Loading...</div>}
 
-      {completion && <div className="whitespace-pre-wrap">{completion}</div>}
+      {/* {completion && <div className="whitespace-pre-wrap">{completion}</div>} */}
+      {completion && <Response>
+        {completion}
+        {/* {
+        `$a^2 + b^2 = c^2$  
+        $E = mc^2$ 
+        $\\frac{a}{b} = c$  
+        $\\int_a^b f(x)dx = F(b) - F(a)$  
+        $\\int_a^b f(x)dx = F(b) - F(a)$
+        `
+
+
+        } */}
+
+      </Response>}
+
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -127,3 +143,6 @@ export default function CompletionStreamPage() {
     </div>
   );
 }
+
+
+
