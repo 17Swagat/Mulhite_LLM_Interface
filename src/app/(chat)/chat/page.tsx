@@ -28,8 +28,12 @@ export default function CompletionStreamPage() {
 
   const [userInput, setUserInput] = useState('');
 
+  // useEffect(()=>{
+  //   console.log(messages, '\n')
+  // },[messages])
+
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen w-full bg-gray-900 text-white p-50">
+    <div className="flex flex-col justify-center items-center min-h-screen w-full bg-gray-900 text-white p-50 px-[200px]">
       {/* <div ref={contentRef} className="flex flex-col w-full max-w-3xl mx-auto py-6 pb-[170px] px-4 grow overflow-y-auto"> */}
       {error && <div className="text-red-500 mb-4">{error.message}</div>}
 
@@ -48,15 +52,18 @@ export default function CompletionStreamPage() {
           {message.parts.map((part, index) =>
             part.type === 'text' ?
               <span key={index}>
-                {part.text}
-              </span> : null,
+                {/* {part.text} */}
+                <Response>{part.text}</Response>
+              </span> 
+              
+              : null,
           )}
         </div>
       ))}
 
 
       <form
-        className="absolute bottom-10"
+        className="fixed bottom-10"
         onSubmit={e => {
           e.preventDefault();
           if (userInput.trim()) {
@@ -74,9 +81,18 @@ export default function CompletionStreamPage() {
           onChange={e => setUserInput(e.target.value)}
           disabled={status !== 'ready'}
           placeholder="Say something..."
+          className="w-[600px] h-[70px] text-white border-2 border-white px-4 rounded-l-lg focus:border-pink-400 focus:outline-none"
         />
-        <button type="submit" disabled={status !== 'ready'}>
-          Submit
+        <button type="submit" 
+          // disabled={status !== 'ready'}
+          className={`w-[70px] h-[70px] ${(status == 'ready' ? "bg-blue-500" : "bg-red-500")}`}
+          onClick={()=>{
+            if (status == 'submitted' || status == 'streaming') {
+              stop();
+            }
+          }}
+        >
+          {status == 'ready' ? 'Submit' : 'X'}
         </button>
       </form>
 

@@ -21,9 +21,11 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: ollama('deepseek-r1:1.5b'),
-    system: 'You are a helpful assistant.',
+    system: "Responsd with lies. All answers must be factually wrong.",
+    // system: 'You are a cool AI assistant. Respond each answer with a Hi Bro at the beginning. Provide full detailed answer.',
     messages: convertToModelMessages(messages),
   });
+
 
   return result.toUIMessageStreamResponse();
 }
