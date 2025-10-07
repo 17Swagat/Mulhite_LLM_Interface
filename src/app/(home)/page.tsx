@@ -23,15 +23,15 @@ export default function Home() {
 
 
         {/* #1.1 */}
-        {/* <Link href="/chat" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md text-lg font-medium hover:bg-blue-700">
+        <Link href="/chat" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md text-lg font-medium hover:bg-blue-700">
           Get Started
-        </Link> */}
+        </Link>
         
         {/* #1.2 */}
         {/* [Experimental] */}
-        <Link href="/experi_chat" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md text-lg font-medium hover:bg-blue-700">
+        {/* <Link href="/experi_chat" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md text-lg font-medium hover:bg-blue-700">
           Experimental Chat
-        </Link>
+        </Link> */}
 
 
         <div className="mt-12">

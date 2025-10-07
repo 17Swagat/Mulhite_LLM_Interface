@@ -13,7 +13,9 @@ const ollama = createOllama({
 export async function POST(req: Request) {
   try {
     // const { messages }: { messages: UIMessage[] } = await req.json();
-    const { prompt } = await req.json();
+    // const { prompt } = await req.json();
+
+  const { messages }: { messages: UIMessage[] } = await req.json();
     const result = streamText({
       // #1
       // model: openai('gpt-4o'), // NOTE: Need To buy API
@@ -21,7 +23,7 @@ export async function POST(req: Request) {
       // model: google("gemini-2.5-flash"), // NOTE: Works!!
       // #3
       model: ollama('deepseek-r1:1.5b'),
-      prompt: prompt
+      prompt: convertToModelMessages(messages),
       // messages: convertToModelMessages(messages),
     });
 
