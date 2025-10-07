@@ -21,9 +21,19 @@ export default function Home() {
         </p>
 
 
-        <Link href="/chat" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md text-lg font-medium hover:bg-blue-700">
+
+        {/* #1.1 */}
+        {/* <Link href="/chat" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md text-lg font-medium hover:bg-blue-700">
           Get Started
+        </Link> */}
+        
+        {/* #1.2 */}
+        {/* [Experimental] */}
+        <Link href="/experi_chat" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md text-lg font-medium hover:bg-blue-700">
+          Experimental Chat
         </Link>
+
+
         <div className="mt-12">
           {/* Placeholder for Hero Image */}
           <div className="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">

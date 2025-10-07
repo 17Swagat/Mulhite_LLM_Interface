@@ -8,6 +8,10 @@ import { useEffect, useRef, useState } from "react";
 import { Conversation, ConversationContent, ConversationScrollButton } from "@/components/ui/shadcn-io/ai/conversation";
 import { Message, MessageAvatar, MessageContent } from "@/components/ui/shadcn-io/ai/message";
 
+
+
+// ... rest of the file
+
 export default function CompletionStreamPage() {
   const { completion, input, handleInputChange, handleSubmit, isLoading, error, setInput, stop } = useCompletion({
     api: "/chat/api",
