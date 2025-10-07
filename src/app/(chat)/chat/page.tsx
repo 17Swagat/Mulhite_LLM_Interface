@@ -36,8 +36,6 @@ export default function CompletionStreamPage() {
 
         <Conversation>
           <ConversationContent>
-
-
             <Message from="user">
               <MessageAvatar src="" name="User" />
               <MessageContent>
@@ -46,7 +44,6 @@ export default function CompletionStreamPage() {
                 </Response>
               </MessageContent>
             </Message>
-
 
             {completion && (
               // #1 Working!!
@@ -66,34 +63,6 @@ export default function CompletionStreamPage() {
           </ConversationContent>
           <ConversationScrollButton />
         </Conversation>
-
-        {/* {userInput && (
-          <>
-            <Message from="user">
-              <MessageAvatar src="" name="User" />
-              <MessageContent>
-                <Response>
-                  {userInput}
-                </Response>
-              </MessageContent>
-            </Message>
-          </>
-        )}
-        {completion && (
-          // #1 Working!!
-          // <Response className="bg-white p-4 rounded-lg shadow-sm mb-4">{completion}</Response>
-          <>
-            <Message from="assistant">
-              <MessageAvatar src="" name="AI" />
-              <MessageContent>
-                <Response>
-                  {completion}
-                </Response>
-              </MessageContent>
-            </Message>
-          </>
-        )} */}
-
       </div>
 
 
