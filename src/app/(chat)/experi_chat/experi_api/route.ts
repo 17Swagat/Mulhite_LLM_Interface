@@ -13,8 +13,10 @@ const ollama = createOllama({
 
 export async function GET(
     req: NextRequest,
-)// params: Promise<{ prompt: string }>) 
+    // params: Promise<{ prompt: string }>) 
+)
 {
+
     // const { prompt } = await params;
     const prompt = "What is love?";
     const { text } = await generateText({
