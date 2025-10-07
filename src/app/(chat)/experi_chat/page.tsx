@@ -1,24 +1,60 @@
-import { Suspense } from "react";
+'use client';
 
-export async function DataComponent2({ question }: { question: string }) {
-    const encodedQuestion = encodeURIComponent(question);
-    const res = await fetch(
-        `http://localhost:3000/experi_chat/experi_api/${encodedQuestion}`,
-        { cache: 'no-store' });
-    const data = await res.json();
-
-    return <div className="bg-pink-700">
-        {data.ai_message}
-    </div>;
-}
+import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
+import { useState } from 'react';
 
 export default function Page() {
+    const { messages, sendMessage, status } = useChat({
+        transport: new DefaultChatTransport({
+            api: '/experi_chat/experi_api',
+        }),
+    });
+    const [input, setInput] = useState('');
 
     return (
-        <div>
-            <Suspense fallback={<div>Loading...</div>}>
-                <DataComponent2 question="Who is Mahatma Gandhi?" />
-            </Suspense>
+        <div
+            className='w-screen h-screen bg-gray-800 text-white flex flex-col justify-center items-center px-50'>
+            {messages.map(message => (
+                <div key={message.id}>
+                    {message.role === 'user' ?
+
+                        <div className='bg-pink-500 w-fit'>
+                            User:
+                        </div>
+                        :
+                        <div className='bg-green-700 w-fit'>
+                            AI
+                        </div>
+                    }
+                    {message.parts.map((part, index) =>
+                        part.type === 'text' ? 
+                        <span key={index}>
+                            {part.text}
+                        </span> : null,
+                    )}
+                </div>
+            ))}
+
+            <form
+                onSubmit={e => {
+                    e.preventDefault();
+                    if (input.trim()) {
+                        sendMessage({ text: input });
+                        setInput('');
+                    }
+                }}
+            >
+                <input
+                    value={input}
+                    onChange={e => setInput(e.target.value)}
+                    disabled={status !== 'ready'}
+                    placeholder="Say something..."
+                />
+                <button type="submit" disabled={status !== 'ready'}>
+                    Submit
+                </button>
+            </form>
         </div>
     );
 }
