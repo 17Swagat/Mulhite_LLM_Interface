@@ -46,29 +46,44 @@ export default function ChatArea({
         </div>
       ))} */}
 
-            {messages.map(message => (
-                <div key={message.id}>
-                    {message.role === 'user' ?
+            {messages.map(message => {
+                // console.log('---------------------------------------')
+                // console.log(message.id);
+                // console.log('---------------------------------------')
+                return (
+                    <div key={message.id}>
+                        {message.role === 'user' ?
 
-                        <div className='bg-pink-500 w-fit'>
-                            User:
-                        </div>
-                        :
-                        <div className='bg-green-700 w-fit'>
-                            AI
-                        </div>
-                    }
-                    {message.parts.map((part, index) =>
-                        part.type === 'text' ?
-                            <span key={index}>
-                                {/* {part.text} */}
-                                <Response>{part.text}</Response>
-                            </span>
+                            <div className='bg-pink-500 w-fit'>
+                                User:
+                            </div>
+                            :
+                            <div className='bg-green-700 w-fit'>
+                                AI
+                            </div>
+                        }
+                        {message.parts.map((part, index) =>
+                            part.type === 'reasoning' ?
+                                <span key={index} className='text-yellow-300 '>
+                                    {/* {part.text} */}
+                                    <Response>{part.text}</Response>
+                                </span>
 
-                            : null,
-                    )}
-                </div>
-            ))}
+                                : null,
+                        )}
+                        {message.parts.map((part, index) =>
+                            part.type === 'text' ?
+                                <span key={index}>
+                                    {/* {part.text} */}
+                                    <Response>{part.text}</Response>
+                                </span>
+
+                                : null,
+                        )}
+                    </div>
+                )
+            }
+            )}
 
             {/* <form onSubmit={handleSubmit}>
                 <input

@@ -21,6 +21,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { getChatHistory, getChatHistory2 } from "@/utils/chat-store"
 import { UIMessage } from "ai"
 
+
 // Menu items.
 const items = [
     {
@@ -55,12 +56,17 @@ export function AppSidebar() {
     let chatHistory: UIMessage[] = getChatHistory();
     let chatHistory2: string[] = getChatHistory2();
 
+
     return (
         <Sidebar>
             <SidebarHeader>
-                <div className="w-full bg-yellow-500 p-2 text-center font-semibold text-[22px] rounded-[19px]">
-                    Nody ➡️
-                </div>
+
+                <Link href={'/'}>
+                    <div className="w-full bg-yellow-500 p-2 text-center font-semibold text-[22px] rounded-[19px]">
+                        Nody ➡️
+                    </div>
+                </Link>
+
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
@@ -95,9 +101,10 @@ export function AppSidebar() {
                                         // console.log(chat);
                                         // console.log(chat);
                                         return (
-                                            <SidebarMenuItem key={chat}>
+                                            <SidebarMenuItem  key={chat}>
                                                 <SidebarMenuButton asChild>
-                                                    <Link href={`/chat/${chat}`} className="bg-pink-400">
+                                                    <Link href={`/chat/${chat}`} className="bg-pink-400 hover:bg-yellow-600 "
+                                                    >
                                                         {/* #2 */}
                                                         <div>
                                                             {/* {chat} */}

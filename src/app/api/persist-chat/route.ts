@@ -17,6 +17,7 @@ export async function POST(req: Request) {
       // model: openai('gpt-4o'), // NOTE: Need To buy API
       // model: google("gemini-2.5-flash"), // NOTE: Works!!
       model: ollama('deepseek-r1:1.5b'),
+      providerOptions: { ollama: { think: true } },
       prompt: convertToModelMessages(messages),
     });
 
@@ -38,7 +39,8 @@ export async function POST(req: Request) {
             // saveChat({chatId: messages[0].metadata?.chatId || 'unknown', messages});
             saveChat({chatId: chatId, messages})
             // saveChat({chatId, messages})
-        }
+        },
+        sendReasoning: true
     });
 
   } catch (error) {
