@@ -1,4 +1,10 @@
-import { Calendar, ChevronDown, Home, Inbox, Search, Settings } from "lucide-react"
+import {
+    Calendar, ChevronDown, Home, Inbox, Search, Settings,
+
+    EllipsisVertical,
+} from "lucide-react"
+
+import Link from "next/link"
 
 import {
     Sidebar,
@@ -12,6 +18,8 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { getChatHistory, getChatHistory2 } from "@/utils/chat-store"
+import { UIMessage } from "ai"
 
 // Menu items.
 const items = [
@@ -43,6 +51,10 @@ const items = [
 ]
 
 export function AppSidebar() {
+
+    let chatHistory: UIMessage[] = getChatHistory();
+    let chatHistory2: string[] = getChatHistory2();
+
     return (
         <Sidebar>
             <SidebarHeader>
@@ -55,16 +67,66 @@ export function AppSidebar() {
                     <SidebarGroupLabel>Chat History</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {items.map((item) => (
+
+                            {
+                                // #1
+                                // chatHistory.length === 0 ?
+                                //     <SidebarMenuItem key={0}>No chat history available</SidebarMenuItem>
+                                //     : chatHistory.map((chat: UIMessage | any, index: number) => (
+                                //         <SidebarMenuItem key={chat.id}>
+                                //             <SidebarMenuButton asChild>
+                                //                 <Link href={`/chat/${chat.id}`}  className="bg-pink-400">
+                                //                     {/* #1 */}
+                                //                     <div>
+                                //                         {chat.parts[0].text.substring(0, 30)}
+                                //                     </div>
+
+                                //                 </Link>
+                                //                 {/* <EllipsisVertical className="ml-auto" /> */}
+                                //             </SidebarMenuButton>
+                                //         </SidebarMenuItem>
+                                //     ))
+
+
+                                // #2
+                                chatHistory2.length === 0 ?
+                                    <SidebarMenuItem key={0}>No chat history available</SidebarMenuItem>
+                                    : chatHistory2.map((chat: any, index: number) => {
+                                        // console.log(chat);
+                                        // console.log(chat);
+                                        return (
+                                            <SidebarMenuItem key={chat}>
+                                                <SidebarMenuButton asChild>
+                                                    <Link href={`/chat/${chat}`} className="bg-pink-400">
+                                                        {/* #2 */}
+                                                        <div>
+                                                            {/* {chat} */}
+                                                            {chat}
+                                                            {/* {chat.parts[0].text.substring(0, 30)} */}
+                                                        </div>
+
+                                                    </Link>
+                                                    {/* <EllipsisVertical className="ml-auto" /> */}
+                                                </SidebarMenuButton>
+                                            </SidebarMenuItem>
+                                        )
+                                    }
+
+                                    )
+
+                            }
+                            {/* {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
                                         <a href={item.url}>
-                                            {/* <item.icon /> */}
+                                            <item.icon />
                                             <span>{item.title}</span>
                                         </a>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
-                            ))}
+                            ))} */}
+
+
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>

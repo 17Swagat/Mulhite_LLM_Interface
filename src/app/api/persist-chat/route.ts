@@ -1,12 +1,13 @@
 import { google } from '@ai-sdk/google'
 import { saveChat } from '@/utils/chat-store';
-import { streamText, UIMessage, convertToModelMessages } from 'ai';
+import { streamText, UIMessage, convertToModelMessages, uiMessageChunkSchema } from 'ai';
 import { createOllama } from 'ollama-ai-provider-v2';
 
 // export const maxDuration = 30;
 
 const ollama = createOllama({
   baseURL: 'http://localhost:11434/api',
+  compatibility: 'strict',
 });
 
 export async function POST(req: Request) {
@@ -30,6 +31,7 @@ export async function POST(req: Request) {
     });
 
 
+    
     return result.toUIMessageStreamResponse({
         originalMessages: messages,
         onFinish: ({messages})=>{

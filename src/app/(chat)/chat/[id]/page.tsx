@@ -1,7 +1,7 @@
 import { loadChat } from "@/utils/chat-store";
-import Chat from "./chat";
 import { Error_ChatNotFound } from "@/utils/custom_errors/chat_errors";
 import ChatNotFound from "./ChatNotFound";
+import ChatArea from "./ChatArea";
 
 export default async function ChatPage_ID({ params }: { params: Promise<{ id: string }> }) {
 
@@ -9,7 +9,7 @@ export default async function ChatPage_ID({ params }: { params: Promise<{ id: st
 
     try {
         const messages = await loadChat(id);
-        return <Chat id={id} initialMessages={messages} />;
+        return <ChatArea id={id} initialMessages={messages} />;
     } catch (error: unknown) {
         if (error instanceof Error_ChatNotFound) {
             return <ChatNotFound id={id} />;

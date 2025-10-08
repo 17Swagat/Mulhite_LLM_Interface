@@ -5,7 +5,7 @@ import { DefaultChatTransport } from 'ai';
 import { useState } from 'react';
 import { Response } from '@/components/ui/shadcn-io/ai/response';
 
-export default function Chat({
+export default function ChatArea({
     id,
     initialMessages,
 }: { id?: string | undefined; initialMessages?: UIMessage[] } = {}) {
@@ -90,7 +90,7 @@ export default function Chat({
                     onChange={e => setInput(e.target.value)}
                     disabled={status !== 'ready'}
                     placeholder="Say something..."
-                    className="w-[600px] h-[70px] text-white border-2 border-white px-4 rounded-l-lg focus:border-pink-400 focus:outline-none"
+                    className="w-[600px] h-[70px] placeholder-white text-white border-2 bg-black/90 border-white px-4 rounded-l-lg focus:border-pink-400 focus:outline-none"
                 />
                 <button type="submit"
                     // disabled={status !== 'ready'}
