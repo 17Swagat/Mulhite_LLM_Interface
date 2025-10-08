@@ -19,7 +19,14 @@ export async function createChat(): Promise<string> {
 }
 
 export async function loadChat(id: string): Promise<UIMessage[]> {
-    return JSON.parse(await readFile(getChatFileLocation(id), 'utf8'));
+    try {
+        return JSON.parse(await readFile(getChatFileLocation(id), 'utf8'));
+    } catch (error: Error | any) {
+        if (error.code === 'ENOENT') {
+            throw error;
+        }
+        return [];
+    }
 }
 
 export async function saveChat({
