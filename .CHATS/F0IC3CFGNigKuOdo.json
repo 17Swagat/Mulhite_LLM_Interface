@@ -1,0 +1,29 @@
+[
+  {
+    "parts": [
+      {
+        "type": "text",
+        "text": "hi"
+      }
+    ],
+    "id": "BIrlSsdytO8AQ3Ku",
+    "role": "user",
+    "metadata": {
+      "messages": []
+    }
+  },
+  {
+    "id": "",
+    "role": "assistant",
+    "parts": [
+      {
+        "type": "step-start"
+      },
+      {
+        "type": "text",
+        "text": "Hello! How can I assist you today? 😊",
+        "state": "done"
+      }
+    ]
+  }
+]

@@ -1,9 +1,9 @@
-// import { google } from '@ai-sdk/google'
+import { google } from '@ai-sdk/google'
 import { saveChat } from '@/utils/chat-store';
 import { streamText, UIMessage, convertToModelMessages } from 'ai';
 import { createOllama } from 'ollama-ai-provider-v2';
 
-export const maxDuration = 30;
+// export const maxDuration = 30;
 
 const ollama = createOllama({
   baseURL: 'http://localhost:11434/api',
@@ -29,11 +29,6 @@ export async function POST(req: Request) {
       });
     });
 
-    // result.content.then((content) => {
-    //   console.log("\nFinal content:\n", content);
-    // });
-
-    // console.log(`Chat ID: ${chatId}`); // undefined ??
 
     return result.toUIMessageStreamResponse({
         originalMessages: messages,

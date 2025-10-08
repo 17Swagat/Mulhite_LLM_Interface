@@ -10,7 +10,7 @@ export default function Chat({
     initialMessages,
 }: { id?: string | undefined; initialMessages?: UIMessage[] } = {}) {
     const [input, setInput] = useState('');
-    
+
     // console.log(`Chat ID: ${id}`); // 
     const { sendMessage, messages, status, stop } = useChat({
         id, // use the provided chat ID
@@ -25,7 +25,7 @@ export default function Chat({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (input.trim()) {
-            sendMessage({ text: input, metadata:{messages} });
+            sendMessage({ text: input, metadata: { messages } });
             // sendMessage({ role: 'user', parts: [{ type: 'text', text: input }] });
             setInput('');
         }
@@ -83,7 +83,7 @@ export default function Chat({
                 className="fixed bottom-10"
                 onSubmit={
                     handleSubmit
-            }
+                }
             >
                 <input
                     value={input}

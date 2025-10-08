@@ -1,0 +1,84 @@
+[
+  {
+    "parts": [
+      {
+        "type": "text",
+        "text": "hi"
+      }
+    ],
+    "id": "dEQ3SakgRkzSnKad",
+    "role": "user",
+    "metadata": {
+      "messages": []
+    }
+  },
+  {
+    "id": "Vdw73ZG9X7IEamGQ",
+    "role": "assistant",
+    "parts": [
+      {
+        "type": "step-start"
+      },
+      {
+        "type": "text",
+        "text": "Hello! How can I assist you today? 😊",
+        "state": "done"
+      }
+    ]
+  },
+  {
+    "parts": [
+      {
+        "type": "text",
+        "text": "what is the value of PI in maths"
+      }
+    ],
+    "id": "rler2cx1D1cIcdYV",
+    "role": "user",
+    "metadata": {
+      "messages": [
+        {
+          "parts": [
+            {
+              "type": "text",
+              "text": "hi"
+            }
+          ],
+          "id": "dEQ3SakgRkzSnKad",
+          "role": "user",
+          "metadata": {
+            "messages": []
+          }
+        },
+        {
+          "id": "Vdw73ZG9X7IEamGQ",
+          "role": "assistant",
+          "parts": [
+            {
+              "type": "step-start"
+            },
+            {
+              "type": "text",
+              "text": "Hello! How can I assist you today? 😊",
+              "state": "done"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "",
+    "role": "assistant",
+    "parts": [
+      {
+        "type": "step-start"
+      },
+      {
+        "type": "text",
+        "text": "PI (π) is a mathematical constant representing the ratio of any circle's circumference to its diameter. It is approximately equal to 3.141592653589793 and has been represented by the Greek letter π since the mid-18th century.",
+        "state": "done"
+      }
+    ]
+  }
+]
