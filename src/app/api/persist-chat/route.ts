@@ -1,9 +1,8 @@
-// import { openai } from '@ai-sdk/openai';
-import { google } from '@ai-sdk/google'
+// import { google } from '@ai-sdk/google'
+import { saveChat } from '@/utils/chat-store';
 import { streamText, UIMessage, convertToModelMessages } from 'ai';
 import { createOllama } from 'ollama-ai-provider-v2';
 
-// Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
 const ollama = createOllama({
@@ -12,7 +11,7 @@ const ollama = createOllama({
 
 export async function POST(req: Request) {
   try {
-    const { messages }: { messages: UIMessage[] } = await req.json();
+    const { messages, chatId }: { messages: UIMessage[]; chatId: string } = await req.json();
     const result = streamText({
       // model: openai('gpt-4o'), // NOTE: Need To buy API
       // model: google("gemini-2.5-flash"), // NOTE: Works!!
@@ -34,7 +33,16 @@ export async function POST(req: Request) {
     //   console.log("\nFinal content:\n", content);
     // });
 
-    return result.toUIMessageStreamResponse();
+    // console.log(`Chat ID: ${chatId}`); // undefined ??
+
+    return result.toUIMessageStreamResponse({
+        originalMessages: messages,
+        onFinish: ({messages})=>{
+            // saveChat({chatId: messages[0].metadata?.chatId || 'unknown', messages});
+            saveChat({chatId: chatId, messages})
+            // saveChat({chatId, messages})
+        }
+    });
 
   } catch (error) {
     console.error("Error streaming text:", error);

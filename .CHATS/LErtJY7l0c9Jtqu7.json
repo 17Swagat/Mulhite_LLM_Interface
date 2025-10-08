@@ -1,0 +1,84 @@
+[
+  {
+    "parts": [
+      {
+        "type": "text",
+        "text": "hi"
+      }
+    ],
+    "id": "BShuhnN5XdKASzsd",
+    "role": "user",
+    "metadata": {
+      "messages": []
+    }
+  },
+  {
+    "id": "9K6wVft73LTMIl02",
+    "role": "assistant",
+    "parts": [
+      {
+        "type": "step-start"
+      },
+      {
+        "type": "text",
+        "text": "Hello! How can I assist you today? 😊",
+        "state": "done"
+      }
+    ]
+  },
+  {
+    "parts": [
+      {
+        "type": "text",
+        "text": "how are you"
+      }
+    ],
+    "id": "QGlcSsOwmgRIHxqR",
+    "role": "user",
+    "metadata": {
+      "messages": [
+        {
+          "parts": [
+            {
+              "type": "text",
+              "text": "hi"
+            }
+          ],
+          "id": "BShuhnN5XdKASzsd",
+          "role": "user",
+          "metadata": {
+            "messages": []
+          }
+        },
+        {
+          "id": "9K6wVft73LTMIl02",
+          "role": "assistant",
+          "parts": [
+            {
+              "type": "step-start"
+            },
+            {
+              "type": "text",
+              "text": "Hello! How can I assist you today? 😊",
+              "state": "done"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "",
+    "role": "assistant",
+    "parts": [
+      {
+        "type": "step-start"
+      },
+      {
+        "type": "text",
+        "text": "Thank you for asking. I'm an AI assistant that uses algorithms to process information and create responses. While I can't communicate with humans, I'll do my best to provide helpful and accurate responses based on the data it has been trained on! How can I assist you today? 😊",
+        "state": "done"
+      }
+    ]
+  }
+]
