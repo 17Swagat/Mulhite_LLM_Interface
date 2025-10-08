@@ -5,6 +5,8 @@ import path from 'path';
 
 import { UIMessage } from 'ai';
 
+import { Error_ChatNotFound } from './custom_errors/chat_errors';
+
 function getChatFileLocation(id: string): string {
     const chatDir = path.join(process.cwd(), '.CHATS');
     if (!existsSync(chatDir))
@@ -23,7 +25,8 @@ export async function loadChat(id: string): Promise<UIMessage[]> {
         return JSON.parse(await readFile(getChatFileLocation(id), 'utf8'));
     } catch (error: Error | any) {
         if (error.code === 'ENOENT') {
-            throw error;
+            // throw error;
+            throw new Error_ChatNotFound(id);
         }
         return [];
     }
