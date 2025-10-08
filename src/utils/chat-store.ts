@@ -76,7 +76,7 @@ export function getChatHistory(): UIMessage[] {
     return result;
 }
 
-export function getChatHistory2() {
+export function getLocalChatFileNames() {
     // function to return file names in .CHATS folder
 
     const folderPath = path.join(process.cwd(), '.CHATS');

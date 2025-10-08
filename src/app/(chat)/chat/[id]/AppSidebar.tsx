@@ -18,43 +18,14 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { getChatHistory, getChatHistory2 } from "@/utils/chat-store"
+import { getLocalChatFileNames } from "@/utils/chat-store"
 import { UIMessage } from "ai"
 
 
-// Menu items.
-const items = [
-    {
-        title: "Home",
-        url: "#",
-        icon: Home,
-    },
-    {
-        title: "Inbox",
-        url: "#",
-        icon: Inbox,
-    },
-    {
-        title: "Calendar",
-        url: "#",
-        icon: Calendar,
-    },
-    {
-        title: "Search",
-        url: "#",
-        icon: Search,
-    },
-    {
-        title: "Settings",
-        url: "#",
-        icon: Settings,
-    },
-]
 
 export function AppSidebar() {
 
-    let chatHistory: UIMessage[] = getChatHistory();
-    let chatHistory2: string[] = getChatHistory2();
+    let chatHistory2: string[] = getLocalChatFileNames();
 
 
     return (
