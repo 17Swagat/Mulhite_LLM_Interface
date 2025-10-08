@@ -44,3 +44,7 @@ next-env.d.ts
 # From Tutorials
 prisma/*
 src/generated/*
+
+
+# Local-Chat Files
+./CHATS
