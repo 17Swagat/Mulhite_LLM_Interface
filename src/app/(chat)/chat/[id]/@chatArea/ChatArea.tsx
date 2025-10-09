@@ -9,6 +9,8 @@ export default function ChatArea({
     id,
     initialMessages,
 }: { id?: string | undefined; initialMessages?: UIMessage[] } = {}) {
+    
+    
     const [input, setInput] = useState('');
 
     // console.log(`Chat ID: ${id}`); // 
@@ -31,20 +33,11 @@ export default function ChatArea({
         }
     };
 
-    // simplified rendering code, extend as needed:
     return (
         // <div>
 
         <div className="flex flex-col justify-start items-center min-h-screen w-full bg-gray-900 text-white p-50 px-[200px]">
 
-            {/* {messages.map(m => (
-        <div key={m.id}>
-          {m.role === 'user' ? 'User: ' : 'AI: '}
-          {m.parts
-            .map(part => (part.type === 'text' ? part.text : ''))
-            .join('')}
-        </div>
-      ))} */}
 
             {messages.map(message => {
                 // console.log('---------------------------------------')
@@ -84,15 +77,6 @@ export default function ChatArea({
                 )
             }
             )}
-
-            {/* <form onSubmit={handleSubmit}>
-                <input
-                    value={input}
-                    onChange={e => setInput(e.target.value)}
-                    placeholder="Type a message..."
-                />
-                <button type="submit">Send</button>
-            </form> */}
 
             <form
                 className="fixed bottom-10"

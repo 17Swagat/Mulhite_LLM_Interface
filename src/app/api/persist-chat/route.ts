@@ -1,3 +1,4 @@
+// #1
 import { google } from '@ai-sdk/google'
 import { saveChat } from '@/utils/chat-store';
 import { streamText, UIMessage, convertToModelMessages, uiMessageChunkSchema } from 'ai';

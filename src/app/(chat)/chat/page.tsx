@@ -4,18 +4,23 @@ import { redirect } from "next/navigation";
 // import {generateId} from 'ai';
 import { createChat } from "@/utils/chat-store";
 import Chat_LoadingScreen from "./loading";
+import { generateId } from "ai";
 
 export default async function ChatPage() {
 
-    const id = await createChat(); // create a new chat
-    redirect(`/chat/${id}`); // redirect to chat page, see below
+    // Create a new Id and Take user to /chat/[id] page
+    const new_id = generateId();
+    redirect(`/chat/${new_id}`,);
 
-    return <Chat_LoadingScreen/>
+
+    // const id = await createChat(); // create a new chat
+    // redirect(`/chat/${id}`); // redirect to chat page, see below
+    // return <Chat_LoadingScreen/>
 
     // "intentional delay":=>
     // await new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
-    //     // redirect(`/chat/${id}`);
-    //     redirect(`/chat/${id}`);
+        // redirect(`/chat/${id}`);
+        // redirect(`/chat/${id}`);
     // })
 
 }
