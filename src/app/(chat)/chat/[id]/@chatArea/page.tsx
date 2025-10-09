@@ -10,6 +10,7 @@ export default async function ChatPage_ID({ params }: { params: Promise<{ id: st
     let messages: UIMessage[] = [];
     try {
         messages = await loadChat(id);
+        console.log(`Loaded messages for chat ID: ${id}`);
     } catch(error: unknown){
         // if (error instanceof Error_ChatNotFound) {
         //     return <ChatNotFound id={id} />;

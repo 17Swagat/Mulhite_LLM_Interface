@@ -1,27 +1,15 @@
 import { loadChat } from "@/utils/chat-store";
 import { Error_ChatNotFound } from "@/utils/custom_errors/chat_errors";
 import ChatNotFound from "./@chatArea/ChatNotFound";
-// import ChatArea from "./_ChatArea";
 import ChatArea from "./@chatArea/ChatArea";
 
+// NOTE: **"Page not rendered in the <layout.tsx>"**
 export default async function ChatPage_ID({ params }: { params: Promise<{ id: string }> }) {
 
-    const { id } = await params;
+    const {id} = await params;
+    console.log('Chat Page ID (in page.tsx): ', id)
 
-    try {
-        const messages = await loadChat(id);
-        return <ChatArea id={id} initialMessages={messages} />;
-    } catch (error: unknown) {
-        if (error instanceof Error_ChatNotFound) {
-            return <ChatNotFound id={id} />;
-        }
-        
-        return (
-            <div className="flex flex-col justify-center items-center min-h-screen w-full bg-gray-900 text-white p-50 px-[200px]">
-                <h1 className="text-4xl font-bold mb-4">Chat Not Found</h1>
-                <p className="text-lg">Unexpected Error Occurred. Kindly Refresh.</p>
-            </div>
-        );
-    }
-
+    return (
+        <div className="w-screen h-screen bg-purple-500"></div>
+    );
 }

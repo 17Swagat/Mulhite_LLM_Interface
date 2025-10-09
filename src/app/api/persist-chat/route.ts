@@ -13,7 +13,15 @@ const ollama = createOllama({
 
 export async function POST(req: Request) {
   try {
-    const { messages, chatId }: { messages: UIMessage[]; chatId: string } = await req.json();
+    const req_ = await req.json();
+    // console.log(Object.keys(req_));
+    // console.log(req_.chatId);
+    // console.log(req_.id);
+
+    const { messages}: { messages: UIMessage[]; chatId: string } = req_;// await req.json();
+
+    const chatId = messages?.[0]?.metadata?.chatId; 
+
     const result = streamText({
       // model: openai('gpt-4o'), // NOTE: Need To buy API
       // model: google("gemini-2.5-flash"), // NOTE: Works!!
@@ -24,22 +32,21 @@ export async function POST(req: Request) {
 
 
     // Log token usage after streaming completes
-    result.usage.then((usage) => {
+    /*result.usage.then((usage) => {
       console.log({
         inputTokens: usage.inputTokens,
         outputTokens: usage.outputTokens,
         totalTokens: usage.totalTokens,
       });
-    });
+    });*/
 
 
     
     return result.toUIMessageStreamResponse({
         originalMessages: messages,
         onFinish: ({messages})=>{
-            // saveChat({chatId: messages[0].metadata?.chatId || 'unknown', messages});
+            console.log('Saving chat with ID:', chatId);
             saveChat({chatId: chatId, messages})
-            // saveChat({chatId, messages})
         },
         sendReasoning: true
     });

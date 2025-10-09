@@ -1,11 +1,4 @@
-import {
-    Calendar, ChevronDown, Home, Inbox, Search, Settings,
-
-    EllipsisVertical,
-} from "lucide-react"
-
 import Link from "next/link"
-
 import {
     Sidebar,
     SidebarContent,
@@ -17,9 +10,8 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { getLocalChatFileNames } from "@/utils/chat-store"
-import { generateId, UIMessage } from "ai"
+import { generateId} from "ai"
 
 
 
@@ -76,7 +68,6 @@ export function AppSidebar() {
                                     }
 
                                     )
-
                             }
 
                         </SidebarMenu>

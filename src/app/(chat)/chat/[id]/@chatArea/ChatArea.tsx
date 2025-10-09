@@ -9,8 +9,8 @@ export default function ChatArea({
     id,
     initialMessages,
 }: { id?: string | undefined; initialMessages?: UIMessage[] } = {}) {
-    
-    
+
+
     const [input, setInput] = useState('');
 
     // console.log(`Chat ID: ${id}`); // 
@@ -18,7 +18,6 @@ export default function ChatArea({
         id, // use the provided chat ID
         messages: initialMessages, // load initial messages
         transport: new DefaultChatTransport({
-            // api: '/api/chat',
             api: '/api/persist-chat',
             body: { chatId: id }, // pass chatId to the API
         }),
@@ -40,9 +39,7 @@ export default function ChatArea({
 
 
             {messages.map(message => {
-                // console.log('---------------------------------------')
                 // console.log(message.id);
-                // console.log('---------------------------------------')
                 return (
                     <div key={message.id}>
                         {message.role === 'user' ?
