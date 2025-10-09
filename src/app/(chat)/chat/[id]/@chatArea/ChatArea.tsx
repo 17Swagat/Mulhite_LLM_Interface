@@ -4,6 +4,7 @@ import { UIMessage, useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import { useState } from 'react';
 import { Response } from '@/components/ui/shadcn-io/ai/response';
+import {v7 as uuidv7} from 'uuid';
 
 export default function ChatArea({
     id,
@@ -40,6 +41,15 @@ export default function ChatArea({
 
             {messages.map(message => {
                 // console.log(message.id);
+
+                if (message.id.trim() == '') {
+                    // message.id = 'abc' + Date.now().toString();
+                    message.id = uuidv7();
+                    // message.id = crypto.randomUUID();
+                }
+
+                console.log('Message ID:', message.id, message.role);
+
                 return (
                     <div key={message.id}>
                         {message.role === 'user' ?
