@@ -2,9 +2,9 @@
 
 import { UIMessage, useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
-import { useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Response } from '@/components/ui/shadcn-io/ai/response';
-import {v7 as uuidv7} from 'uuid';
+import { v7 as uuidv7 } from 'uuid';
 
 export default function ChatArea({
     id,
@@ -13,6 +13,15 @@ export default function ChatArea({
 
 
     const [input, setInput] = useState('');
+
+    // code to always scroll down and bring down the latest chat
+    const messagesEndRef = useRef<HTMLDivElement>(null); // Ref for the scroll target
+
+    // Code to always scroll down to the latest chat
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
 
     // console.log(`Chat ID: ${id}`); // 
     const { sendMessage, messages, status, stop } = useChat({
@@ -23,6 +32,12 @@ export default function ChatArea({
             body: { chatId: id }, // pass chatId to the API
         }),
     });
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]); // Trigger whenever messages change
+
+
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -43,12 +58,10 @@ export default function ChatArea({
                 // console.log(message.id);
 
                 if (message.id.trim() == '') {
-                    // message.id = 'abc' + Date.now().toString();
                     message.id = uuidv7();
-                    // message.id = crypto.randomUUID();
                 }
 
-                console.log('Message ID:', message.id, message.role);
+                // console.log('Message ID:', message.id, message.role);
 
                 return (
                     <div key={message.id}>
@@ -80,6 +93,9 @@ export default function ChatArea({
 
                                 : null,
                         )}
+
+                        {/* Empty div as scroll target */}
+                        <div ref={messagesEndRef} />
                     </div>
                 )
             }
