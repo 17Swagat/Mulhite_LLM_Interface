@@ -70,10 +70,14 @@ export default function ChatArea({
             <div className="flex-1 overflow-y-auto p-6">
                 <Conversation className="max-w-11/12 mx-auto">
                     <ConversationContent>
-                        {messages.map((message) => {
+                        {messages.map((message, messageIndex) => {
                             if (message.id.trim() === '') {
                                 message.id = uuidv7();
                             }
+                            // Only consider streaming if it's the last message
+                            const isLastMessage = messageIndex === messages.length - 1;
+                            const isCurrentlyStreaming = status === 'streaming' && isLastMessage;
+                            
                             return (
                                 <Message from={message.role} key={message.id} className="mb-4">
                                     <MessageContent className="bg-gray-800 p-3 rounded-lg">
@@ -82,7 +86,7 @@ export default function ChatArea({
                                                 <div key={index} className="mb-2">
                                                     <Reasoning
                                                         className="w-full"
-                                                        isStreaming={status === 'streaming'}
+                                                        isStreaming={isCurrentlyStreaming}
                                                         duration={0}
                                                         defaultOpen={false}
                                                     >
