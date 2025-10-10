@@ -3,6 +3,7 @@ import { google } from '@ai-sdk/google'
 import { saveChat } from '@/utils/chat-store';
 import { streamText, UIMessage, convertToModelMessages, uiMessageChunkSchema } from 'ai';
 import { createOllama } from 'ollama-ai-provider-v2';
+import {v7 as uuidv7} from 'uuid';
 
 // export const maxDuration = 30;
 
@@ -11,16 +12,19 @@ const ollama = createOllama({
   compatibility: 'strict',
 });
 
+type ExtendedUIMessage = UIMessage & {
+  metadata?: {
+    chatId?: string;
+  };
+};
+
 export async function POST(req: Request) {
   try {
     const req_ = await req.json();
-    // console.log(Object.keys(req_));
-    // console.log(req_.chatId);
-    // console.log(req_.id);
+    // const { messages}: { messages: UIMessage[]; } = req_;// await req.json();
+    const { messages}: { messages: ExtendedUIMessage[]; } = req_;
 
-    const { messages}: { messages: UIMessage[]; chatId: string } = req_;// await req.json();
-
-    const chatId = messages?.[0]?.metadata?.chatId; 
+    const chatId = messages?.[0]?.metadata?.chatId ?? uuidv7();
 
     const result = streamText({
       // model: openai('gpt-4o'), // NOTE: Need To buy API
@@ -29,17 +33,6 @@ export async function POST(req: Request) {
       providerOptions: { ollama: { think: true } },
       prompt: convertToModelMessages(messages),
     });
-
-
-    // Log token usage after streaming completes
-    /*result.usage.then((usage) => {
-      console.log({
-        inputTokens: usage.inputTokens,
-        outputTokens: usage.outputTokens,
-        totalTokens: usage.totalTokens,
-      });
-    });*/
-
 
     
     return result.toUIMessageStreamResponse({

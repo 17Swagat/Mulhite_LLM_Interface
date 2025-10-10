@@ -1,40 +1,69 @@
-import { loadChat } from "@/utils/chat-store";
-import { Error_ChatNotFound } from "@/utils/custom_errors/chat_errors";
-import ChatArea from "./ChatArea";
-import ChatNotFound from "./ChatNotFound";
+// DeepSeek V1:
+'use client';
+import { useEffect, useState } from 'react';
+import ChatArea from "./_ui/ChatArea";
 import { UIMessage } from "ai";
 
-export default async function ChatPage_ID({ params }: { params: Promise<{ id: string }> }) {
+export default function ChatPage_ID({ params }: { params: Promise<{ id: string }> }) {
+    const [id, setId] = useState<string | null>(null);
+    const [initialMessages, setInitialMessages] = useState<UIMessage[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const { id } = await params;
-    let messages: UIMessage[] = [];
-    try {
-        messages = await loadChat(id);
-        console.log(`Loaded messages for chat ID: ${id}`);
-    } catch(error: unknown){
-        // if (error instanceof Error_ChatNotFound) {
-        //     return <ChatNotFound id={id} />;
-        // }
-    }
+    useEffect(() => {
+        const loadChatData = async () => {
+            const { id: chatId } = await params;
+            setId(chatId);
 
+            try {
+                const response = await fetch(`/api/persist-chat/${chatId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setInitialMessages(data.messages);
+                } else {
+                    // New chat or not found
+                    setInitialMessages([]);
+                }
+            } catch (error) {
+                console.error('Error loading chat:', error);
+                setInitialMessages([]);
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
-    return <ChatArea id={id} initialMessages={messages} />;
+        loadChatData();
+    }, [params]);
 
-    /*try {
-        const messages = await loadChat(id);
-        return <ChatArea id={id} initialMessages={messages} />;
-    } catch (error: unknown) {
-        if (error instanceof Error_ChatNotFound) {
-            return <ChatNotFound id={id} />;
-        }
-
+    if (isLoading || !id) {
         return (
-            <div className="flex flex-col justify-center items-center min-h-screen w-full bg-gray-900 text-white p-50 px-[200px]">
-                <h1 className="text-4xl font-bold mb-4">Chat Not Found</h1>
-                <p className="text-lg">Unexpected Error Occurred. Kindly Refresh.</p>
+            <div className="w-full h-full flex items-center justify-center">
+                <div className="text-white">Loading chat...</div>
             </div>
         );
-    }*/
+    }
 
-
+    return <ChatArea id={id} initialMessages={initialMessages} />;
 }
+
+
+
+// Old #1:
+// import { loadChat } from "@/utils/chat-store";
+// import ChatArea from "./_ui/ChatArea";
+// import { UIMessage } from "ai";
+
+// export default async function ChatPage_ID({ params }: { params: Promise<{ id: string }> }) {
+
+//     const { id } = await params;
+//     let messages: UIMessage[] = [];
+//     try {
+//         messages = await loadChat(id);
+//         console.log(`Loaded messages for chat ID: ${id}`);
+//     } catch(error: unknown){
+//         // if (error instanceof Error_ChatNotFound) {
+//         //     return <ChatNotFound id={id} />;
+//         // }
+//     }
+
+//     return <ChatArea id={id} initialMessages={messages} />;
+// }

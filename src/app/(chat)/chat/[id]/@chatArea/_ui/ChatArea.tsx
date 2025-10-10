@@ -13,17 +13,6 @@ export default function ChatArea({
 
 
     const [input, setInput] = useState('');
-
-    // code to always scroll down and bring down the latest chat
-    const messagesEndRef = useRef<HTMLDivElement>(null); // Ref for the scroll target
-
-    // Code to always scroll down to the latest chat
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-
-
-    // console.log(`Chat ID: ${id}`); // 
     const { sendMessage, messages, status, stop } = useChat({
         id, // use the provided chat ID
         messages: initialMessages, // load initial messages
@@ -33,6 +22,12 @@ export default function ChatArea({
         }),
     });
 
+
+    // Code to always scroll down to the latest chat
+    const messagesEndRef = useRef<HTMLDivElement>(null); // Ref for the scroll target
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
     useEffect(() => {
         scrollToBottom();
     }, [messages]); // Trigger whenever messages change
