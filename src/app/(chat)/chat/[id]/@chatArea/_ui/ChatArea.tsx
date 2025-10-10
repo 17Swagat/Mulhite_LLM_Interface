@@ -5,6 +5,7 @@ import { DefaultChatTransport } from 'ai';
 import { useEffect, useState, useRef } from 'react';
 import { Response } from '@/components/ui/shadcn-io/ai/response';
 import { v7 as uuidv7 } from 'uuid';
+import { Reasoning, ReasoningContent, ReasoningTrigger } from '@/components/ui/shadcn-io/ai/reasoning';
 
 export default function ChatArea({
     id,
@@ -102,10 +103,26 @@ export default function ChatArea({
                         }
                         {message.parts.map((part, index) =>
                             part.type === 'reasoning' ?
-                                <span key={index} className='text-yellow-300 '>
-                                    {/* {part.text} */}
-                                    <Response>{part.text}</Response>
-                                </span>
+                                // #1
+                                // <span key={index} className='text-yellow-300 '>
+                                //     {/* {part.text} */}
+                                //     <Reasoning className='bg-pink-500' key={index} isStreaming={status === 'streaming'}>
+                                //         {part.text}
+                                //     </Reasoning>
+                                //     {/* <Response>{part.text}</Response> */}
+                                // </span>
+                                // <div key={index} className="p-8 w-full">
+                                <div key={index} className="">
+                                    <Reasoning className="w-[500px] min-h-[20px]"
+                                        isStreaming={status === 'streaming'}
+                                        // defaultOpen={true}
+                                        >
+                                        <ReasoningTrigger />
+                                        <ReasoningContent className='bg-yellow-600 text-white'>
+                                            {part.text}
+                                        </ReasoningContent>
+                                    </Reasoning>
+                                </div>
 
                                 : null,
                         )}
