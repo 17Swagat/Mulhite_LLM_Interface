@@ -52,23 +52,21 @@ export function AppSidebar() {
                                 chatHistory.length === 0 ?
                                     <SidebarMenuItem>No chat history available</SidebarMenuItem>
                                     : chatHistory.map((chat: any, index: number) => {
-                                        // console.log(chat);
+                                        
+                                        // let bgColor:string = 'bg-pink-700';
+                                        // let bgHoverColor:string = 'hover:bg-yellow-500';
+                                        // let textColor:string = '';
+                                        // let textHoverColor:string = '';
+
                                         return (
-                                            <SidebarMenuItem  key={chat}>
-                                                <SidebarMenuButton className="" asChild>
-                                                    {/* <Link href={`/chat/${chat}`} className="bg-pink-400 hover:bg-yellow-600 "
-                                                    >
-                                                        <div>
-                                                            {chat}
-                                                        </div>
-                                                    </Link> */}
-
-                                                    <div className="bg-pink-700">
+                                            // <SidebarMenuItem className={`${bgColor} ${textColor}`}  key={chat}>
+                                            <SidebarMenuItem key={chat} >
+                                                {/* <SidebarMenuButton className="" asChild> */}
+                                                    {/* <div className="bg-pink-700 hover:bg-yellow-500"> */}
+                                                    {/* <div className={`${bgColor} ${bgHoverColor}`}> */}
                                                         <SidebarItem key={chat} title={chat} navLink={`/chat/${chat}`} />
-                                                    </div>
-
-                                                    {/* <EllipsisVertical className="ml-auto" /> */}
-                                                </SidebarMenuButton>
+                                                    {/* </div> */}
+                                                {/* </SidebarMenuButton> */}
                                             </SidebarMenuItem>
                                         )
                                     }
