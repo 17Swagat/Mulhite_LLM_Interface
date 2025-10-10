@@ -14,7 +14,7 @@ export default function ChatArea({
 
     const [input, setInput] = useState('');
     const [hasProcessedPendingMessage, setHasProcessedPendingMessage] = useState(false);
-    
+
     const { sendMessage, messages, status, stop, setMessages } = useChat({
         id, // use the provided chat ID
         transport: new DefaultChatTransport({
@@ -35,13 +35,13 @@ export default function ChatArea({
         if (id && !hasProcessedPendingMessage && status === 'ready' && messages.length === 0) {
             const pendingMessageKey = `pendingMessage_${id}`;
             const pendingMessage = sessionStorage.getItem(pendingMessageKey);
-            
+
             if (pendingMessage) {
                 console.log('Found pending message:', pendingMessage);
                 // Send the pending message
-                sendMessage({ 
-                    text: pendingMessage, 
-                    metadata: { chatId: id } 
+                sendMessage({
+                    text: pendingMessage,
+                    metadata: { chatId: id }
                 });
                 // Clear the pending message from sessionStorage
                 sessionStorage.removeItem(pendingMessageKey);
@@ -65,9 +65,9 @@ export default function ChatArea({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (input.trim() && status === 'ready') {
-            sendMessage({ 
-                text: input, 
-                metadata: { chatId: id } 
+            sendMessage({
+                text: input,
+                metadata: { chatId: id }
             });
             setInput('');
         }
@@ -127,7 +127,7 @@ export default function ChatArea({
             )}
 
             <form
-                className="fixed bottom-10"
+                className="flex gap-1 fixed bottom-10"
                 onSubmit={
                     handleSubmit
                 }
@@ -139,17 +139,25 @@ export default function ChatArea({
                     placeholder="Say something..."
                     className="w-[600px] h-[70px] placeholder-white text-white border-2 bg-black/90 border-white px-4 rounded-l-lg focus:border-pink-400 focus:outline-none"
                 />
-                <button type="submit"
-                    // disabled={status !== 'ready'}
-                    className={`w-[70px] h-[70px] ${(status == 'ready' ? "bg-blue-500" : "bg-red-500")}`}
+                <button
+                    type="submit"
+                    className={`w-[70px] h-[70px] flex justify-center items-center ${status === 'ready' ? "bg-blue-500" : "bg-red-500"}`}
                     onClick={() => {
-                        if (status == 'submitted' || status == 'streaming') {
+                        if (status === 'submitted' || status === 'streaming') {
                             stop();
                         }
                     }}
                 >
-                    {status == 'ready' ? 'Submit' : 'X'}
+                    {status === 'ready' ? (
+                        <div className="h-full flex items-center">Submit</div>
+                    ) : (
+                        <div className="h-full flex items-center justify-center">
+                            <div className="w-6 h-6 animate-spin rounded-full border-4 border-solid border-white border-t-transparent"></div>
+                        </div>
+                    )}
                 </button>
+
+
             </form>
 
         </div>
