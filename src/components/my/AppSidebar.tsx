@@ -38,7 +38,8 @@ export function AppSidebar() {
 
                             <SidebarMenuItem >
                                 <SidebarMenuButton asChild className="bg-gray-800/80 hover:bg-gray-600 hover:brightness-125 hover:text-white text-white">
-                                    <Link href={`/chat/${generateId()}`}>
+                                    {/* <Link href={`/chat/${generateId()}`}> */}
+                                    <Link href={`/chat/`}>
                                         + New Chat
                                     </Link>
 
