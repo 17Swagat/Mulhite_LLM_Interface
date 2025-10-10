@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     return result.toUIMessageStreamResponse({
         originalMessages: messages,
         onFinish: ({messages})=>{
-            console.log('Saving chat with ID:', chatId);
+            // console.log('Saving chat with ID:', chatId);
             saveChat({chatId: chatId, messages})
         },
         sendReasoning: true
