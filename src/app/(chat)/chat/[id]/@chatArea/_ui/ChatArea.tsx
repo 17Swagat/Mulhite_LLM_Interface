@@ -113,9 +113,10 @@ export default function ChatArea({
                                 // </span>
                                 // <div key={index} className="p-8 w-full">
                                 <div key={index} className="">
-                                    <Reasoning className="w-[500px] min-h-[20px]"
+                                    <Reasoning className="w-full min-h-[20px] "
                                         isStreaming={status === 'streaming'}
                                         // defaultOpen={true}
+                                        // duration={100}
                                         >
                                         <ReasoningTrigger />
                                         <ReasoningContent className='bg-yellow-600 text-white'>
