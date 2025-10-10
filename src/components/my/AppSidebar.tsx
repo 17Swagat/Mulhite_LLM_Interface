@@ -11,13 +11,15 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { getLocalChatFileNames } from "@/utils/chat-store"
-import { generateId} from "ai"
+import SidebarItem from "./SidebarItem";
+// import { generateId} from "ai"
 
 
 
 export function AppSidebar() {
 
     let chatHistory: string[] = getLocalChatFileNames();
+
 
     return (
         <Sidebar>
@@ -52,16 +54,19 @@ export function AppSidebar() {
                                     : chatHistory.map((chat: any, index: number) => {
                                         // console.log(chat);
                                         return (
-                                            <SidebarMenuItem key={chat}>
-                                                <SidebarMenuButton asChild>
-                                                    <Link href={`/chat/${chat}`} className="bg-pink-400 hover:bg-yellow-600 "
+                                            <SidebarMenuItem  key={chat}>
+                                                <SidebarMenuButton className="" asChild>
+                                                    {/* <Link href={`/chat/${chat}`} className="bg-pink-400 hover:bg-yellow-600 "
                                                     >
                                                         <div>
                                                             {chat}
-                                                            {/* {chat.parts[0].text.substring(0, 30)} */}
                                                         </div>
+                                                    </Link> */}
 
-                                                    </Link>
+                                                    <div className="bg-pink-700">
+                                                        <SidebarItem key={chat} title={chat} navLink={`/chat/${chat}`} />
+                                                    </div>
+
                                                     {/* <EllipsisVertical className="ml-auto" /> */}
                                                 </SidebarMenuButton>
                                             </SidebarMenuItem>

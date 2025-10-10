@@ -16,7 +16,7 @@ export default async function Layout({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params;
-  console.log('Layout.tsx - Chat ID:', id);
+  // console.log('Layout.tsx - Chat ID:', id);
   let initialMessages: UIMessage[] = [];
 
   try {
