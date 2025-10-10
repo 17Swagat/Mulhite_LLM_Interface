@@ -11,19 +11,6 @@ export default async function ChatLayout({
   children: React.ReactNode, 
   chatArea: React.ReactNode,
 }) {
-//   const { id } = await params;
-//   console.log('Layout.tsx - Chat ID:', id);
-//   let initialMessages: UIMessage[] = [];
-  
-//   try {
-//     initialMessages = await loadChat(id);
-//   } catch (error) {
-//     if (error instanceof Error_ChatNotFound) {
-//       return <ChatNotFound id={id} />;
-//     }
-//     console.error('Error loading chat:', error);
-//   }
-
   return (
     <SidebarProvider>
       <AppSidebar />
