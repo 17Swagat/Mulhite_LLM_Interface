@@ -3,8 +3,8 @@ export default async function ChatPage_ID({ params }: { params: Promise<{ id: st
 
     const {id} = await params;
     return (
-        <div className="w-screen h-screen bg-purple-500">
+        <>
             {/* NOT INCLUDED IN THE `layout.tsx` -> Won't Get Rendered!! */}
-        </div>
+        </>
     );
 }
