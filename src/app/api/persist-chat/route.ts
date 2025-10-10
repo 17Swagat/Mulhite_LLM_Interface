@@ -7,6 +7,7 @@ import {v7 as uuidv7} from 'uuid';
 
 // export const maxDuration = 30;
 
+
 const ollama = createOllama({
   baseURL: 'http://localhost:11434/api',
   compatibility: 'strict',

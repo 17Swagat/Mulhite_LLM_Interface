@@ -6,62 +6,53 @@ import { useEffect, useState, useRef } from 'react';
 import { Response } from '@/components/ui/shadcn-io/ai/response';
 import { v7 as uuidv7 } from 'uuid';
 import { Reasoning, ReasoningContent, ReasoningTrigger } from '@/components/ui/shadcn-io/ai/reasoning';
+import { Conversation, ConversationContent } from '@/components/ui/shadcn-io/ai/conversation';
+import { Message, MessageContent } from '@/components/ui/shadcn-io/ai/message';
 
 export default function ChatArea({
     id,
     initialMessages,
 }: { id?: string | undefined; initialMessages?: UIMessage[] } = {}) {
-
-
     const [input, setInput] = useState('');
     const [hasProcessedPendingMessage, setHasProcessedPendingMessage] = useState(false);
 
     const { sendMessage, messages, status, stop, setMessages } = useChat({
-        id, // use the provided chat ID
+        id,
         transport: new DefaultChatTransport({
             api: '/api/persist-chat',
-            body: { chatId: id }, // pass chatId to the API
+            body: { chatId: id },
         }),
     });
 
-    // Load initial messages when component mounts
     useEffect(() => {
         if (initialMessages && initialMessages.length > 0) {
             setMessages(initialMessages);
         }
     }, [initialMessages, setMessages]);
 
-    // Check for pending message from sessionStorage and send it
     useEffect(() => {
         if (id && !hasProcessedPendingMessage && status === 'ready' && messages.length === 0) {
             const pendingMessageKey = `pendingMessage_${id}`;
             const pendingMessage = sessionStorage.getItem(pendingMessageKey);
 
             if (pendingMessage) {
-                console.log('Found pending message:', pendingMessage);
-                // Send the pending message
                 sendMessage({
                     text: pendingMessage,
                     metadata: { chatId: id }
                 });
-                // Clear the pending message from sessionStorage
                 sessionStorage.removeItem(pendingMessageKey);
                 setHasProcessedPendingMessage(true);
             }
         }
     }, [id, hasProcessedPendingMessage, status, sendMessage, messages.length]);
 
-
-    // Code to always scroll down to the latest chat
-    const messagesEndRef = useRef<HTMLDivElement>(null); // Ref for the scroll target
+    const messagesEndRef = useRef<HTMLDivElement>(null);
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
     useEffect(() => {
         scrollToBottom();
-    }, [messages]); // Trigger whenever messages change
-
-
+    }, [messages]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -75,77 +66,54 @@ export default function ChatArea({
     };
 
     return (
-        // <div>
-
-        <div className="flex flex-col justify-start items-center min-h-screen w-full bg-gray-900 text-white p-50 px-[200px]">
-
-
-            {messages.map(message => {
-                // console.log(message.id);
-
-                if (message.id.trim() == '') {
-                    message.id = uuidv7();
-                }
-
-                // console.log('Message ID:', message.id, message.role);
-
-                return (
-                    <div key={message.id}>
-                        {message.role === 'user' ?
-
-                            <div className='bg-pink-500 w-fit'>
-                                User:
-                            </div>
-                            :
-                            <div className='bg-green-700 w-fit'>
-                                AI
-                            </div>
-                        }
-                        {message.parts.map((part, index) =>
-                            part.type === 'reasoning' ?
-                                // #1
-                                // <span key={index} className='text-yellow-300 '>
-                                //     {/* {part.text} */}
-                                //     <Reasoning className='bg-pink-500' key={index} isStreaming={status === 'streaming'}>
-                                //         {part.text}
-                                //     </Reasoning>
-                                //     {/* <Response>{part.text}</Response> */}
-                                // </span>
-                                // <div key={index} className="p-8 w-full">
-                                <div key={index} className="">
-                                    <Reasoning className="w-full min-h-[20px] "
-                                        isStreaming={status === 'streaming'}
-                                        // defaultOpen={true}
-                                        // duration={100}
-                                        >
-                                        <ReasoningTrigger />
-                                        <ReasoningContent className='bg-yellow-600 text-white'>
-                                            {part.text}
-                                        </ReasoningContent>
-                                    </Reasoning>
-                                </div>
-
-                                : null,
-                        )}
-                        {message.parts.map((part, index) =>
-                            part.type === 'text' ?
-                                <span key={index}>
-                                    {/* {part.text} */}
-                                    <Response>{part.text}</Response>
-                                </span>
-
-                                : null,
-                        )}
-
-                        {/* Empty div as scroll target */}
+        <div className="flex flex-col items-center-safe min-h-screen bg-gray-900 text-white">
+            <div className="flex-1 overflow-y-auto p-6">
+                <Conversation className="max-w-11/12 mx-auto">
+                    <ConversationContent>
+                        {messages.map((message) => {
+                            if (message.id.trim() === '') {
+                                message.id = uuidv7();
+                            }
+                            return (
+                                <Message from={message.role} key={message.id} className="mb-4">
+                                    <MessageContent className="bg-gray-800 p-3 rounded-lg">
+                                        {message.parts.map((part, index) =>
+                                            part.type === 'reasoning' ? (
+                                                <div key={index} className="mb-2">
+                                                    <Reasoning
+                                                        className="w-full"
+                                                        isStreaming={status === 'streaming'}
+                                                        duration={0}
+                                                        defaultOpen={false}
+                                                    >
+                                                        <ReasoningTrigger />
+                                                        <ReasoningContent className="bg-yellow-600 text-white p-2 rounded">
+                                                            {part.text}
+                                                        </ReasoningContent>
+                                                    </Reasoning>
+                                                </div>
+                                            ) : null
+                                        )}
+                                        {message.parts.map((part, index) =>
+                                            part.type === 'text' ? (
+                                                <span key={index} className="block">
+                                                    <Response className="text-lg">{part.text}</Response>
+                                                </span>
+                                            ) : null
+                                        )}
+                                    </MessageContent>
+                                </Message>
+                            );
+                        })}
                         <div ref={messagesEndRef} />
-                    </div>
-                )
-            }
-            )}
+                    </ConversationContent>
+                </Conversation>
+            </div>
+
+            <div className='h-20'></div>
 
             <form
-                className="flex gap-1 fixed bottom-10"
+                className="flex gap-1 fixed bottom-2"
                 onSubmit={
                     handleSubmit
                 }
