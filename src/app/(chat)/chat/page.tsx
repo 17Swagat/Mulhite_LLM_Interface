@@ -14,31 +14,38 @@ export default function ChatPage() {
         if (input.trim() && !isSubmitting) {
             setIsSubmitting(true);
             
-            // const id = generateId();
+            // Generate a unique chat ID
             const id = uuidv7(); // Using UUID v7 for better uniqueness and sorting
             
-            // Store the message in sessionStorage with the chat ID as key
-            sessionStorage.setItem(`pendingMessage_${id}`, input);
-            
-            // Creating an empty chat file for the new chat ID
-            // let blankMessages:UIMessage[] = [];
-            // saveChat({chatId: id, messages: blankMessages});  // ISSUE: `saveChat` is a server-side function
-            
-            // how to do a client-to-server call here to create an empty chat file?
-            await fetch('/api/persist-chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    messages: [ ] // Sending empty messages to create a blank chat
-                }),
-            });
+            try {
+                // Create an empty chat file with the new chat ID
+                const response = await fetch('/api/persist-chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chatId: id,
+                        messages: [] // Sending empty messages to create a blank chat
+                    }),
+                });
 
-            // Navigate immediately to clean URL
-            router.push(`/chat/${id}`);
-            
-            setInput('');
-            // Reset submitting state after navigation
-            setTimeout(() => setIsSubmitting(false), 1000);
+                if (!response.ok) {
+                    throw new Error('Failed to create chat');
+                }
+
+                // Store the initial message in sessionStorage with the chat ID as key
+                sessionStorage.setItem(`pendingMessage_${id}`, input);
+                
+                // Navigate to the chat page with the new ID
+                router.push(`/chat/${id}`);
+                
+                setInput('');
+            } catch (error) {
+                console.error('Error creating chat:', error);
+                alert('Failed to create chat. Please try again.');
+            } finally {
+                // Reset submitting state after navigation
+                setTimeout(() => setIsSubmitting(false), 1000);
+            }
         }
     };
 

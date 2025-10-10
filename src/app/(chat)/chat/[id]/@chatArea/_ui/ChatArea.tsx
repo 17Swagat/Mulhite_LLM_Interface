@@ -13,14 +13,42 @@ export default function ChatArea({
 
 
     const [input, setInput] = useState('');
-    const { sendMessage, messages, status, stop } = useChat({
+    const [hasProcessedPendingMessage, setHasProcessedPendingMessage] = useState(false);
+    
+    const { sendMessage, messages, status, stop, setMessages } = useChat({
         id, // use the provided chat ID
-        messages: initialMessages, // load initial messages
         transport: new DefaultChatTransport({
             api: '/api/persist-chat',
             body: { chatId: id }, // pass chatId to the API
         }),
     });
+
+    // Load initial messages when component mounts
+    useEffect(() => {
+        if (initialMessages && initialMessages.length > 0) {
+            setMessages(initialMessages);
+        }
+    }, [initialMessages, setMessages]);
+
+    // Check for pending message from sessionStorage and send it
+    useEffect(() => {
+        if (id && !hasProcessedPendingMessage && status === 'ready' && messages.length === 0) {
+            const pendingMessageKey = `pendingMessage_${id}`;
+            const pendingMessage = sessionStorage.getItem(pendingMessageKey);
+            
+            if (pendingMessage) {
+                console.log('Found pending message:', pendingMessage);
+                // Send the pending message
+                sendMessage({ 
+                    text: pendingMessage, 
+                    metadata: { chatId: id } 
+                });
+                // Clear the pending message from sessionStorage
+                sessionStorage.removeItem(pendingMessageKey);
+                setHasProcessedPendingMessage(true);
+            }
+        }
+    }, [id, hasProcessedPendingMessage, status, sendMessage, messages.length]);
 
 
     // Code to always scroll down to the latest chat
@@ -36,9 +64,11 @@ export default function ChatArea({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (input.trim()) {
-            sendMessage({ text: input, metadata: { messages } });
-            // sendMessage({ role: 'user', parts: [{ type: 'text', text: input }] });
+        if (input.trim() && status === 'ready') {
+            sendMessage({ 
+                text: input, 
+                metadata: { chatId: id } 
+            });
             setInput('');
         }
     };

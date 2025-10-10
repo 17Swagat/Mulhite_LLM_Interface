@@ -3,6 +3,8 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "./_ui/AppSidebar"
 import { loadChat } from "@/utils/chat-store"
 import { UIMessage } from "ai"
+import { Error_ChatNotFound } from "@/utils/custom_errors/chat_errors"
+import ChatNotFound from "./@chatArea/_ui/ChatNotFound"
 
 export default async function Layout({ 
   children, 
@@ -20,6 +22,9 @@ export default async function Layout({
   try {
     initialMessages = await loadChat(id);
   } catch (error) {
+    if (error instanceof Error_ChatNotFound) {
+      return <ChatNotFound id={id} />;
+    }
     console.error('Error loading chat:', error);
   }
 

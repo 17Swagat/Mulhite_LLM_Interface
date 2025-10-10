@@ -21,10 +21,20 @@ type ExtendedUIMessage = UIMessage & {
 export async function POST(req: Request) {
   try {
     const req_ = await req.json();
-    // const { messages}: { messages: UIMessage[]; } = req_;// await req.json();
-    const { messages}: { messages: ExtendedUIMessage[]; } = req_;
+    const { messages, chatId: providedChatId }: { messages: ExtendedUIMessage[]; chatId?: string } = req_;
 
-    const chatId = messages?.[0]?.metadata?.chatId ?? uuidv7();
+    // Use provided chatId or generate a new one
+    const chatId = providedChatId ?? messages?.[0]?.metadata?.chatId ?? uuidv7();
+
+    // If no messages provided, just create an empty chat file
+    if (!messages || messages.length === 0) {
+      console.log('Creating empty chat file with ID:', chatId);
+      await saveChat({ chatId, messages: [] });
+      return new Response(JSON.stringify({ chatId, success: true }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
 
     const result = streamText({
       // model: openai('gpt-4o'), // NOTE: Need To buy API
