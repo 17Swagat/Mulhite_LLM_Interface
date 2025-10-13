@@ -37,7 +37,11 @@ export default function Navbar() {
 
                         </SignedOut>
 
-                        <UserButton />
+                        <SignedIn>
+                            <div className="bg-gradient-to-r from-purple-400 via-green-600 to-teal-400 flex p-1 rounded-[10px] hover:bg-gradient-to-r hover:from-purple-400 hover:via-blue-600/50 hover:to-teal-500/50 transition duration-300">
+                                <UserButton />
+                            </div>
+                        </SignedIn>
 
                     </div>
                 </nav>
