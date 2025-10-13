@@ -6,6 +6,8 @@ import { useRef, useState, useEffect } from "react";
 import { v7 as uuidv7 } from "uuid";
 import { useChatStore } from "@/stores/chatStore";
 
+import { Authenticated, Unauthenticated } from "convex/react";
+
 export default function ChatPage() {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -85,6 +87,16 @@ export default function ChatPage() {
         <div className="w-full h-screen bg-purple-700/80 text-white flex justify-center items-center">
             <div className="flex flex-col items-center">
                 <h1 className="text-3xl">Write Your Prompt</h1>
+
+                {/* Authenticated Message: */}
+                <Authenticated>
+                    <div>Authenticated content</div>
+                </Authenticated>
+                <Unauthenticated>
+                    <div>Please sign in to access this content.</div>
+                </Unauthenticated>
+
+
                 <form ref={formRef} onSubmit={handleSubmit}>
                     <input
                         value={input}
