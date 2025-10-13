@@ -2,12 +2,19 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { generateId, UIMessage } from "ai";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { v7 as uuidv7 } from "uuid";
+import { useChatStore } from "@/stores/chatStore";
 
 export default function ChatPage() {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { addChat, setActiveChat } = useChatStore();
+
+    // Clear active chat when landing on /chat page
+    useEffect(() => {
+        setActiveChat(null);
+    }, [setActiveChat]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -31,6 +38,17 @@ export default function ChatPage() {
                 if (!response.ok) {
                     throw new Error("Failed to create chat");
                 }
+
+                // Add the new chat to Zustand store
+                addChat({
+                    id,
+                    title: input.substring(0, 50) + (input.length > 50 ? '...' : ''), // Use first 50 chars as title
+                    createdAt: Date.now(),
+                    lastMessagePreview: input.substring(0, 100),
+                });
+
+                // Set as active chat
+                setActiveChat(id);
 
                 // Store the initial message in sessionStorage with the chat ID as key
                 sessionStorage.setItem(`pendingMessage_${id}`, input);

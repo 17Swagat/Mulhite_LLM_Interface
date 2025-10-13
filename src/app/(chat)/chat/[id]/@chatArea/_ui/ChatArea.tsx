@@ -8,6 +8,7 @@ import { v7 as uuidv7 } from 'uuid';
 import { Reasoning, ReasoningContent, ReasoningTrigger } from '@/components/ui/shadcn-io/ai/reasoning';
 import { Conversation, ConversationContent } from '@/components/ui/shadcn-io/ai/conversation';
 import { Message, MessageContent } from '@/components/ui/shadcn-io/ai/message';
+import { useChatStore } from '@/stores/chatStore';
 
 export default function ChatArea({
     id,
@@ -15,6 +16,7 @@ export default function ChatArea({
 }: { id?: string | undefined; initialMessages?: UIMessage[] } = {}) {
     const [input, setInput] = useState('');
     const [hasProcessedPendingMessage, setHasProcessedPendingMessage] = useState(false);
+    const { setActiveChat, addChat, getChatById } = useChatStore();
 
     const { sendMessage, messages, status, stop, setMessages } = useChat({
         id,
@@ -23,6 +25,23 @@ export default function ChatArea({
             body: { chatId: id },
         }),
     });
+
+    // Set this chat as active when component mounts
+    useEffect(() => {
+        if (id) {
+            setActiveChat(id);
+            
+            // If chat doesn't exist in store, add it
+            const existingChat = getChatById(id);
+            if (!existingChat) {
+                addChat({
+                    id,
+                    title: id.substring(0, 8) + '...', // Will be updated with first message
+                    createdAt: Date.now(),
+                });
+            }
+        }
+    }, [id, setActiveChat, addChat, getChatById]);
 
     useEffect(() => {
         if (initialMessages && initialMessages.length > 0) {
@@ -57,15 +76,19 @@ export default function ChatArea({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (input.trim() && status === 'ready') {
-            sendMessage({
-                text: input,
-                metadata: { chatId: id }
+            // Update chat title with first message if it's the first user message
+            if (id && messages.length === 0) {
+                const { updateChatTitle } = useChatStore.getState();
+                updateChatTitle(id, input.substring(0, 50) + (input.length > 50 ? '...' : ''));
+            }
+            
+            sendMessage({ 
+                text: input, 
+                metadata: { chatId: id } 
             });
             setInput('');
         }
-    };
-
-    return (
+    };    return (
         <div className="flex flex-col items-center-safe min-h-screen bg-gray-900 text-white">
             <div className="flex-1 overflow-y-auto p-6">
                 <Conversation className="max-w-11/12 mx-auto">
