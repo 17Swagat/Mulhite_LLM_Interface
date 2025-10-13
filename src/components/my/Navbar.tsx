@@ -9,6 +9,8 @@ import {
     UserButton,
 } from '@clerk/nextjs'
 
+// import { Authenticated } from "convex/react";
+
 export default function Navbar() {
     return (
         <>
@@ -24,13 +26,13 @@ export default function Navbar() {
                     <div className="space-x-4 text-xl flex ">
                         <SignedOut>
                             <SignInButton>
-                                <button type='button' className="bg-gradient-to-r from-purple-700  to-teal-500 text-white text-ceramic-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer hover:bg-gradient-to-r hover:from-blue-700 hover:via-teal-700 hover:to-pink-700 transition duration-500 ease-in">
+                                <button type='button' className="bg-gradient-to-r from-purple-700  to-teal-500 text-white text-ceramic-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer hover:bg-gradient-to-r hover:from-blue-700 hover:via-teal-500 hover:to-pink-700 transition duration-300 ease-in">
                                     Login
                                 </button>
                             </SignInButton>
 
                             <SignUpButton>
-                                <button type='button' className="bg-gradient-to-r from-purple-700 via-teal-600  to-blue-950 text-white text-ceramic-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer hover:bg-gradient-to-r hover:from-purple-700 hover:via-red-700 hover:to-pink-700 transition duration-500">
+                                <button type='button' className="bg-gradient-to-r from-purple-700 via-teal-600  to-blue-950 text-white text-ceramic-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer hover:bg-gradient-to-r hover:from-purple-700 hover:via-red-700 hover:to-pink-700 transition duration-300">
                                     Create Account
                                 </button>
                             </SignUpButton>

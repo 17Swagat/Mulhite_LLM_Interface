@@ -12,9 +12,9 @@ export default function Home() {
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
 
-        <h2 className="text-4xl leading-tight md:text-5xl font-bold bg-gradient-to-r from-purple-400 via-blue-500 to-purple-500 bg-clip-text text-transparent
+        <h2 className="text-4xl leading-snug md:text-5xl font-bold bg-gradient-to-r from-purple-400 via-blue-500 to-purple-500 bg-clip-text text-transparent
         mb-4">
-          BEST <span className='bg-purple-700/30 rounded-2xl p-1.5 decoration-purple-600 decoration-6'>LLM INTERFACE</span> FOR STUDYING AND LEARNING SOMETHING!!
+          BEST <span className='bg-gradient-to-tr from-purple-900 via-teal-800 to-pink-700 rounded-2xl p-1.5 hover:text-purple-100 hover:bg-gradient-to-r hover:bg-green-500 hover:via-purple-500 hover:from-red-500 transition duration-500 ease-in-out decoration-purple-600 decoration-6  text-white'>LLM INTERFACE</span> FOR <span className='decoration-white underline decoration-5 underline-offset-3'>STUDYING</span> AND <span className='decoration-white underline decoration-5 underline-offset-3'>LEARNING</span> SOMETHING!!
         </h2>
 
         <p className="text-2xl text-gray-600 mb-8">

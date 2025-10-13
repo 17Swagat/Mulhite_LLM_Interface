@@ -50,3 +50,7 @@ src/generated/*
 .CHATS/
 # clerk configuration (can include secrets)
 /.clerk/
+
+
+# Temporary files
+tmp/
