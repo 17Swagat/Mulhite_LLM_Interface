@@ -48,3 +48,5 @@ src/generated/*
 
 # Local-Chat Files
 .CHATS/
+# clerk configuration (can include secrets)
+/.clerk/
