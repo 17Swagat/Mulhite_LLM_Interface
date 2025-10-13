@@ -22,17 +22,20 @@ export default function Navbar() {
                         <Link href="/changelog" className=" hover:text-white transition duration-300">Changelog</Link>
                     </div>
                     <div className="space-x-4 text-xl flex ">
-                        <SignInButton>
-                            <button type='button' className="bg-gradient-to-r from-purple-700  to-teal-500 text-white text-ceramic-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer hover:bg-gradient-to-r hover:from-blue-700 hover:via-teal-700 hover:to-pink-700 transition duration-500 ease-in">
-                                Login
-                            </button>
-                        </SignInButton>
+                        <SignedOut>
+                            <SignInButton>
+                                <button type='button' className="bg-gradient-to-r from-purple-700  to-teal-500 text-white text-ceramic-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer hover:bg-gradient-to-r hover:from-blue-700 hover:via-teal-700 hover:to-pink-700 transition duration-500 ease-in">
+                                    Login
+                                </button>
+                            </SignInButton>
 
-                        <SignUpButton>
-                            <button type='button' className="bg-gradient-to-r from-purple-700 via-teal-600  to-blue-950 text-white text-ceramic-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer hover:bg-gradient-to-r hover:from-purple-700 hover:via-red-700 hover:to-pink-700 transition duration-500">
-                                Create Account
-                            </button>
-                        </SignUpButton>
+                            <SignUpButton>
+                                <button type='button' className="bg-gradient-to-r from-purple-700 via-teal-600  to-blue-950 text-white text-ceramic-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer hover:bg-gradient-to-r hover:from-purple-700 hover:via-red-700 hover:to-pink-700 transition duration-500">
+                                    Create Account
+                                </button>
+                            </SignUpButton>
+
+                        </SignedOut>
 
                         <UserButton />
 
