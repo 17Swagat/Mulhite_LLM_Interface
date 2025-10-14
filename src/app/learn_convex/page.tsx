@@ -1,45 +1,80 @@
 'use client'
-import { SignIn, SignInButton, useAuth } from "@clerk/nextjs";
-import { Authenticated, Unauthenticated } from "convex/react";
+import {
+    SignInButton,
+    // SignIn, 
+    // SignInButton, 
+    useAuth
+} from "@clerk/nextjs";
+// import { Authenticated, Unauthenticated } from "convex/react";
+
+// Convex Stuff:
+import { Authenticated, Unauthenticated, useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { useState } from "react";
+
+function LoadingSpinner() {
+    return (
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-5 border-purple-500"></div>
+        </div>
+    );
+}
 
 export default function LearnConvexPage() {
 
-    const { isLoaded } = useAuth(); // isLoaded: boolean
+    const { isLoaded, userId, isSignedIn } = useAuth(); // isLoaded: boolean
+    const sendMessage = useMutation(api.chat.sendMessage)
+    const [message, setMessage] = useState('');
 
 
     // Handling Loading State:
-    // As <Authenticated> and <Unauthenticated> takes a little time to load its children
     if (!isLoaded) {
         return (
             <>
-                <div className="min-h-screen flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-32 w-32 border-b-5 border-purple-500"></div>
-                </div>
+                <LoadingSpinner />
             </>
+        )
+    }
+
+    if (!isSignedIn) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+                <div className="mb-4 text-xl">Please sign in to send messages.</div>
+                <SignInButton>
+                    <div className="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 cursor-pointer">Sign In</div>
+                </SignInButton>
+            </div>
         )
     }
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-            <h1 className="text-4xl font-bold mb-8">Learn Convex</h1>
-            <Authenticated>
-                <p className="text-lg text-center max-w-2xl">
-                    This is the Convex Placeholder
-                </p>
-            </Authenticated>
 
-            <Unauthenticated>
-                <div className="flex flex-col items-center">
-                    <p className="text-lg text-center max-w-2xl">
-                        Please sign in to access this content.
-                    </p>
-                    <SignInButton>
-                        <div className="bg-yellow-500 text-center p-2 rounded w-fit hover:cursor-pointer">
-                            Sign-In
-                        </div>
-                    </SignInButton>
-                </div>
-            </Unauthenticated>
+            <h1 className="text-4xl font-bold mb-8">Learn Convex</h1>
+            <form onSubmit={async (e) => {
+                e.preventDefault();
+
+                if (!userId) {
+                    alert("User not signed in");
+                    return;
+                }
+
+                await sendMessage({
+                    user: userId,
+                    body: message
+                })
+                setMessage('');
+            }}>
+                <input value={message} onChange={(e) => {
+                    setMessage(e.currentTarget.value)
+                }} type="text" name="message" placeholder="Enter your message" className="border border-gray-300 p-2 rounded-lg mr-4" />
+                <button type="submit" className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">
+                    Send Message
+                </button>
+
+            </form>
+
+
         </div>
     );
 }
