@@ -47,9 +47,16 @@ async function ensureUserOwnsConvoQuery(
     { conversationId }: { conversationId: Id<"conversations"> }
 ) {
     const user = await getCurrentUserQuery(ctx);
-    if (!user) throw new Error("User not found");
-    const convo = await ctx.db.get<"conversations">(conversationId);
-    if (!convo || convo.userId !== user._id) throw new Error("Unauthorized");
+    if (!user) return null;
+    
+    try {
+        const convo = await ctx.db.get<"conversations">(conversationId);
+        if (!convo) return null;
+        if (convo.userId !== user._id) throw new Error("Unauthorized");
+        return convo;
+    } catch (error) {
+        return null;
+    }
 }
 
 async function ensureUserOwnsConvoMutation(
@@ -79,22 +86,32 @@ export const listConversations = query({
 
 export const getMessages = query({
     args: {
-        conversationId: v.id("conversations"),
+        conversationId: v.string(),
         limit: v.optional(v.number()),
         cursor: v.optional(v.string()),
     },
     handler: async (ctx, { conversationId, limit = 50, cursor }) => {
-        await ensureUserOwnsConvoQuery(ctx, { conversationId });
+        // Validate ID format
+        const validIdRegex = /^[a-z0-9]+$/i;
+        if (!validIdRegex.test(conversationId) || conversationId.length < 10) {
+            return { messages: [], nextCursor: null, notFound: true };
+        }
+
+        const convo = await ensureUserOwnsConvoQuery(ctx, { conversationId: conversationId as Id<"conversations"> });
+        
+        if (!convo) {
+            return { messages: [], nextCursor: null, notFound: true };
+        }
 
         const messages = await ctx.db
             .query("messages")
             .withIndex("by_conversationId", (q) =>
-                q.eq("conversationId", conversationId)
+                q.eq("conversationId", conversationId as Id<"conversations">)
             )
             .order("asc")
-            .paginate({ cursor: cursor ?? null, numItems: limit }); // ✅ fixed
+            .paginate({ cursor: cursor ?? null, numItems: limit });
 
-        return { messages: messages.page, nextCursor: messages.continueCursor };
+        return { messages: messages.page, nextCursor: messages.continueCursor, notFound: false };
     },
 });
 

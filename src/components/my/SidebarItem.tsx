@@ -66,17 +66,19 @@ export default function SidebarItem(
         if (!confirmed) return;
 
         setIsDeleting(true);
+        
+        // If we're currently viewing this chat, redirect FIRST to prevent query errors
+        const shouldRedirect = pathname === navLink;
+        if (shouldRedirect) {
+            router.push('/chat');
+        }
+        
         try {
             // Delete from Convex
             await deleteConversation({ conversationId: chatId });
             
             // Remove from Zustand store
             removeChat(chatId);
-            
-            // If we're currently viewing this chat, redirect to /chat page
-            if (pathname === navLink) {
-                router.push('/chat');
-            }
         } catch (error) {
             console.error('Error deleting chat:', error);
             alert('Failed to delete chat. Please try again.');

@@ -12,6 +12,7 @@ import { useChatStore } from '@/stores/chatStore';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../convex/_generated/dataModel';
+import ChatNotFound from './ChatNotFound';
 
 export default function ChatArea({
     id,
@@ -19,6 +20,7 @@ export default function ChatArea({
     const [input, setInput] = useState('');
     const [hasProcessedPendingMessage, setHasProcessedPendingMessage] = useState(false);
     const [isLoadingMessages, setIsLoadingMessages] = useState(true);
+    const [conversationNotFound, setConversationNotFound] = useState(false);
     const { setActiveChat, addChat, getChatById, updateChatTitle } = useChatStore();
     
     // Convex queries and mutations
@@ -82,18 +84,27 @@ export default function ChatArea({
 
     // Load messages from Convex
     useEffect(() => {
-        if (messagesData && messagesData.messages) {
-            const convexMessages: UIMessage[] = messagesData.messages.map(msg => ({
-                id: msg._id,
-                role: msg.role,
-                parts: msg.parts as any, // Type mismatch due to convex schema
-            }));
-            
-            if (convexMessages.length > 0) {
-                setMessages(convexMessages);
+        if (messagesData !== undefined) {
+            // Check if conversation was not found
+            if (messagesData.notFound) {
+                setConversationNotFound(true);
+                setIsLoadingMessages(false);
+                return;
             }
-            setIsLoadingMessages(false);
-        } else if (messagesData !== undefined) {
+
+            // Valid conversation, load messages
+            if (messagesData.messages) {
+                const convexMessages: UIMessage[] = messagesData.messages.map(msg => ({
+                    id: msg._id,
+                    role: msg.role,
+                    parts: msg.parts as any, // Type mismatch due to convex schema
+                }));
+                
+                if (convexMessages.length > 0) {
+                    setMessages(convexMessages);
+                }
+                setConversationNotFound(false);
+            }
             setIsLoadingMessages(false);
         }
     }, [messagesData, setMessages]);
@@ -150,7 +161,14 @@ export default function ChatArea({
             });
             setInput('');
         }
-    };    return (
+    };
+
+    // Show ChatNotFound if conversation doesn't exist
+    if (conversationNotFound && !isLoadingMessages) {
+        return <ChatNotFound id={id || ''} />;
+    }
+
+    return (
         <div className="flex flex-col items-center-safe min-h-screen bg-gray-900 text-white">
             <div className="flex-1 overflow-y-auto p-6">
                 <Conversation className="max-w-11/12 mx-auto">
