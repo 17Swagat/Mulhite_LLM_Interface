@@ -1,17 +1,18 @@
 // DeepSeek #1:
 "use client";
 import { useRouter } from "next/navigation";
-import { generateId, UIMessage } from "ai";
 import { useRef, useState, useEffect } from "react";
-import { v7 as uuidv7 } from "uuid";
 import { useChatStore } from "@/stores/chatStore";
-
-// import { Authenticated, Unauthenticated } from "convex/react";
+import { useMutation } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
 
 export default function ChatPage() {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { addChat, setActiveChat } = useChatStore();
+    
+    // Convex mutation
+    const createConversation = useMutation(api.conversations.createConversation);
 
     // Clear active chat when landing on /chat page
     useEffect(() => {
@@ -23,40 +24,32 @@ export default function ChatPage() {
         if (input.trim() && !isSubmitting) {
             setIsSubmitting(true);
 
-            // Generate a unique chat ID
-            const id = uuidv7(); // Using UUID v7 for better uniqueness and sorting
-
             try {
-                // Create an empty chat file with the new chat ID
-                const response = await fetch("/api/persist-chat", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        chatId: id,
-                        messages: [], // Sending empty messages to create a blank chat
-                    }),
-                });
-
-                if (!response.ok) {
-                    throw new Error("Failed to create chat");
-                }
+                // Create conversation in Convex
+                const title = input.substring(0, 50) + (input.length > 50 ? '...' : '');
+                const result = await createConversation({ title });
+                
+                const conversationId = result._id;
+                const now = Date.now();
 
                 // Add the new chat to Zustand store
+                // Note: userId will be set by the backend
                 addChat({
-                    id,
-                    title: input.substring(0, 50) + (input.length > 50 ? '...' : ''), // Use first 50 chars as title
-                    createdAt: Date.now(),
-                    lastMessagePreview: input.substring(0, 100),
+                    _id: conversationId,
+                    title,
+                    createdAt: now,
+                    updatedAt: now,
+                    userId: '' as any, // This will be replaced when the sidebar refreshes
                 });
 
                 // Set as active chat
-                setActiveChat(id);
+                setActiveChat(conversationId);
 
-                // Store the initial message in sessionStorage with the chat ID as key
-                sessionStorage.setItem(`pendingMessage_${id}`, input);
+                // Store the initial message in sessionStorage with the conversation ID as key
+                sessionStorage.setItem(`pendingMessage_${conversationId}`, input);
 
                 // Navigate to the chat page with the new ID
-                router.push(`/chat/${id}`);
+                router.push(`/chat/${conversationId}`);
 
                 setInput("");
             } catch (error) {

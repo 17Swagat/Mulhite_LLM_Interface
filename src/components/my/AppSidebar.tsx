@@ -15,30 +15,31 @@ import {
 import SidebarItem from "./SidebarItem";
 import { useChatStore } from "@/stores/chatStore";
 import { useEffect } from "react";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 export function AppSidebar() {
-    const { chats, setActiveChat, syncWithFiles } = useChatStore();
+    const { chats, setActiveChat, setChats } = useChatStore();
+    
+    // Ensure user exists in Convex on mount
+    const ensureUser = useMutation(api.conversations.ensureUser);
+    
+    // Fetch conversations from Convex
+    const conversations = useQuery(api.conversations.listConversations);
 
-    // Load chat files only on mount
+    // Create user if doesn't exist
     useEffect(() => {
-        const loadChats = async () => {
-            try {
-                // Fetch chat file names from the API
-                const response = await fetch('/api/chats/list');
-                if (response.ok) {
-                    const data = await response.json();
-                    const actualChatIds = data.chatIds || [];
-                    
-                    // Sync store with actual files (removes stale, adds new)
-                    syncWithFiles(actualChatIds);
-                }
-            } catch (error) {
-                console.error('Failed to load chats:', error);
-            }
-        };
+        ensureUser().catch((err: unknown) => {
+            console.error("Failed to ensure user:", err);
+        });
+    }, [ensureUser]);
 
-        loadChats();
-    }, [syncWithFiles]);
+    // Sync Convex data with store
+    useEffect(() => {
+        if (conversations) {
+            setChats(conversations);
+        }
+    }, [conversations, setChats]);
 
     return (
         <Sidebar>
@@ -65,17 +66,21 @@ export function AppSidebar() {
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
 
-                            {chats.length === 0 ? (
+                            {conversations === undefined ? (
+                                <SidebarMenuItem>
+                                    <span className="text-gray-400 text-sm px-2">Loading...</span>
+                                </SidebarMenuItem>
+                            ) : chats.length === 0 ? (
                                 <SidebarMenuItem>
                                     <span className="text-gray-400 text-sm px-2">No chat history available</span>
                                 </SidebarMenuItem>
                             ) : (
                                 chats.map((chat) => (
-                                    <SidebarMenuItem key={chat.id}>
+                                    <SidebarMenuItem key={chat._id}>
                                         <SidebarItem 
-                                            chatId={chat.id} 
-                                            title={chat.title} 
-                                            navLink={`/chat/${chat.id}`} 
+                                            chatId={chat._id} 
+                                            title={chat.title || `Chat ${chat._id.slice(0, 8)}`} 
+                                            navLink={`/chat/${chat._id}`} 
                                         />
                                     </SidebarMenuItem>
                                 ))

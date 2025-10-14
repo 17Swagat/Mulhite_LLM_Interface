@@ -11,9 +11,12 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { Id } from "../../../convex/_generated/dataModel";
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 export default function SidebarItem(
-    { chatId, title, navLink }: { chatId: string; title: string; navLink: string }) {
+    { chatId, title, navLink }: { chatId: Id<"conversations">; title: string; navLink: string }) {
 
     const pathname = usePathname();
     const router = useRouter();
@@ -22,6 +25,10 @@ export default function SidebarItem(
     const [isRenaming, setIsRenaming] = useState(false);
     const [newTitle, setNewTitle] = useState(title);
     const [isDeleting, setIsDeleting] = useState(false);
+    
+    // Convex mutations
+    const updateConversation = useMutation(api.conversations.updateConversation);
+    const deleteConversation = useMutation(api.conversations.deleteConversation);
 
     // Update active chat when pathname changes
     useEffect(() => {
@@ -32,7 +39,19 @@ export default function SidebarItem(
 
     const handleRename = async () => {
         if (newTitle.trim() && newTitle !== title) {
-            updateChatTitle(chatId, newTitle.trim());
+            try {
+                // Update in Convex
+                await updateConversation({
+                    conversationId: chatId,
+                    title: newTitle.trim(),
+                });
+                
+                // Update local store
+                updateChatTitle(chatId, newTitle.trim());
+            } catch (error) {
+                console.error('Failed to rename chat:', error);
+                alert('Failed to rename chat. Please try again.');
+            }
         }
         setIsRenaming(false);
     };
@@ -48,21 +67,15 @@ export default function SidebarItem(
 
         setIsDeleting(true);
         try {
-            // Call API to delete the chat file
-            const response = await fetch(`/api/chats/${chatId}`, {
-                method: 'DELETE',
-            });
-
-            if (response.ok) {
-                // Remove from Zustand store
-                removeChat(chatId);
-                
-                // If we're currently viewing this chat, redirect to /chat page
-                if (pathname === navLink) {
-                    router.push('/chat');
-                }
-            } else {
-                alert('Failed to delete chat. Please try again.');
+            // Delete from Convex
+            await deleteConversation({ conversationId: chatId });
+            
+            // Remove from Zustand store
+            removeChat(chatId);
+            
+            // If we're currently viewing this chat, redirect to /chat page
+            if (pathname === navLink) {
+                router.push('/chat');
             }
         } catch (error) {
             console.error('Error deleting chat:', error);

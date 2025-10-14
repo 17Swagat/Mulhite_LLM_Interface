@@ -1,25 +1,27 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { Id } from '../../convex/_generated/dataModel';
 
 export interface ChatItem {
-  id: string;
-  title: string;
+  _id: Id<"conversations">;
+  title?: string;
   createdAt: number;
-  lastMessagePreview?: string;
+  updatedAt: number;
+  userId: Id<"users">;
 }
 
 interface ChatStore {
   chats: ChatItem[];
-  activeChat: string | null;
+  activeChat: Id<"conversations"> | null;
   
   // Actions
+  setChats: (chats: ChatItem[]) => void;
   addChat: (chat: ChatItem) => void;
-  removeChat: (id: string) => void;
-  setActiveChat: (id: string | null) => void;
-  updateChatTitle: (id: string, title: string) => void;
-  loadChatsFromFiles: (chatIds: string[]) => void;
-  getChatById: (id: string) => ChatItem | undefined;
-  syncWithFiles: (fileIds: string[]) => void;
+  removeChat: (id: Id<"conversations">) => void;
+  setActiveChat: (id: Id<"conversations"> | null) => void;
+  updateChatTitle: (id: Id<"conversations">, title: string) => void;
+  getChatById: (id: Id<"conversations">) => ChatItem | undefined;
+  clearChats: () => void;
 }
 
 export const useChatStore = create<ChatStore>()(
@@ -28,10 +30,13 @@ export const useChatStore = create<ChatStore>()(
       chats: [],
       activeChat: null,
 
+      setChats: (chats: ChatItem[]) =>
+        set({ chats: chats.sort((a, b) => b.createdAt - a.createdAt) }),
+
       addChat: (chat: ChatItem) =>
         set((state) => {
           // Check if chat already exists
-          const exists = state.chats.some((c) => c.id === chat.id);
+          const exists = state.chats.some((c) => c._id === chat._id);
           if (exists) {
             return state; // Don't add duplicates
           }
@@ -39,76 +44,36 @@ export const useChatStore = create<ChatStore>()(
           // Add new chat at the beginning (top)
           return {
             chats: [chat, ...state.chats],
-            activeChat: chat.id,
+            activeChat: chat._id,
           };
         }),
 
-      removeChat: (id: string) =>
+      removeChat: (id: Id<"conversations">) =>
         set((state) => ({
-          chats: state.chats.filter((chat) => chat.id !== id),
+          chats: state.chats.filter((chat) => chat._id !== id),
           activeChat: state.activeChat === id ? null : state.activeChat,
         })),
 
-      setActiveChat: (id: string | null) =>
+      setActiveChat: (id: Id<"conversations"> | null) =>
         set({ activeChat: id }),
 
-      updateChatTitle: (id: string, title: string) =>
+      updateChatTitle: (id: Id<"conversations">, title: string) =>
         set((state) => ({
           chats: state.chats.map((chat) =>
-            chat.id === id ? { ...chat, title } : chat
+            chat._id === id ? { ...chat, title, updatedAt: Date.now() } : chat
           ),
         })),
 
-      loadChatsFromFiles: (chatIds: string[]) =>
-        set((state) => {
-          // Create chat items for IDs that don't exist yet
-          const existingIds = new Set(state.chats.map((c) => c.id));
-          const newChats: ChatItem[] = chatIds
-            .filter((id) => !existingIds.has(id))
-            .map((id) => ({
-              id,
-              title: id.substring(0, 8), // Short preview of ID
-              createdAt: Date.now(),
-            }));
+      getChatById: (id: Id<"conversations">) =>
+        get().chats.find((chat) => chat._id === id),
 
-          // Merge with existing chats, sort by createdAt (newest first)
-          const allChats = [...newChats, ...state.chats].sort(
-            (a, b) => b.createdAt - a.createdAt
-          );
-
-          return { chats: allChats };
-        }),
-
-      getChatById: (id: string) =>
-        get().chats.find((chat) => chat.id === id),
-
-      syncWithFiles: (fileIds: string[]) =>
-        set((state) => {
-          const fileIdSet = new Set(fileIds);
-          // Remove chats that don't exist in files
-          const validChats = state.chats.filter((chat) => fileIdSet.has(chat.id));
-          
-          // Add new chats from files that aren't in store
-          const existingIds = new Set(validChats.map((c) => c.id));
-          const newChats: ChatItem[] = fileIds
-            .filter((id) => !existingIds.has(id))
-            .map((id) => ({
-              id,
-              title: id.substring(0, 8) + '...', // Short preview of ID
-              createdAt: Date.now(),
-            }));
-
-          // Merge and sort by createdAt (newest first)
-          const allChats = [...newChats, ...validChats].sort(
-            (a, b) => b.createdAt - a.createdAt
-          );
-
-          return { chats: allChats };
-        }),
+      clearChats: () =>
+        set({ chats: [], activeChat: null }),
     }),
     {
       name: 'chat-store', // localStorage key
       storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({ activeChat: state.activeChat }), // Only persist activeChat
     }
   )
 );

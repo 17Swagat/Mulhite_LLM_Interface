@@ -22,19 +22,19 @@ export default defineSchema({
         .index("by_updatedAt", ["updatedAt"]),  // Recent convos first
 
     messages: defineTable({
-        conversationId: v.id("conversations"),  // Foreign key
-        role: v.union(v.literal("user"), v.literal("assistant")),  // From your JSON
-        parts: v.array(  // Your JSON structure—flexible for text/images/etc.
+        conversationId: v.id("conversations"),  // Foreign key to conversation
+        role: v.union(v.literal("user"), v.literal("assistant")),  // Message sender
+        parts: v.array(  // Message content (supports text, reasoning, etc.)
             v.object({
-                type: v.string(),  // "text", etc.
-                text: v.optional(v.string()),
-                // Add more: image_url: v.optional(v.string()), etc.
+                type: v.string(),  // "text", "reasoning", "image", etc.
+                text: v.optional(v.string()),  // Text content
+                // Future: Add image_url, file_url, etc.
             })
         ),
-        id: v.optional(v.string()),  // From JSON, if provided
-        metadata: v.optional(v.object({})),  // chatId, etc. from sample
-        timestamp: v.number(),  // For ordering in convo
+        timestamp: v.number(),  // Unix timestamp for ordering messages
+        // Removed: id (Convex auto-generates _id)
+        // Removed: metadata (not currently used)
     })
-        .index("by_conversationId", ["conversationId"])  // Load full history
-        .index("by_timestamp", ["timestamp"]),  // Chronological order
+        .index("by_conversationId", ["conversationId"])  // Fast lookup of all messages in a conversation
+        .index("by_timestamp", ["timestamp"]),  // Chronological ordering
 });

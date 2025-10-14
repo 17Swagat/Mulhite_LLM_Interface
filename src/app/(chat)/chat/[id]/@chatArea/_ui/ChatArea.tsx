@@ -9,14 +9,26 @@ import { Reasoning, ReasoningContent, ReasoningTrigger } from '@/components/ui/s
 import { Conversation, ConversationContent } from '@/components/ui/shadcn-io/ai/conversation';
 import { Message, MessageContent } from '@/components/ui/shadcn-io/ai/message';
 import { useChatStore } from '@/stores/chatStore';
+import { useQuery, useMutation } from 'convex/react';
+import { api } from '../../../../../../../convex/_generated/api';
+import { Id } from '../../../../../../../convex/_generated/dataModel';
 
 export default function ChatArea({
     id,
-    initialMessages,
-}: { id?: string | undefined; initialMessages?: UIMessage[] } = {}) {
+}: { id?: string | undefined } = {}) {
     const [input, setInput] = useState('');
     const [hasProcessedPendingMessage, setHasProcessedPendingMessage] = useState(false);
-    const { setActiveChat, addChat, getChatById } = useChatStore();
+    const [isLoadingMessages, setIsLoadingMessages] = useState(true);
+    const { setActiveChat, addChat, getChatById, updateChatTitle } = useChatStore();
+    
+    // Convex queries and mutations
+    const conversationId = id as Id<"conversations">;
+    const messagesData = useQuery(
+        api.conversations.getMessages,
+        id ? { conversationId } : "skip"
+    );
+    const addMessageToConvex = useMutation(api.conversations.addMessage);
+    const updateConversationMutation = useMutation(api.conversations.updateConversation);
 
     const { sendMessage, messages, status, stop, setMessages } = useChat({
         id,
@@ -24,30 +36,67 @@ export default function ChatArea({
             api: '/api/persist-chat',
             body: { chatId: id },
         }),
+        onFinish: async ({ message: finishedMessage, messages: allMessages }) => {
+            if (!id) return;
+            
+            try {
+                // Save both user and assistant messages to Convex
+                // Get the last 2 messages (user message + assistant response)
+                const lastTwoMessages = allMessages.slice(-2);
+                
+                for (const msg of lastTwoMessages) {
+                    // Check if message is already in Convex to avoid duplicates
+                    await addMessageToConvex({
+                        conversationId: conversationId,
+                        role: msg.role as 'user' | 'assistant',
+                        parts: msg.parts.map((part: any) => ({
+                            type: part.type,
+                            text: part.text,
+                        })),
+                    });
+                }
+            } catch (error) {
+                console.error('Failed to save messages to Convex:', error);
+            }
+        },
     });
 
     // Set this chat as active when component mounts
     useEffect(() => {
         if (id) {
-            setActiveChat(id);
+            setActiveChat(conversationId);
             
             // If chat doesn't exist in store, add it
-            const existingChat = getChatById(id);
+            const existingChat = getChatById(conversationId);
             if (!existingChat) {
                 addChat({
-                    id,
-                    title: id.substring(0, 8) + '...', // Will be updated with first message
+                    _id: conversationId,
+                    title: `Chat ${conversationId.slice(0, 8)}`, // Will be updated with first message
                     createdAt: Date.now(),
+                    updatedAt: Date.now(),
+                    userId: '' as any,
                 });
             }
         }
-    }, [id, setActiveChat, addChat, getChatById]);
+    }, [id, conversationId, setActiveChat, addChat, getChatById]);
 
+    // Load messages from Convex
     useEffect(() => {
-        if (initialMessages && initialMessages.length > 0) {
-            setMessages(initialMessages);
+        if (messagesData && messagesData.messages) {
+            const convexMessages: UIMessage[] = messagesData.messages.map(msg => ({
+                id: msg._id,
+                role: msg.role,
+                parts: msg.parts as any, // Type mismatch due to convex schema
+            }));
+            
+            if (convexMessages.length > 0) {
+                setMessages(convexMessages);
+            }
+            setIsLoadingMessages(false);
+        } else if (messagesData !== undefined) {
+            setIsLoadingMessages(false);
         }
-    }, [initialMessages, setMessages]);
+    }, [messagesData, setMessages]);
 
     useEffect(() => {
         if (id && !hasProcessedPendingMessage && status === 'ready' && messages.length === 0) {
@@ -73,17 +122,30 @@ export default function ChatArea({
         scrollToBottom();
     }, [messages]);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (input.trim() && status === 'ready') {
+        if (input.trim() && status === 'ready' && id) {
+            const userMessage = input.trim();
+            
             // Update chat title with first message if it's the first user message
-            if (id && messages.length === 0) {
-                const { updateChatTitle } = useChatStore.getState();
-                updateChatTitle(id, input.substring(0, 50) + (input.length > 50 ? '...' : ''));
+            if (messages.length === 0) {
+                const title = userMessage.substring(0, 50) + (userMessage.length > 50 ? '...' : '');
+                updateChatTitle(conversationId, title);
+                
+                // Also update in Convex
+                try {
+                    await updateConversationMutation({
+                        conversationId,
+                        title,
+                    });
+                } catch (error) {
+                    console.error('Failed to update conversation title:', error);
+                }
             }
             
+            // Send message to AI (will be saved to Convex in onFinish callback)
             sendMessage({ 
-                text: input, 
+                text: userMessage, 
                 metadata: { chatId: id } 
             });
             setInput('');
