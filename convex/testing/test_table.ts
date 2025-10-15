@@ -1,6 +1,6 @@
 // 1. Writing a Test `mutation` to add data to `test_table`
 
-import { mutation } from "../_generated/server";
+import { mutation, query } from "../_generated/server";
 import { v } from 'convex/values';
 
 export const addEntry_to_test_table = mutation({
@@ -22,5 +22,13 @@ export const addEntry_to_test_table = mutation({
         });
 
         return { success: true, id: docId, userId };
+    }
+})
+
+export const getData_from_test_table = query({
+    args: {},
+    handler: async (ctx, args) => {
+        const result = await ctx.db.query('test_table').collect();
+        return result;
     }
 })

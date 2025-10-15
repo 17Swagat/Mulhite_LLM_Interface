@@ -8,7 +8,7 @@ import {
 // import { Authenticated, Unauthenticated } from "convex/react";
 
 // Convex Stuff:
-import { Authenticated, Unauthenticated, useMutation } from "convex/react";
+import { Authenticated, Unauthenticated, useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
 
@@ -21,6 +21,8 @@ export default function LearnConvexPage() {
     const [optionalTag, setOptionalTag] = useState<string | null>(null);
 
     const addEntry = useMutation(api.testing.test_table.addEntry_to_test_table);
+    const fetchEntries = useQuery(api.testing.test_table.getData_from_test_table);
+
 
 
     // Handling Loading State:
@@ -85,6 +87,18 @@ export default function LearnConvexPage() {
                 </button>
 
             </form>
+
+            <div className="mt-8 w-full max-w-xl">
+                <h2 className="text-2xl font-bold mb-4">Messages</h2>
+                <div className="space-y-4">
+                    {fetchEntries && fetchEntries.map((entry) => (
+                        <div key={entry._id} className="border border-gray-300 p-4 rounded-lg">
+                            <p className="font-bold">{entry.message}</p>
+                            {entry.optionalTag && <p className="text-gray-500">Tag: {entry.optionalTag}</p>}
+                        </div>
+                    ))}
+                </div>
+            </div>
 
         </div>
 
