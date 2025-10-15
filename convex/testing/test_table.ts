@@ -32,3 +32,13 @@ export const getData_from_test_table = query({
         return result;
     }
 })
+
+export const getSingleDoc_from_test_table = query({
+    args:{
+        id: v.id("test_table")
+    },
+    handler: async (ctx, args) => {
+        const result = await ctx.db.get(args.id);
+        return result;
+    }
+})

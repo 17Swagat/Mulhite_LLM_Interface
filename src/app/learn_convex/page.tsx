@@ -13,6 +13,7 @@ import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Id } from "../../../convex/_generated/dataModel";
 
 
 
@@ -27,6 +28,10 @@ export default function LearnConvexPage() {
     const fetchEntries = useQuery(api.testing.test_table.getData_from_test_table);
 
 
+    // const someId = "64b8f3f4c1a5f2001e6f0b8a" as Id<'test_table'>;
+    const someId = "jn77pdq81g8y8ff6gwpcjfbcd17sg52f" as Id<'test_table'>;
+    const singleDoc = useQuery(api.testing.test_table.getSingleDoc_from_test_table, { id: someId });
+
 
     // Handling Loading State:
     if (!isLoaded) {
@@ -35,7 +40,7 @@ export default function LearnConvexPage() {
                 <LoadingSpinner />
             </>
         )
-    }
+    } 
 
     if (!isSignedIn) {
         return (
@@ -51,58 +56,59 @@ export default function LearnConvexPage() {
     return (
         <div className="min-h-screen flex flex-col justify-start items-center bg-gray-200">
 
-            <h1 className="text-4xl font-bold mb-8">Learn Convex</h1>
-            <form onSubmit={async (e) => {
-                e.preventDefault();
+            <div className="sticky top-0">
+                <h1 className="text-4xl font-bold mb-8">Learn Convex</h1>
+                <form onSubmit={async (e) => {
+                    e.preventDefault();
 
-                if (!userId) {
-                    alert("User not signed in");
-                    return;
-                }
+                    if (!userId) {
+                        alert("User not signed in");
+                        return;
+                    }
 
-                if (message.trim() != '') {
-                    // DB Insertion
-                    // addEntry({ message, optionalTag: optionalTag ?? undefined });
-                    addEntry({ message, optionalTag: optionalTag, numericValue: numericValue });
-                }
+                    if (message.trim() != '') {
+                        // DB Insertion
+                        // addEntry({ message, optionalTag: optionalTag ?? undefined });
+                        addEntry({ message, optionalTag: optionalTag, numericValue: numericValue });
+                    }
 
-                setMessage('');
-                setOptionalTag(null)
-                setNumericValue(0)
-            }}>
+                    setMessage('');
+                    setOptionalTag(null)
+                    setNumericValue(0)
+                }}>
 
-                <div className="flex flex-col mb-2 gap-1">
+                    <div className="flex flex-col mb-2 gap-1">
 
-                    {/* Message-Input */}
-                    <input value={message} onChange={(e) => {
-                        setMessage(e.currentTarget.value)
-                    }} type="text" name="message" placeholder="Enter your message" className="border border-gray-300 p-2 rounded-lg mr-4" />
+                        {/* Message-Input */}
+                        <input value={message} onChange={(e) => {
+                            setMessage(e.currentTarget.value)
+                        }} type="text" name="message" placeholder="Enter your message" className="border border-gray-300 p-2 rounded-lg mr-4" />
 
-                    {/* Optional Tag */}
-                    <input value={optionalTag ?? ''} onChange={(e) => {
-                        setOptionalTag(e.currentTarget.value)
-                    }} type="text" name="optionalTag" placeholder="Enter an optional tag" className="border border-gray-300 p-2 rounded-lg mr-4" />
+                        {/* Optional Tag */}
+                        <input value={optionalTag ?? ''} onChange={(e) => {
+                            setOptionalTag(e.currentTarget.value)
+                        }} type="text" name="optionalTag" placeholder="Enter an optional tag" className="border border-gray-300 p-2 rounded-lg mr-4" />
 
-                    {/* Numeric Value */}
-                    <input value={numericValue ?? ''} onChange={(e) => {
-                        if (isNaN(parseFloat(e.currentTarget.value))) {
-                            setNumericValue(0);
-                            return;
-                        }
-                        setNumericValue(
-                            parseFloat(e.currentTarget.value)
-                        )
-                    }} type="number" name="numericValue" placeholder="Enter a numeric value" className="border border-gray-300 p-2 rounded-lg mr-4" />
+                        {/* Numeric Value */}
+                        <input value={numericValue ?? ''} onChange={(e) => {
+                            if (isNaN(parseFloat(e.currentTarget.value))) {
+                                setNumericValue(0);
+                                return;
+                            }
+                            setNumericValue(
+                                parseFloat(e.currentTarget.value)
+                            )
+                        }} type="number" name="numericValue" placeholder="Enter a numeric value" className="border border-gray-300 p-2 rounded-lg mr-4" />
 
-                </div>
+                    </div>
 
-                {/* Submit */}
-                <button type="submit" className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">
-                    Send Message
-                </button>
+                    {/* Submit */}
+                    <button type="submit" className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">
+                        Send Message
+                    </button>
 
-            </form>
-
+                </form>
+            </div>
 
             {/* Displaying Fetched Entries */}
             {/* ==========================>> */}
