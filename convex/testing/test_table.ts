@@ -39,6 +39,10 @@ export const getSingleDoc_from_test_table = query({
     },
     handler: async (ctx, args) => {
         const result = await ctx.db.get(args.id);
+        if (result === null) {
+            console.log("No document found with that ID.");
+            return { message: "No document found with that ID." };
+        }
         return result;
     }
 })
