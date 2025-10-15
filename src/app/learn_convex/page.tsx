@@ -49,7 +49,7 @@ export default function LearnConvexPage() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+        <div className="min-h-screen flex flex-col justify-start items-center bg-gray-200">
 
             <h1 className="text-4xl font-bold mb-8">Learn Convex</h1>
             <form onSubmit={async (e) => {
@@ -110,8 +110,8 @@ export default function LearnConvexPage() {
                 <h2 className="text-2xl font-bold mb-4">Messages</h2>
                 <Tabs defaultValue="allContent" className="w-[400px]">
                     <TabsList>
-                        <TabsTrigger value="allContent">Account</TabsTrigger>
-                        <TabsTrigger value="onlySome">Password</TabsTrigger>
+                        <TabsTrigger value="allContent">All Content</TabsTrigger>
+                        <TabsTrigger value="onlySome">Filtered Content</TabsTrigger>
                     </TabsList>
                     <TabsContent value="allContent">
                         {/* Make changes to your account here. */}
@@ -136,8 +136,7 @@ export default function LearnConvexPage() {
 
                     </TabsContent>
                     <TabsContent value="onlySome">
-                        Change your password here.
-
+                        Will Display Filtered Content (e.g., numericValue &gt; 5)
                     </TabsContent>
                 </Tabs>
 
