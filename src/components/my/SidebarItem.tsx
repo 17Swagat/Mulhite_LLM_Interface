@@ -25,7 +25,7 @@ export default function SidebarItem(
     const [isRenaming, setIsRenaming] = useState(false);
     const [newTitle, setNewTitle] = useState(title);
     const [isDeleting, setIsDeleting] = useState(false);
-    
+
     // Convex mutations
     const updateConversation = useMutation(api.conversations.updateConversation);
     const deleteConversation = useMutation(api.conversations.deleteConversation);
@@ -45,7 +45,7 @@ export default function SidebarItem(
                     conversationId: chatId,
                     title: newTitle.trim(),
                 });
-                
+
                 // Update local store
                 updateChatTitle(chatId, newTitle.trim());
             } catch (error) {
@@ -59,24 +59,24 @@ export default function SidebarItem(
     const handleDelete = async (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        
+
         if (isDeleting) return;
-        
+
         const confirmed = confirm(`Are you sure you want to delete "${title}"?`);
         if (!confirmed) return;
 
         setIsDeleting(true);
-        
+
         // If we're currently viewing this chat, redirect FIRST to prevent query errors
         const shouldRedirect = pathname === navLink;
         if (shouldRedirect) {
             router.push('/chat');
         }
-        
+
         try {
             // Delete from Convex
             await deleteConversation({ conversationId: chatId });
-            
+
             // Remove from Zustand store
             removeChat(chatId);
         } catch (error) {
@@ -89,9 +89,8 @@ export default function SidebarItem(
 
     if (isRenaming) {
         return (
-            <div className={`text-white bg-black w-full h-full ${
-                isActive ? 'bg-gray-700 brightness-125' : 'bg-yellow-700'
-            } flex items-center gap-1 p-1 rounded-2xl`}>
+            <div className={`text-white w-full h-full ${isActive ? 'bg-teal-800 brightness-125' : 'bg-yellow-700'
+                } flex items-center gap-1 p-1 rounded-2xl`}>
                 <input
                     type="text"
                     value={newTitle}
@@ -107,30 +106,33 @@ export default function SidebarItem(
                     autoFocus
                     placeholder="Enter chat title"
                     aria-label="Rename chat"
-                    className="flex-1 bg-transparent text-white outline-none border-b border-white px-1"
+                    className="flex-1 bg-pink-500 text-white outline-none border-b border-white px-1"
                 />
             </div>
         );
     }
 
     return (
-        <div className={`text-white bg-black w-full h-full ${
-            isActive ? 'bg-gray-700 brightness-125' : 'bg-yellow-700'
-        } flex items-center gap-1 rounded-2xl transition-colors group relative`}>
+        <div className={
+            `text-white font-semibold  hover:bg-gradient-to-br hover:from-[#6b46c1] hover:to-[#b83280] bg-black w-full h-full 
+            ${isActive ? 'brightness-125 text-black __ bg-gradient-to-r from-[#001f3f] via-[#083358] to-[#0da574]  ' : 'brightness-125 bg-gradient-to-tl from-[#030637] via-[#3c0753] to-[#720455]' //'bg-pink-800'
+            } flex items-center gap-1 rounded-2xl transition-colors duration-500 group relative`}>
             <Link
                 href={`${navLink}`}
                 onClick={() => setActiveChat(chatId)}
-                className="flex-1 flex items-center hover:bg-green-500 p-1 rounded-l-2xl min-w-0"
+                // className="flex-1 flex items-center hover:bg-green-500 p-1 rounded-l-2xl min-w-0"
+                className="flex-1 flex items-center  p-1 rounded-l-2xl min-w-0"
             >
-                <span className="text-white text-ellipsis truncate">
+                <span className="text-white text-ellipsis truncate p-1">
                     {title || 'Untitled Chat'}
                 </span>
             </Link>
-            
+
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <button
-                        className="p-1 hover:bg-gray-600 rounded-r-2xl opacity-0 group-hover:opacity-100 transition-opacity"
+                        type="button"
+                        className="p-2 hover:bg-pink-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"
                         onClick={(e) => e.stopPropagation()}
                         aria-label="Chat options"
                         title="Chat options"

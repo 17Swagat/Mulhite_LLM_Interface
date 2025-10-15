@@ -66,6 +66,8 @@ export function AppSidebar() {
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
 
+                            <div className="h-1"></div>
+
                             {conversations === undefined ? (
                                 <SidebarMenuItem>
                                     <span className="text-gray-400 text-sm px-2">Loading...</span>
