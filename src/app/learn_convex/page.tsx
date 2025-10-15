@@ -28,7 +28,6 @@ export default function LearnConvexPage() {
     const fetchEntries = useQuery(api.testing.test_table.getData_from_test_table);
 
 
-    // const someId = "64b8f3f4c1a5f2001e6f0b8a" as Id<'test_table'>;
     const someId = "jn77pdq81g8y8ff6gwpcjfbcd17sg52f" as Id<'test_table'>;
     const singleDoc = useQuery(api.testing.test_table.getSingleDoc_from_test_table, { id: someId });
 
