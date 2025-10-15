@@ -54,3 +54,6 @@ src/generated/*
 
 # Temporary files
 tmp/
+
+# Agent Work:
+AGENT_WORK/
