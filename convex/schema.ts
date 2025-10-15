@@ -2,6 +2,17 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+
+    ////////////////////////////////////
+    // Learning Convex with experimentation
+    test_table: defineTable({
+        message: v.string(),
+        // optionalTag: v.optional(v.string())
+        optionalTag: v.union(v.string(), v.null()),
+    }),
+
+    ////////////////////////////////////
+
     users: defineTable({
         clerkUserId: v.string(),  // Clerk's unique user ID (e.g., "user_abc123")
         email: v.string(),        // For quick lookups (optional, from Clerk)

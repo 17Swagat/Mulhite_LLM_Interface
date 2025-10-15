@@ -1,0 +1,4 @@
+TODO:
+
+0. {Understanding the codebase till now...}
+1. HAVE a [loading pagination] setup in the  <AppSideBar> to load only say recent 15 chats and then when the user scrolls down a loading-item appears until the next recent 15 chats load up

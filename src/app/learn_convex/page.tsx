@@ -12,19 +12,15 @@ import { Authenticated, Unauthenticated, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
 
-function LoadingSpinner() {
-    return (
-        <div className="min-h-screen flex items-center justify-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-5 border-purple-500"></div>
-        </div>
-    );
-}
+
 
 export default function LearnConvexPage() {
 
     const { isLoaded, userId, isSignedIn } = useAuth(); // isLoaded: boolean
-    const sendMessage = useMutation(api.chat.sendMessage)
     const [message, setMessage] = useState('');
+    const [optionalTag, setOptionalTag] = useState<string | null>(null);
+
+    const addEntry = useMutation(api.testing.test_table.addEntry_to_test_table);
 
 
     // Handling Loading State:
@@ -59,22 +55,50 @@ export default function LearnConvexPage() {
                     return;
                 }
 
-                await sendMessage({
-                    user: userId,
-                    body: message
-                })
+                if (message.trim() != '') {
+                    // DB Insertion
+                    // addEntry({ message, optionalTag: optionalTag ?? undefined });
+                    addEntry({ message, optionalTag: optionalTag});
+                } 
+
                 setMessage('');
+                setOptionalTag(null)
             }}>
-                <input value={message} onChange={(e) => {
-                    setMessage(e.currentTarget.value)
-                }} type="text" name="message" placeholder="Enter your message" className="border border-gray-300 p-2 rounded-lg mr-4" />
+
+                <div className="flex flex-col mb-2 gap-1">
+
+                    {/* Message-Input */}
+                    <input value={message} onChange={(e) => {
+                        setMessage(e.currentTarget.value)
+                    }} type="text" name="message" placeholder="Enter your message" className="border border-gray-300 p-2 rounded-lg mr-4" />
+
+                    {/* Optional Tag */}
+                    <input value={optionalTag ?? ''} onChange={(e) => {
+                        setOptionalTag(e.currentTarget.value)
+                    }} type="text" name="optionalTag" placeholder="Enter an optional tag" className="border border-gray-300 p-2 rounded-lg mr-4" />
+
+                </div>
+
+                {/* Submit */}
                 <button type="submit" className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">
                     Send Message
                 </button>
 
             </form>
 
+        </div>
 
+        // Viewing Inserted Messages in the `test_table` table
+
+    );
+}
+
+
+
+function LoadingSpinner() {
+    return (
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-5 border-purple-500"></div>
         </div>
     );
 }
