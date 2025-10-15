@@ -28,7 +28,7 @@ export const addEntry_to_test_table = mutation({
 export const getData_from_test_table = query({
     args: {},
     handler: async (ctx, args) => {
-        const result = await ctx.db.query('test_table').collect();
+        const result = await ctx.db.query('test_table').collect()
         return result;
     }
 })

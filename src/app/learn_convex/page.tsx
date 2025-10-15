@@ -60,8 +60,8 @@ export default function LearnConvexPage() {
                 if (message.trim() != '') {
                     // DB Insertion
                     // addEntry({ message, optionalTag: optionalTag ?? undefined });
-                    addEntry({ message, optionalTag: optionalTag});
-                } 
+                    addEntry({ message, optionalTag: optionalTag });
+                }
 
                 setMessage('');
                 setOptionalTag(null)
@@ -90,7 +90,11 @@ export default function LearnConvexPage() {
 
             <div className="mt-8 w-full max-w-xl">
                 <h2 className="text-2xl font-bold mb-4">Messages</h2>
+                {/* {fetchEntries === undefined && <p>Loading messages...</p>} */}
                 <div className="space-y-4">
+                    {fetchEntries === undefined &&
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-purple-500"></div>
+                    }
                     {fetchEntries && fetchEntries.map((entry) => (
                         <div key={entry._id} className="border border-gray-300 p-4 rounded-lg">
                             <p className="font-bold">{entry.message}</p>
