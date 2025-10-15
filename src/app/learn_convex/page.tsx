@@ -12,6 +12,8 @@ import { Authenticated, Unauthenticated, useMutation, useQuery } from "convex/re
 import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
 
 
 export default function LearnConvexPage() {
@@ -19,6 +21,7 @@ export default function LearnConvexPage() {
     const { isLoaded, userId, isSignedIn } = useAuth(); // isLoaded: boolean
     const [message, setMessage] = useState('');
     const [optionalTag, setOptionalTag] = useState<string | null>(null);
+    const [numericValue, setNumericValue] = useState<number>(0);
 
     const addEntry = useMutation(api.testing.test_table.addEntry_to_test_table);
     const fetchEntries = useQuery(api.testing.test_table.getData_from_test_table);
@@ -60,11 +63,12 @@ export default function LearnConvexPage() {
                 if (message.trim() != '') {
                     // DB Insertion
                     // addEntry({ message, optionalTag: optionalTag ?? undefined });
-                    addEntry({ message, optionalTag: optionalTag });
+                    addEntry({ message, optionalTag: optionalTag, numericValue: numericValue });
                 }
 
                 setMessage('');
                 setOptionalTag(null)
+                setNumericValue(0)
             }}>
 
                 <div className="flex flex-col mb-2 gap-1">
@@ -79,6 +83,17 @@ export default function LearnConvexPage() {
                         setOptionalTag(e.currentTarget.value)
                     }} type="text" name="optionalTag" placeholder="Enter an optional tag" className="border border-gray-300 p-2 rounded-lg mr-4" />
 
+                    {/* Numeric Value */}
+                    <input value={numericValue ?? ''} onChange={(e) => {
+                        if (isNaN(parseFloat(e.currentTarget.value))) {
+                            setNumericValue(0);
+                            return;
+                        }
+                        setNumericValue(
+                            parseFloat(e.currentTarget.value)
+                        )
+                    }} type="number" name="numericValue" placeholder="Enter a numeric value" className="border border-gray-300 p-2 rounded-lg mr-4" />
+
                 </div>
 
                 {/* Submit */}
@@ -88,23 +103,48 @@ export default function LearnConvexPage() {
 
             </form>
 
+
+            {/* Displaying Fetched Entries */}
+            {/* ==========================>> */}
             <div className="mt-8 w-full max-w-xl">
                 <h2 className="text-2xl font-bold mb-4">Messages</h2>
-                {/* {fetchEntries === undefined && <p>Loading messages...</p>} */}
-                <div className="space-y-4">
-                    {fetchEntries === undefined &&
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-purple-500"></div>
-                    }
-                    {fetchEntries && fetchEntries.map((entry) => (
-                        <div key={entry._id} className="border border-gray-300 p-4 rounded-lg">
-                            <p className="font-bold">{entry.message}</p>
-                            {entry.optionalTag && <p className="text-gray-500">Tag: {entry.optionalTag}</p>}
+                <Tabs defaultValue="allContent" className="w-[400px]">
+                    <TabsList>
+                        <TabsTrigger value="allContent">Account</TabsTrigger>
+                        <TabsTrigger value="onlySome">Password</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="allContent">
+                        {/* Make changes to your account here. */}
+
+                        <div className="space-y-4">
+                            {fetchEntries === undefined &&
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-purple-500"></div>
+                            }
+                            {fetchEntries && fetchEntries.map((entry) => (
+                                <div key={entry._id} className="border border-gray-300 p-4 rounded-lg">
+                                    {/* Message:*/}
+                                    <p className="font-bold">{entry.message}</p>
+
+                                    {/* Tag*/}
+                                    {entry.optionalTag && <p className="text-gray-500">Tag: {entry.optionalTag}</p>}
+
+                                    {/* Numeric Value */}
+                                    <p className="text-gray-500">Numeric Value: {entry.numericValue}</p>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
+
+                    </TabsContent>
+                    <TabsContent value="onlySome">
+                        Change your password here.
+
+                    </TabsContent>
+                </Tabs>
+
             </div>
 
-        </div>
+
+        </div >
 
         // Viewing Inserted Messages in the `test_table` table
 

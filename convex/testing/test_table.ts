@@ -6,8 +6,8 @@ import { v } from 'convex/values';
 export const addEntry_to_test_table = mutation({
     args: {
         message: v.string(),
-        // optionalTag: v.optional(v.string()) 
-        optionalTag: v.union(v.string(), v.null())
+        optionalTag: v.union(v.string(), v.null()),
+        numericValue: v.number()
     },
 
     handler: async (
@@ -17,8 +17,8 @@ export const addEntry_to_test_table = mutation({
         const userId = await ctx.auth.getUserIdentity();
         const docId = await ctx.db.insert("test_table", {
             message: args.message,
-            // optionalTag: args.optionalTag ?? undefined
-            optionalTag: args.optionalTag //?? undefined
+            optionalTag: args.optionalTag,
+            numericValue: args.numericValue
         });
 
         return { success: true, id: docId, userId };

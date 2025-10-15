@@ -9,6 +9,7 @@ export default defineSchema({
         message: v.string(),
         // optionalTag: v.optional(v.string())
         optionalTag: v.union(v.string(), v.null()),
+        numericValue: v.number()
     }),
 
     ////////////////////////////////////
