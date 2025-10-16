@@ -58,6 +58,7 @@ export const getData_HigherThanValue_from_test_table = query({
         const filteredResults = await ctx.db.query('test_table')
         .withIndex('by_numericValue', 
             (q) =>  q.gte('numericValue', args.minValue))
+        .order('desc')
         .collect()
         return filteredResults
     }
