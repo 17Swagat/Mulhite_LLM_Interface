@@ -31,6 +31,10 @@ export default function LearnConvexPage() {
     const someId = "jn77pdq81g8y8ff6gwpcjfbcd17sg52f" as Id<'test_table'>;
     const singleDoc = useQuery(api.testing.test_table.getSingleDoc_from_test_table, { id: someId });
 
+    const data_filtered_01 = useQuery(api.testing.test_table.getData_HigherThanValue_from_test_table, {
+        minValue: 100
+    })
+
 
     // Handling Loading State:
     if (!isLoaded) {
@@ -39,7 +43,7 @@ export default function LearnConvexPage() {
                 <LoadingSpinner />
             </>
         )
-    } 
+    }
 
     if (!isSignedIn) {
         return (
@@ -118,6 +122,8 @@ export default function LearnConvexPage() {
                         <TabsTrigger value="allContent">All Content</TabsTrigger>
                         <TabsTrigger value="onlySome">Filtered Content</TabsTrigger>
                     </TabsList>
+
+                    {/* ALL-Content */}
                     <TabsContent value="allContent">
                         {/* Make changes to your account here. */}
 
@@ -140,8 +146,26 @@ export default function LearnConvexPage() {
                         </div>
 
                     </TabsContent>
+
+                    {/* Filtered-Content */}
                     <TabsContent value="onlySome">
-                        Will Display Filtered Content (e.g., numericValue &gt; 5)
+                        <h1>Filtered Content</h1>
+                        <div className="flex flex-col gap-2">
+                            {data_filtered_01 === undefined
+                                && <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-purple-500"></div>}
+
+                            {data_filtered_01 != undefined && data_filtered_01.map(
+                                (data) => {
+                                    return <div key={data._id}>
+                                        <div className="w-fit bg-pink-400 p-2">
+                                            <div className="bg-green-500">Message: {data.message}</div>
+                                            <div className="bg-green-500">OptionalTag: {data.optionalTag}</div>
+                                            <div className="bg-green-500">Numeric: {data.numericValue}</div>
+                                        </div>
+                                    </div>
+                                }
+                            )}
+                        </div>
                     </TabsContent>
                 </Tabs>
 

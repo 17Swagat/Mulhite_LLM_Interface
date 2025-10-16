@@ -10,7 +10,7 @@ export default defineSchema({
         // optionalTag: v.optional(v.string())
         optionalTag: v.union(v.string(), v.null()),
         numericValue: v.number()
-    }),
+    }).index('by_numericValue', ['numericValue']),
 
     ////////////////////////////////////
 

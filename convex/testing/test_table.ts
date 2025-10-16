@@ -3,6 +3,7 @@
 import { mutation, query } from "../_generated/server";
 import { v } from 'convex/values';
 
+
 export const addEntry_to_test_table = mutation({
     args: {
         message: v.string(),
@@ -44,5 +45,20 @@ export const getSingleDoc_from_test_table = query({
             return { message: "No document found with that ID." };
         }
         return result;
+    }
+})
+
+
+
+export const getData_HigherThanValue_from_test_table = query({
+    args:{
+        minValue: v.number()
+    },
+    handler: async (ctx, args) => {
+        const filteredResults = await ctx.db.query('test_table')
+        .withIndex('by_numericValue', 
+            (q) =>  q.gte('numericValue', args.minValue))
+        .collect()
+        return filteredResults
     }
 })
