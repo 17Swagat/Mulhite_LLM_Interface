@@ -52,7 +52,7 @@ export default function LearnConvexPage() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col justify-start items-center bg-gray-200">
+        <div className="min-h-screen flex justify-center items-start gap-10 bg-black text-white">
 
             <div className="sticky top-0">
                 <h1 className="text-4xl font-bold mb-8">Learn Convex</h1>
@@ -128,8 +128,10 @@ export default function LearnConvexPage() {
 
             {/* Displaying Fetched Entries */}
             {/* ==========================>> */}
-            <div className="mt-8 w-full max-w-xl">
+            <div className="mt-8 w-full max-w-xl ">
                 <h2 className="text-2xl font-bold mb-4">Messages</h2>
+
+
                 <Tabs defaultValue="allContent" className="w-[400px]">
                     <TabsList className="space-x-2">
                         <TabsTrigger value="allContent">All Content</TabsTrigger>
@@ -137,70 +139,72 @@ export default function LearnConvexPage() {
                         <TabsTrigger value="firstDoc">First Doc</TabsTrigger>
                     </TabsList>
 
-                    {/* ALL-Content */}
-                    <TabsContent value="allContent">
-                        {/* Make changes to your account here. */}
+                    <div className="h-[80vh] bg-cyan-500 overflow-y-scroll p-2">
+                        {/* ALL-Content */}
+                        <TabsContent value="allContent">
+                            {/* Make changes to your account here. */}
 
-                        <div className="space-y-4">
-                            {fetchEntries === undefined &&
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-purple-500"></div>
-                            }
-                            {fetchEntries && fetchEntries.map((entry) => (
-                                <div key={entry._id} className="border border-gray-300 p-4 rounded-lg">
-                                    {/* Message:*/}
-                                    <p className="font-bold">{entry.message}</p>
-
-                                    {/* Tag*/}
-                                    {entry.optionalTag && <p className="text-gray-500">Tag: {entry.optionalTag}</p>}
-
-                                    {/* Numeric Value */}
-                                    <p className="text-gray-500">Numeric Value: {entry.numericValue}</p>
-                                </div>
-                            ))}
-                        </div>
-
-                    </TabsContent>
-
-                    {/* Filtered-Content */}
-                    <TabsContent value="onlySome">
-                        <h1>Filtered Content</h1>
-                        {/* <div>{typeof data_filtered_01}</div> */}
-                        <div className="flex flex-col gap-2">
-                            {fetchFilteredData === undefined
-                                && <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-purple-500"></div>}
-
-                            {fetchFilteredData != undefined && fetchFilteredData.map(
-                                (data) => {
-                                    return <div key={data._id}>
-                                        <div className="w-fit bg-pink-400 p-2">
-                                            <div className="bg-green-500">Message: {data.message}</div>
-                                            <div className="bg-green-500">OptionalTag: {data.optionalTag}</div>
-                                            <div className="bg-green-500">Numeric: {data.numericValue}</div>
-                                        </div>
-                                    </div>
+                            <div className="space-y-4">
+                                {fetchEntries === undefined &&
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-purple-500"></div>
                                 }
-                            )}
-                        </div>
-                    </TabsContent>
+                                {fetchEntries && fetchEntries.map((entry) => (
+                                    <div key={entry._id} className="border border-gray-300 p-4 rounded-lg">
+                                        {/* Message:*/}
+                                        <p className="font-bold">{entry.message}</p>
+
+                                        {/* Tag*/}
+                                        {entry.optionalTag && <p className="text-gray-500">Tag: {entry.optionalTag}</p>}
+
+                                        {/* Numeric Value */}
+                                        <p className="text-gray-500">Numeric Value: {entry.numericValue}</p>
+                                    </div>
+                                ))}
+                            </div>
+
+                        </TabsContent>
+
+                        {/* Filtered-Content */}
+                        <TabsContent value="onlySome">
+                            <h1>Filtered Content</h1>
+                            {/* <div>{typeof data_filtered_01}</div> */}
+                            <div className="flex flex-col gap-2">
+                                {fetchFilteredData === undefined
+                                    && <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-purple-500"></div>}
+
+                                {fetchFilteredData != undefined && fetchFilteredData.map(
+                                    (data) => {
+                                        return <div key={data._id}>
+                                            <div className="w-fit bg-pink-400 p-2">
+                                                <div className="bg-green-500">Message: {data.message}</div>
+                                                <div className="bg-green-500">OptionalTag: {data.optionalTag}</div>
+                                                <div className="bg-green-500">Numeric: {data.numericValue}</div>
+                                            </div>
+                                        </div>
+                                    }
+                                )}
+                            </div>
+                        </TabsContent>
 
 
-                    {/* First-Doc */}
-                    <TabsContent value="firstDoc" >
-                        <div className="bg-blue-400">
-                            <div>
-                                {fetchFirstDoc?.message ?? ''}
+                        {/* First-Doc */}
+                        <TabsContent value="firstDoc" >
+                            <div className="bg-blue-400">
+                                <div>
+                                    {fetchFirstDoc?.message ?? ''}
+                                </div>
+                                <div>
+                                    {fetchFirstDoc?.optionalTag ?? ''}
+                                </div>
+                                <div>
+                                    {fetchFirstDoc?.numericValue ?? -1}
+                                </div>
+                                <div>
+                                    {fetchFirstDoc?.integerValue ?? -1}
+                                </div>
                             </div>
-                            <div>
-                                {fetchFirstDoc?.optionalTag ?? ''}
-                            </div>
-                            <div>
-                                {fetchFirstDoc?.numericValue ?? -1}
-                            </div>
-                            <div>
-                                {fetchFirstDoc?.integerValue ?? -1}
-                            </div>
-                        </div>
-                    </TabsContent>
+                        </TabsContent>
+                    </div>
 
                 </Tabs>
 
