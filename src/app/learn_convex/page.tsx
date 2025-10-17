@@ -10,12 +10,22 @@ import {
 // Convex Stuff:
 import { Authenticated, Unauthenticated, useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Id } from "../../../convex/_generated/dataModel";
+import { SearchComponent } from "./SearchBox";
 
 
+
+interface SearchedDoc {
+    _id: Id<"test_table">;
+    _creationTime: number;
+    message: string;
+    optionalTag: string | null;
+    numericValue: number;
+    integerValue: number;
+}
 
 export default function LearnConvexPage() {
 
@@ -29,7 +39,10 @@ export default function LearnConvexPage() {
     const fetchEntries = useQuery(api.testing.test_table.fetchEntries)
     const fetchFilteredData = useQuery(api.testing.test_table.fetchFilteredData, { minNumericValue: 120, minIntegerValue: 150 })
 
-    const fetchFirstDoc = useQuery(api.testing.test_table.fetchFirstDoc)
+    // let [searchedQuery, setSearchedQuery] = useState<string>('')
+    // let fetchSearchedDocs: SearchedDoc[] | undefined = useQuery(api.testing.test_table.fetchSearchedDocs, { searchTerm: searchedQuery })
+
+
 
     // Handling Loading State:
     if (!isLoaded) {
@@ -132,14 +145,14 @@ export default function LearnConvexPage() {
                 <h2 className="text-2xl font-bold mb-4">Messages</h2>
 
 
-                <Tabs defaultValue="allContent" className="w-[400px]">
+                <Tabs defaultValue="searchedDocs" className="w-[400px]">
                     <TabsList className="space-x-2">
                         <TabsTrigger value="allContent">All Content</TabsTrigger>
                         <TabsTrigger value="onlySome">Filtered Content</TabsTrigger>
-                        <TabsTrigger value="firstDoc">First Doc</TabsTrigger>
+                        <TabsTrigger value="searchedDocs">Searched Docs</TabsTrigger>
                     </TabsList>
 
-                    <div className="h-[80vh] bg-cyan-500 overflow-y-scroll p-2">
+                    <div className="h-[80vh] bg-black overflow-y-scroll p-2">
                         {/* ALL-Content */}
                         <TabsContent value="allContent">
                             {/* Make changes to your account here. */}
@@ -188,21 +201,37 @@ export default function LearnConvexPage() {
 
 
                         {/* First-Doc */}
-                        <TabsContent value="firstDoc" >
-                            <div className="bg-blue-400">
-                                <div>
-                                    {fetchFirstDoc?.message ?? ''}
-                                </div>
-                                <div>
-                                    {fetchFirstDoc?.optionalTag ?? ''}
-                                </div>
-                                <div>
-                                    {fetchFirstDoc?.numericValue ?? -1}
-                                </div>
-                                <div>
-                                    {fetchFirstDoc?.integerValue ?? -1}
-                                </div>
-                            </div>
+                        <TabsContent value="searchedDocs" >
+                            {/* Search input field */}
+                            <SearchComponent />
+                            {/* <input value={searchedQuery} type="text" placeholder="Search for 'larry'" className="border border-gray-300 p-2 rounded-lg mb-4" onChange={(e) => {
+                                // e.preventDefault()
+                                let inputValue: string = e.currentTarget.value;
+                                setSearchedQuery(inputValue)
+                            }} />
+
+                            <div className="bg-blue-400  space-y-2">
+                                {fetchSearchedDocs?.map(doc => {
+                                    return (
+                                        <div key={doc._id} className="bg-amber-700">
+                                            <div>
+                                                {doc.message}
+                                            </div>
+                                            <div>
+                                                {doc.optionalTag}
+                                            </div>
+                                            <div>
+                                                {doc.numericValue}
+                                            </div>
+                                            <div>
+                                                {doc.integerValue}
+                                            </div>
+
+                                        </div>
+                                    )
+                                })}
+
+                            </div> */}
                         </TabsContent>
                     </div>
 

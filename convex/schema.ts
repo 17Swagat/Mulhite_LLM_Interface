@@ -13,7 +13,10 @@ export default defineSchema({
     })
         .index('by_numericValue', ['numericValue'])
         .index('by_numeric_integer_Value', ['numericValue', 'integerValue'])
-        .index('by_staged_integerValue', { fields: ['integerValue'] }),
+        .index('by_staged_integerValue', { fields: ['integerValue'] })
+        .searchIndex('search_message', { searchField: 'message', staged: false })
+
+    ,
 
     ////////////////////////////////////
 

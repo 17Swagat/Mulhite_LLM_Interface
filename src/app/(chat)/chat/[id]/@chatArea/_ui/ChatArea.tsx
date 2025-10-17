@@ -22,7 +22,7 @@ export default function ChatArea({
     const [isLoadingMessages, setIsLoadingMessages] = useState(true);
     const [conversationNotFound, setConversationNotFound] = useState(false);
     const { setActiveChat, addChat, getChatById, updateChatTitle } = useChatStore();
-    
+
     // Convex queries and mutations
     const conversationId = id as Id<"conversations">;
     const messagesData = useQuery(
@@ -40,12 +40,12 @@ export default function ChatArea({
         }),
         onFinish: async ({ message: finishedMessage, messages: allMessages }) => {
             if (!id) return;
-            
+
             try {
                 // Save both user and assistant messages to Convex
                 // Get the last 2 messages (user message + assistant response)
                 const lastTwoMessages = allMessages.slice(-2);
-                
+
                 for (const msg of lastTwoMessages) {
                     // Check if message is already in Convex to avoid duplicates
                     await addMessageToConvex({
@@ -67,7 +67,7 @@ export default function ChatArea({
     useEffect(() => {
         if (id) {
             setActiveChat(conversationId);
-            
+
             // If chat doesn't exist in store, add it
             const existingChat = getChatById(conversationId);
             if (!existingChat) {
@@ -99,7 +99,7 @@ export default function ChatArea({
                     role: msg.role,
                     parts: msg.parts as any, // Type mismatch due to convex schema
                 }));
-                
+
                 if (convexMessages.length > 0) {
                     setMessages(convexMessages);
                 }
@@ -132,17 +132,18 @@ export default function ChatArea({
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
+    // }, [messages]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (input.trim() && status === 'ready' && id) {
             const userMessage = input.trim();
-            
+
             // Update chat title with first message if it's the first user message
             if (messages.length === 0) {
                 const title = userMessage.substring(0, 50) + (userMessage.length > 50 ? '...' : '');
                 updateChatTitle(conversationId, title);
-                
+
                 // Also update in Convex
                 try {
                     await updateConversationMutation({
@@ -153,11 +154,11 @@ export default function ChatArea({
                     console.error('Failed to update conversation title:', error);
                 }
             }
-            
+
             // Send message to AI (will be saved to Convex in onFinish callback)
-            sendMessage({ 
-                text: userMessage, 
-                metadata: { chatId: id } 
+            sendMessage({
+                text: userMessage,
+                metadata: { chatId: id }
             });
             setInput('');
         }
@@ -180,7 +181,7 @@ export default function ChatArea({
                             // Only consider streaming if it's the last message
                             const isLastMessage = messageIndex === messages.length - 1;
                             const isCurrentlyStreaming = status === 'streaming' && isLastMessage;
-                            
+
                             return (
                                 <Message from={message.role} key={message.id} className="mb-4">
                                     <MessageContent className="bg-gray-800 p-3 rounded-lg">

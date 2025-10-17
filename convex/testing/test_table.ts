@@ -48,14 +48,18 @@ export const fetchFilteredData = query({
 })
 
 
-export const fetchFirstDoc = query({
-    handler: async (ctx) => {
-        const result = await ctx.db.query('test_table').withIndex('by_numericValue', (q) => q.eq('numericValue', 100)).order('desc').first()
+// Searching for a particular text
+export const fetchSearchedDocs = query({
+    args: {
+        searchTerm: v.string()
+    },
+    handler: async (ctx, args) => {
+        const result = await ctx.db.query('test_table')
+            .withSearchIndex(
+                'search_message',
+                (q) => q.search('message', args.searchTerm)
+            ).take(10)
 
         return result;
     }
 })
-
-
-
-
