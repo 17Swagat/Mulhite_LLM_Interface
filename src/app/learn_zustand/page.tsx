@@ -31,12 +31,10 @@ export default function LearnZustandPage() {
                 </div>
 
                 <form className="flex flex-col">
-                    <label htmlFor="input">
-                        Input
-                        <input value={input} onChange={(e) => {
-                            setInput(Number(e.target.value))
-                        }} placeholder="Enter count" name="input" type="text" className="bg-white text-black border-2" />
-                    </label>
+                    <input value={input} onChange={(e) => {
+                        setInput(Number(e.target.value))
+                    }} placeholder="Enter count" name="input" type="text" className="bg-white text-black border-2" />
+
                     <button type="button" onClick={() => { update(input) }}>
                         Update
                     </button>
