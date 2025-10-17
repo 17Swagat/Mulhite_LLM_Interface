@@ -204,34 +204,6 @@ export default function LearnConvexPage() {
                         <TabsContent value="searchedDocs" >
                             {/* Search input field */}
                             <SearchComponent />
-                            {/* <input value={searchedQuery} type="text" placeholder="Search for 'larry'" className="border border-gray-300 p-2 rounded-lg mb-4" onChange={(e) => {
-                                // e.preventDefault()
-                                let inputValue: string = e.currentTarget.value;
-                                setSearchedQuery(inputValue)
-                            }} />
-
-                            <div className="bg-blue-400  space-y-2">
-                                {fetchSearchedDocs?.map(doc => {
-                                    return (
-                                        <div key={doc._id} className="bg-amber-700">
-                                            <div>
-                                                {doc.message}
-                                            </div>
-                                            <div>
-                                                {doc.optionalTag}
-                                            </div>
-                                            <div>
-                                                {doc.numericValue}
-                                            </div>
-                                            <div>
-                                                {doc.integerValue}
-                                            </div>
-
-                                        </div>
-                                    )
-                                })}
-
-                            </div> */}
                         </TabsContent>
                     </div>
 

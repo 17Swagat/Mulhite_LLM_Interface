@@ -28,9 +28,9 @@ export function SearchComponent() {
                 onChange={(e) => setSearchedQuery(e.currentTarget.value)}
             />
             <div className="bg-blue-400 space-y-2">
-                {fetchSearchedDocs === undefined && (
+                {/* {fetchSearchedDocs === undefined && (
                     <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-purple-500"></div>
-                )}
+                )} */}
                 {fetchSearchedDocs &&
                     fetchSearchedDocs.map((doc) => (
                         <div key={doc._id} className="bg-amber-700 p-2">

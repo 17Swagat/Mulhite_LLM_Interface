@@ -10,13 +10,14 @@ import { Conversation, ConversationContent } from '@/components/ui/shadcn-io/ai/
 import { Message, MessageContent } from '@/components/ui/shadcn-io/ai/message';
 import { useChatStore } from '@/stores/chatStore';
 import { useQuery, useMutation } from 'convex/react';
-import { api } from '../../../../../../../convex/_generated/api';
-import { Id } from '../../../../../../../convex/_generated/dataModel';
+import {api} from '@/../convex/_generated/api';
+import {Id} from '@/../convex/_generated/dataModel';
 import ChatNotFound from './ChatNotFound';
 
 export default function ChatArea({
     id,
-}: { id?: string | undefined } = {}) {
+}: { id?: string | undefined } = {}) 
+{
     const [input, setInput] = useState('');
     const [hasProcessedPendingMessage, setHasProcessedPendingMessage] = useState(false);
     const [isLoadingMessages, setIsLoadingMessages] = useState(true);

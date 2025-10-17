@@ -3,10 +3,9 @@ import { google } from '@ai-sdk/google'
 import { saveChat } from '@/utils/chat-store';
 import { streamText, UIMessage, convertToModelMessages, uiMessageChunkSchema } from 'ai';
 import { createOllama } from 'ollama-ai-provider-v2';
-import {v7 as uuidv7} from 'uuid';
+import { v7 as uuidv7 } from 'uuid';
 
 // export const maxDuration = 30;
-
 
 const ollama = createOllama({
   baseURL: 'http://localhost:11434/api',
@@ -22,7 +21,10 @@ type ExtendedUIMessage = UIMessage & {
 export async function POST(req: Request) {
   try {
     const req_ = await req.json();
-    const { messages, chatId: providedChatId }: { messages: ExtendedUIMessage[]; chatId?: string } = req_;
+    const { messages, chatId: providedChatId }: {
+      messages: ExtendedUIMessage[];
+      chatId?: string
+    } = req_;
 
     // Use provided chatId or generate a new one
     const chatId = providedChatId ?? messages?.[0]?.metadata?.chatId ?? uuidv7();
@@ -45,14 +47,14 @@ export async function POST(req: Request) {
       prompt: convertToModelMessages(messages),
     });
 
-    
+
     return result.toUIMessageStreamResponse({
-        originalMessages: messages,
-        onFinish: ({messages})=>{
-            // console.log('Saving chat with ID:', chatId);
-            saveChat({chatId: chatId, messages})
-        },
-        sendReasoning: true
+      originalMessages: messages,
+      onFinish: ({ messages }) => {
+        // console.log('Saving chat with ID:', chatId);
+        saveChat({ chatId: chatId, messages })
+      },
+      sendReasoning: true
     });
 
   } catch (error) {
