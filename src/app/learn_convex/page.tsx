@@ -23,18 +23,13 @@ export default function LearnConvexPage() {
     const [message, setMessage] = useState('');
     const [optionalTag, setOptionalTag] = useState<string | null>(null);
     const [numericValue, setNumericValue] = useState<number>(0);
+    const [integerValue, setIntegerValue] = useState<number>(0);
 
-    const addEntry = useMutation(api.testing.test_table.addEntry_to_test_table);
-    const fetchEntries = useQuery(api.testing.test_table.getData_from_test_table);
+    const addEntry = useMutation(api.testing.test_table.addEntry)
+    const fetchEntries = useQuery(api.testing.test_table.fetchEntries)
+    const fetchFilteredData = useQuery(api.testing.test_table.fetchFilteredData, { minNumericValue: 120, minIntegerValue: 150 })
 
-
-    const someId = "jn77pdq81g8y8ff6gwpcjfbcd17sg52f" as Id<'test_table'>;
-    const singleDoc = useQuery(api.testing.test_table.getSingleDoc_from_test_table, { id: someId });
-
-    const data_filtered_01 = useQuery(api.testing.test_table.getData_HigherThanValue_from_test_table, {
-        minValue: 100
-    })
-
+    const fetchFirstDoc = useQuery(api.testing.test_table.fetchFirstDoc)
 
     // Handling Loading State:
     if (!isLoaded) {
@@ -71,13 +66,18 @@ export default function LearnConvexPage() {
 
                     if (message.trim() != '') {
                         // DB Insertion
-                        // addEntry({ message, optionalTag: optionalTag ?? undefined });
-                        addEntry({ message, optionalTag: optionalTag, numericValue: numericValue });
+                        addEntry({
+                            message,
+                            optionalTag: optionalTag,
+                            numericValue: numericValue,
+                            integerValue: Math.floor(integerValue) // "number to integer"
+                        });
                     }
 
                     setMessage('');
                     setOptionalTag(null)
                     setNumericValue(0)
+                    setIntegerValue(0)
                 }}>
 
                     <div className="flex flex-col mb-2 gap-1">
@@ -103,6 +103,19 @@ export default function LearnConvexPage() {
                             )
                         }} type="number" name="numericValue" placeholder="Enter a numeric value" className="border border-gray-300 p-2 rounded-lg mr-4" />
 
+
+                        {/* Integer Value */}
+                        <input value={integerValue} onChange={(e) => {
+                            if (isNaN(parseFloat(e.currentTarget.value))) {
+                                setIntegerValue(0);
+                                return;
+                            }
+                            setIntegerValue(
+                                Math.floor(Number(e.target.value))
+                            )
+                        }} type="number" name="integerValue" placeholder="Enter a integer value" className="border border-gray-300 p-2 rounded-lg mr-4" />
+
+
                     </div>
 
                     {/* Submit */}
@@ -118,9 +131,10 @@ export default function LearnConvexPage() {
             <div className="mt-8 w-full max-w-xl">
                 <h2 className="text-2xl font-bold mb-4">Messages</h2>
                 <Tabs defaultValue="allContent" className="w-[400px]">
-                    <TabsList>
+                    <TabsList className="space-x-2">
                         <TabsTrigger value="allContent">All Content</TabsTrigger>
                         <TabsTrigger value="onlySome">Filtered Content</TabsTrigger>
+                        <TabsTrigger value="firstDoc">First Doc</TabsTrigger>
                     </TabsList>
 
                     {/* ALL-Content */}
@@ -150,11 +164,12 @@ export default function LearnConvexPage() {
                     {/* Filtered-Content */}
                     <TabsContent value="onlySome">
                         <h1>Filtered Content</h1>
+                        {/* <div>{typeof data_filtered_01}</div> */}
                         <div className="flex flex-col gap-2">
-                            {data_filtered_01 === undefined
+                            {fetchFilteredData === undefined
                                 && <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-purple-500"></div>}
 
-                            {data_filtered_01 != undefined && data_filtered_01.map(
+                            {fetchFilteredData != undefined && fetchFilteredData.map(
                                 (data) => {
                                     return <div key={data._id}>
                                         <div className="w-fit bg-pink-400 p-2">
@@ -167,6 +182,26 @@ export default function LearnConvexPage() {
                             )}
                         </div>
                     </TabsContent>
+
+
+                    {/* First-Doc */}
+                    <TabsContent value="firstDoc" >
+                        <div className="bg-blue-400">
+                            <div>
+                                {fetchFirstDoc?.message ?? ''}
+                            </div>
+                            <div>
+                                {fetchFirstDoc?.optionalTag ?? ''}
+                            </div>
+                            <div>
+                                {fetchFirstDoc?.numericValue ?? -1}
+                            </div>
+                            <div>
+                                {fetchFirstDoc?.integerValue ?? -1}
+                            </div>
+                        </div>
+                    </TabsContent>
+
                 </Tabs>
 
             </div>

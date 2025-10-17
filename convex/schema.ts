@@ -7,10 +7,13 @@ export default defineSchema({
     // Learning Convex with experimentation
     test_table: defineTable({
         message: v.string(),
-        // optionalTag: v.optional(v.string())
         optionalTag: v.union(v.string(), v.null()),
-        numericValue: v.number()
-    }).index('by_numericValue', ['numericValue']),
+        numericValue: v.number(),
+        integerValue: v.number()
+    })
+        .index('by_numericValue', ['numericValue'])
+        .index('by_numeric_integer_Value', ['numericValue', 'integerValue'])
+        .index('by_staged_integerValue', { fields: ['integerValue'] }),
 
     ////////////////////////////////////
 
