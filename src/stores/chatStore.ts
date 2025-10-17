@@ -31,7 +31,7 @@ export const useChatStore = create<ChatStore>()(
       activeChat: null,
 
       setChats: (chats: ChatItem[]) =>
-        set({ chats: chats.sort((a, b) => b.createdAt - a.createdAt) }),
+        set({ chats: chats.sort((a, b) => (b.createdAt - a.createdAt)) }),
 
       addChat: (chat: ChatItem) =>
         set((state) => {
@@ -70,10 +70,12 @@ export const useChatStore = create<ChatStore>()(
       clearChats: () =>
         set({ chats: [], activeChat: null }),
     }),
+    
     {
       name: 'chat-store', // localStorage key
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ activeChat: state.activeChat }), // Only persist activeChat
     }
+
   )
 );
