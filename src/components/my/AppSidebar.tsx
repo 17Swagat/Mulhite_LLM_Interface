@@ -17,21 +17,9 @@ import { useChatStore } from "@/stores/chatStore";
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, usePaginatedQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { Id } from "../../../convex/_generated/dataModel";
 
-import { ChatItem } from "@/stores/chatStore";
-
-// interface Type_Conversation {
-//     _id: Id<"conversations">;
-//     _creationTime: number;
-//     title?: string | undefined;
-//     userId: Id<"users">;
-//     createdAt: number;
-//     updatedAt: number;
-// }
 
 export function AppSidebar() {
-    // const [showChatHistory, setShowChatHistory] = useState<Type_Conversation[]>([])
 
     const { chats, setActiveChat, setChats } = useChatStore();
 
@@ -41,10 +29,11 @@ export function AppSidebar() {
     // Fetch conversations from Convex
     // const conversations = useQuery(api.conversations.listConversations); // *** 📌
     const [reset, setReset] = useState(false);
+    const PAGINATE_LIMIT = 20;
     const { results: conversations, status: conversPagiStatus, isLoading, loadMore } = usePaginatedQuery(
         api.conversations.listConversationsPaginate, {
         doReset: reset
-    }, { initialNumItems: 10 })
+    }, { initialNumItems: PAGINATE_LIMIT })
 
     // Create user if doesn't exist
     useEffect(() => {
@@ -54,20 +43,13 @@ export function AppSidebar() {
     }, [ensureUser]);
 
     // Sync Convex data with store
-    // **** 📌
     useEffect(() => {
-        // if (conversations) {
-        // console.log(conversPagiStatus)
         if (conversations) {
-            // console.log(conversations)
             setChats(conversations);
         }
     }, [conversations, setChats]);
 
-    // useEffect(()=>{
-    //     setChats(conversations)
-    // }, [conversations, conversPagiStatus])
-
+    
     return (
         <Sidebar>
             <SidebarHeader>
@@ -118,20 +100,20 @@ export function AppSidebar() {
                             )}
 
                             {(conversPagiStatus !== "Exhausted") &&
-                                <div className="w-full bg-amber-400 text-2xl rounded-[10px] text-center" onClick={() => {
-                                    loadMore(2);
+                                <div className="w-full bg-amber-400 text-2xl rounded-[10px] text-center cursor-pointer hover:brightness-125 active:brightness-90 active:text-white" onClick={() => {
+                                    loadMore(PAGINATE_LIMIT);
                                 }}>
                                     Load More
                                 </div>
                             }
 
-                            {(conversPagiStatus === "Exhausted") &&
+                            {/* {(conversPagiStatus === "Exhausted") &&
                                 <div className="w-full bg-amber-700 text-2xl text-white rounded-[10px] text-center" onClick={() => {
                                     setReset(prev => !prev)
                                 }}>
                                     Collapse
                                 </div>
-                            }
+                            } */}
 
                         </SidebarMenu>
                     </SidebarGroupContent>
