@@ -14,18 +14,37 @@ import {
 } from "@/components/ui/sidebar"
 import SidebarItem from "./SidebarItem";
 import { useChatStore } from "@/stores/chatStore";
-import { useEffect } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useEffect, useState } from "react";
+import { useQuery, useMutation, usePaginatedQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { Id } from "../../../convex/_generated/dataModel";
+
+import { ChatItem } from "@/stores/chatStore";
+
+// interface Type_Conversation {
+//     _id: Id<"conversations">;
+//     _creationTime: number;
+//     title?: string | undefined;
+//     userId: Id<"users">;
+//     createdAt: number;
+//     updatedAt: number;
+// }
 
 export function AppSidebar() {
+    const [reset, setReset] = useState(false);
+    // const [showChatHistory, setShowChatHistory] = useState<Type_Conversation[]>([])
+
     const { chats, setActiveChat, setChats } = useChatStore();
-    
+
     // Ensure user exists in Convex on mount
     const ensureUser = useMutation(api.conversations.ensureUser);
-    
+
     // Fetch conversations from Convex
-    const conversations = useQuery(api.conversations.listConversations);
+    // const conversations = useQuery(api.conversations.listConversations); // *** 📌
+    const { results: conversations, status: conversPagiStatus, isLoading, loadMore } = usePaginatedQuery(
+        api.conversations.listConversationsPaginate, {
+        doReset: reset
+    }, { initialNumItems: 2 })
 
     // Create user if doesn't exist
     useEffect(() => {
@@ -35,11 +54,16 @@ export function AppSidebar() {
     }, [ensureUser]);
 
     // Sync Convex data with store
-    useEffect(() => {
-        if (conversations) {
-            setChats(conversations);
-        }
-    }, [conversations, setChats]);
+    // **** 📌
+    // useEffect(() => {
+    //     if (conversations) {
+    //         setChats(conversations);
+    //     }
+    // }, [conversations, setChats]);
+    
+    useEffect(()=>{
+        setChats(conversations)
+    }, [conversations, conversPagiStatus])
 
     return (
         <Sidebar>
@@ -57,7 +81,7 @@ export function AppSidebar() {
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild className="bg-gray-800/80 hover:bg-gray-600 hover:brightness-125 hover:text-white text-white">
-                                    <Link 
+                                    <Link
                                         href={`/chat/`}
                                         onClick={() => setActiveChat(null)}
                                     >
@@ -68,9 +92,10 @@ export function AppSidebar() {
 
                             <div className="h-1"></div>
 
-                            {conversations === undefined ? (
+                            {/* {conversations === undefined ? ( */}
+                            {isLoading ? (
                                 <SidebarMenuItem>
-                                    <span className="text-gray-400 text-sm px-2">Loading...</span>
+                                    <span className="text-gray-700 text-sm px-2">Loading...</span>
                                 </SidebarMenuItem>
                             ) : chats.length === 0 ? (
                                 <SidebarMenuItem>
@@ -79,10 +104,11 @@ export function AppSidebar() {
                             ) : (
                                 chats.map((chat) => (
                                     <SidebarMenuItem key={chat._id}>
-                                        <SidebarItem 
-                                            chatId={chat._id} 
-                                            title={chat.title || `Chat ${chat._id.slice(0, 8)}`} 
-                                            navLink={`/chat/${chat._id}`} 
+                                        {/* My Custom Item:-=> */}
+                                        <SidebarItem
+                                            chatId={chat._id}
+                                            title={chat.title || `Chat ${chat._id.slice(0, 8)}`}
+                                            navLink={`/chat/${chat._id}`}
                                         />
                                     </SidebarMenuItem>
                                 ))

@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import { Id } from "./_generated/dataModel"; // ✅ correct import
 import { api } from "./_generated/api";
 import { userInfo } from "os";
+import { paginationOptsValidator } from "convex/server";
 
 async function getCurrentUserQuery(ctx: QueryCtx) {
     const identity = await ctx.auth.getUserIdentity();
@@ -40,7 +41,7 @@ async function getCurrentUserMutation(ctx: MutationCtx) {
             name: identity.name || undefined,
         });
         user = (await ctx.db.get(userId)) as any;
-        if (!user) 
+        if (!user)
             throw new Error("Failed to create user");
     }
 
@@ -79,7 +80,7 @@ export const listConversations = query({
         const user = await getCurrentUserQuery(ctx);
         // If user doesn't exist yet, return empty array
         // User will be created on first mutation (create conversation)
-        if (!user) 
+        if (!user)
             return [];
 
         return await ctx.db
@@ -89,6 +90,21 @@ export const listConversations = query({
             .collect();
     },
 });
+
+
+export const listConversationsPaginate = query({
+    args: {
+        paginationOpts: paginationOptsValidator,
+        doReset: v.boolean()
+    },
+    handler: async (ctx, args) => {
+        const results = await ctx.db
+            .query('conversations')
+            .paginate(args.paginationOpts)
+        return results;
+    }
+})
+
 
 export const getMessages = query({
     args: {
@@ -123,8 +139,8 @@ export const getMessages = query({
 
 
 export const createConversation = mutation({
-    args: { 
-        title: v.optional(v.string()) 
+    args: {
+        title: v.optional(v.string())
     },
     handler: async (ctx, { title }) => {
         const user = await getCurrentUserMutation(ctx);
