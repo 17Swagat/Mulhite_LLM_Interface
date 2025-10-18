@@ -2,17 +2,17 @@
 
 "use client";
 
-import { Authenticated, AuthLoading, Unauthenticated, useConvexAuth, useMutation } from "convex/react";
+import { Authenticated, AuthLoading, Unauthenticated, useConvexAuth, useMutation, usePaginatedQuery } from "convex/react";
 import { SignInButton, UserButton } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from '@/../convex/_generated/api'
 import { useState } from "react";
+import { PaginatedPosts } from "./PaginatedPosts";
 
 export default function Home() {
     return (
         <>
             <Authenticated>
-                <UserButton />
                 <Content />
             </Authenticated>
             <Unauthenticated>
@@ -34,9 +34,16 @@ function Content() {
 
     const postsByUser = useQuery(api.testing.messages.messagesByUser)
 
+    // const { results: pagiPostsByUser, isLoading, loadMore, status: paginateStatus } = usePaginatedQuery(
+    // api.testing.messages.messagesByUserPaginated, {}, { initialNumItems: 2 })
 
     return (
-        <div className="w-screen h-screen bg-black text-white flex flex-col justify-center items-center">
+        <div className="h-screen bg-black text-white flex flex-col justify-center items-center">
+
+            <div className="fixed top-0">
+                <UserButton />
+            </div>
+
             {/* Post Messages By User: */}
             <form onSubmit={(e) => {
                 e.preventDefault()
@@ -53,14 +60,22 @@ function Content() {
             </form>
 
             {/* Retrive Messages By User: */}
-            <div className="flex flex-col text-2xl gap-2 space-y-2">
-                {postsByUser?.map((doc) => {
-                    return (<div key={doc._id} className="bg-green-500">
-                        {doc.message}
-                    </div>)
-                })}
+            {/* {!postsByUser && <div className="w-10 h-10 rounded-full animate-spin border-2 border-pink-500"></div>} */}
 
-            </div>
+            {/* Collect */}
+            {/* {postsByUser &&
+                <div className="flex flex-col text-2xl gap-2 space-y-2">
+                    {postsByUser?.map((doc) => {
+                        return (<div key={doc._id} className="bg-green-500">
+                            {doc.message}
+                        </div>)
+                    })}
+
+                </div>
+            } */}
+
+            <PaginatedPosts />
+
         </div>
     )
 
