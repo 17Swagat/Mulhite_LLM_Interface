@@ -24,7 +24,7 @@ export default function ChatArea({
     const [conversationNotFound, setConversationNotFound] = useState(false);
     
     // zustand store:
-    const { setActiveChat, addChat, getChatById, updateChatTitle } = useChatStore();
+    const { setActiveChat, addChat, getChatById, updateChatTitle} = useChatStore();
 
     // Convex queries and mutations
     const conversationId = id as Id<"conversations">;
