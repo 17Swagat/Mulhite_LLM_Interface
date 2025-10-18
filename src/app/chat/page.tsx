@@ -1,10 +1,9 @@
-// DeepSeek #1:
 "use client";
 import { useRouter } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
 import { useChatStore } from "@/stores/chatStore";
 import { useMutation } from "convex/react";
-import { api } from "../../../../convex/_generated/api";
+import {api} from '@/../convex/_generated/api'
 
 export default function ChatPage() {
     const router = useRouter();

@@ -23,6 +23,7 @@ async function getCurrentUserMutation(ctx: MutationCtx) {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthorized");
 
+
     let user = await ctx.db
         .query("users")
         .withIndex("by_clerkUserId", (q) => q.eq("clerkUserId", identity.subject))

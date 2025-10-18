@@ -12,6 +12,7 @@ import { useChatStore } from '@/stores/chatStore';
 import { useQuery, useMutation } from 'convex/react';
 import {api} from '@/../convex/_generated/api';
 import {Id} from '@/../convex/_generated/dataModel';
+// import ChatNotFound from './_ui/ChatNotFound';
 import ChatNotFound from './ChatNotFound';
 
 export default function ChatArea({
