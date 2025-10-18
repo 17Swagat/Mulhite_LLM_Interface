@@ -14,6 +14,7 @@ export default function ChatPage_ID({ params }: { params: Promise<{ id: string }
         getId();
     }, [params]);
 
+    
     if (!id) {
         return (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-700/40 via-pink-600/80 to-red-800/90">
