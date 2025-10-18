@@ -25,7 +25,7 @@ export default function ChatArea({
     const [conversationNotFound, setConversationNotFound] = useState(false);
     
     // zustand store:
-    const { setActiveChat, addChat, getChatById, updateChatTitle} = useChatStore();
+    const { setActiveChat, addChat, getChatById, updateChatTitle, chats} = useChatStore();
 
     // Convex queries and mutations
     const conversationId = id as Id<"conversations">;
@@ -73,7 +73,11 @@ export default function ChatArea({
             setActiveChat(conversationId);
 
             // If chat doesn't exist in store, add it
+            // console.log(conversationId) 
+            // console.log(chats) // [] ❓
             const existingChat = getChatById(conversationId);
+            // console.log(existingChat) // undefined ❓
+
             if (!existingChat) {
                 addChat({
                     _id: conversationId,

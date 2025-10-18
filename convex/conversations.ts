@@ -98,8 +98,18 @@ export const listConversationsPaginate = query({
         doReset: v.boolean()
     },
     handler: async (ctx, args) => {
+        const user = await getCurrentUserQuery(ctx);
+        if (!user) {
+            return {
+                page: [],
+                isDone: true,
+                continueCursor: "",
+            };
+        }
         const results = await ctx.db
             .query('conversations')
+            .withIndex("by_userId", (q) => q.eq("userId", user._id))
+            .order('desc')
             .paginate(args.paginationOpts)
         return results;
     }
@@ -133,7 +143,11 @@ export const getMessages = query({
             .order("asc")
             .paginate({ cursor: cursor ?? null, numItems: limit });
 
-        return { messages: messages.page, nextCursor: messages.continueCursor, notFound: false };
+        return {
+            messages: messages.page,
+            nextCursor: messages.continueCursor,
+            notFound: false
+        };
     },
 });
 

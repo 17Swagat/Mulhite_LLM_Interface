@@ -31,7 +31,6 @@ import { ChatItem } from "@/stores/chatStore";
 // }
 
 export function AppSidebar() {
-    const [reset, setReset] = useState(false);
     // const [showChatHistory, setShowChatHistory] = useState<Type_Conversation[]>([])
 
     const { chats, setActiveChat, setChats } = useChatStore();
@@ -41,10 +40,11 @@ export function AppSidebar() {
 
     // Fetch conversations from Convex
     // const conversations = useQuery(api.conversations.listConversations); // *** 📌
+    const [reset, setReset] = useState(false);
     const { results: conversations, status: conversPagiStatus, isLoading, loadMore } = usePaginatedQuery(
         api.conversations.listConversationsPaginate, {
         doReset: reset
-    }, { initialNumItems: 2 })
+    }, { initialNumItems: 10 })
 
     // Create user if doesn't exist
     useEffect(() => {
@@ -55,15 +55,18 @@ export function AppSidebar() {
 
     // Sync Convex data with store
     // **** 📌
-    // useEffect(() => {
-    //     if (conversations) {
-    //         setChats(conversations);
-    //     }
-    // }, [conversations, setChats]);
-    
-    useEffect(()=>{
-        setChats(conversations)
-    }, [conversations, conversPagiStatus])
+    useEffect(() => {
+        // if (conversations) {
+        // console.log(conversPagiStatus)
+        if (conversations) {
+            // console.log(conversations)
+            setChats(conversations);
+        }
+    }, [conversations, setChats]);
+
+    // useEffect(()=>{
+    //     setChats(conversations)
+    // }, [conversations, conversPagiStatus])
 
     return (
         <Sidebar>
@@ -93,7 +96,7 @@ export function AppSidebar() {
                             <div className="h-1"></div>
 
                             {/* {conversations === undefined ? ( */}
-                            {isLoading ? (
+                            {(isLoading && conversPagiStatus == "LoadingFirstPage") ? (
                                 <SidebarMenuItem>
                                     <span className="text-gray-700 text-sm px-2">Loading...</span>
                                 </SidebarMenuItem>
@@ -113,6 +116,23 @@ export function AppSidebar() {
                                     </SidebarMenuItem>
                                 ))
                             )}
+
+                            {(conversPagiStatus !== "Exhausted") &&
+                                <div className="w-full bg-amber-400 text-2xl rounded-[10px] text-center" onClick={() => {
+                                    loadMore(2);
+                                }}>
+                                    Load More
+                                </div>
+                            }
+
+                            {(conversPagiStatus === "Exhausted") &&
+                                <div className="w-full bg-amber-700 text-2xl text-white rounded-[10px] text-center" onClick={() => {
+                                    setReset(prev => !prev)
+                                }}>
+                                    Collapse
+                                </div>
+                            }
+
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
