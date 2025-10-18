@@ -2,10 +2,12 @@ import { query, mutation, QueryCtx, MutationCtx } from "./_generated/server";
 import { v } from "convex/values";
 import { Id } from "./_generated/dataModel"; // ✅ correct import
 import { api } from "./_generated/api";
+import { userInfo } from "os";
 
 async function getCurrentUserQuery(ctx: QueryCtx) {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Unauthorized");
+    if (!identity)
+        throw new Error("Unauthorized");
 
     const user = await ctx.db
         .query("users")
@@ -21,8 +23,9 @@ async function getCurrentUserQuery(ctx: QueryCtx) {
 
 async function getCurrentUserMutation(ctx: MutationCtx) {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Unauthorized");
-
+    if (!identity) {
+        throw new Error("Unauthorized");
+    }
 
     let user = await ctx.db
         .query("users")
@@ -37,9 +40,10 @@ async function getCurrentUserMutation(ctx: MutationCtx) {
             name: identity.name || undefined,
         });
         user = (await ctx.db.get(userId)) as any;
-        if (!user) throw new Error("Failed to create user");
+        if (!user) 
+            throw new Error("Failed to create user");
     }
-    
+
     return user;
 }
 
@@ -49,7 +53,7 @@ async function ensureUserOwnsConvoQuery(
 ) {
     const user = await getCurrentUserQuery(ctx);
     if (!user) return null;
-    
+
     try {
         const convo = await ctx.db.get<"conversations">(conversationId);
         if (!convo) return null;
@@ -75,8 +79,9 @@ export const listConversations = query({
         const user = await getCurrentUserQuery(ctx);
         // If user doesn't exist yet, return empty array
         // User will be created on first mutation (create conversation)
-        if (!user) return [];
-        
+        if (!user) 
+            return [];
+
         return await ctx.db
             .query("conversations")
             .withIndex("by_userId", (q) => q.eq("userId", user._id))
@@ -99,7 +104,7 @@ export const getMessages = query({
         }
 
         const convo = await ensureUserOwnsConvoQuery(ctx, { conversationId: conversationId as Id<"conversations"> });
-        
+
         if (!convo) {
             return { messages: [], nextCursor: null, notFound: true };
         }
@@ -116,8 +121,11 @@ export const getMessages = query({
     },
 });
 
+
 export const createConversation = mutation({
-    args: { title: v.optional(v.string()) },
+    args: { 
+        title: v.optional(v.string()) 
+    },
     handler: async (ctx, { title }) => {
         const user = await getCurrentUserMutation(ctx);
         const now = Date.now();
@@ -130,6 +138,7 @@ export const createConversation = mutation({
         return { _id: convoId };
     },
 });
+
 
 export const addMessage = mutation({
     args: {
@@ -165,12 +174,12 @@ export const updateConversation = mutation({
     },
     handler: async (ctx, { conversationId, title }) => {
         await ensureUserOwnsConvoMutation(ctx, { conversationId });
-        
+
         await ctx.db.patch(conversationId, {
             title,
             updatedAt: Date.now(),
         });
-        
+
         return { success: true };
     },
 });
@@ -181,7 +190,7 @@ export const deleteConversation = mutation({
     },
     handler: async (ctx, { conversationId }) => {
         await ensureUserOwnsConvoMutation(ctx, { conversationId });
-        
+
         // Delete all messages in this conversation
         const messages = await ctx.db
             .query("messages")
@@ -189,14 +198,14 @@ export const deleteConversation = mutation({
                 q.eq("conversationId", conversationId)
             )
             .collect();
-        
+
         for (const message of messages) {
             await ctx.db.delete(message._id);
         }
-        
+
         // Delete the conversation
         await ctx.db.delete(conversationId);
-        
+
         return { success: true };
     },
 });

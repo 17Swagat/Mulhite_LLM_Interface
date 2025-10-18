@@ -3,22 +3,13 @@ import { v } from "convex/values";
 
 export default defineSchema({
 
-    ////////////////////////////////////
+    ////////////////////////////////////////////////////////////////
     // Learning Convex with experimentation
     test_table: defineTable({
         message: v.string(),
-        optionalTag: v.union(v.string(), v.null()),
-        numericValue: v.number(),
-        integerValue: v.number()
-    })
-        .index('by_numericValue', ['numericValue'])
-        .index('by_numeric_integer_Value', ['numericValue', 'integerValue'])
-        .index('by_staged_integerValue', { fields: ['integerValue'] })
-        .searchIndex('search_message', { searchField: 'message', staged: false })
-
-    ,
-
-    ////////////////////////////////////
+        user: v.string(),
+    }).index('by_user', ['user']).searchIndex('search_message', { searchField: 'message', staged: false }),
+    ////////////////////////////////////////////////////////////////
 
     users: defineTable({
         clerkUserId: v.string(),  // Clerk's unique user ID (e.g., "user_abc123")

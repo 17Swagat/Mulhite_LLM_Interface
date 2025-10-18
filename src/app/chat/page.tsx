@@ -3,13 +3,13 @@ import { useRouter } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
 import { useChatStore } from "@/stores/chatStore";
 import { useMutation } from "convex/react";
-import {api} from '@/../convex/_generated/api'
+import { api } from '@/../convex/_generated/api'
 
 export default function ChatPage() {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { addChat, setActiveChat } = useChatStore();
-    
+
     // Convex mutation
     const createConversation = useMutation(api.conversations.createConversation);
 
@@ -18,6 +18,8 @@ export default function ChatPage() {
         setActiveChat(null);
     }, [setActiveChat]);
 
+    
+    // *Question-Submission* 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (input.trim() && !isSubmitting) {
@@ -27,7 +29,7 @@ export default function ChatPage() {
                 // Create conversation in Convex
                 const title = input.substring(0, 50) + (input.length > 50 ? '...' : '');
                 const result = await createConversation({ title });
-                
+
                 const conversationId = result._id;
                 const now = Date.now();
 
@@ -64,23 +66,16 @@ export default function ChatPage() {
     const [input, setInput] = useState("");
 
     // Prompt-Submit Button Ref
-    const formRef = useRef<HTMLFormElement>(null);
-    const translateDown = () => {
-        // Translate down
-        if (formRef.current) {
-            formRef.current.style.transform = "translateY(50vh)";
-            formRef.current.style.transition = "transform 0.9s ease-in-out";
-            // You can also use a CSS class instead of inline styles
-            // formRef.current.classList.add('translate-down');
-        }
-    };
+    // const formRef = useRef<HTMLFormElement>(null);
 
     return (
         <div className="w-full h-screen bg-purple-700/80 text-white flex justify-center items-center">
             <div className="flex flex-col items-center">
                 <h1 className="text-3xl">Write Your Prompt</h1>
 
-                <form ref={formRef} onSubmit={handleSubmit}>
+                <form
+                    // ref={formRef} 
+                    onSubmit={handleSubmit}>
                     <input
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
@@ -93,11 +88,6 @@ export default function ChatPage() {
                         disabled={isSubmitting || !input.trim()}
                         className={`w-[70px] h-[70px] bg-blue-700 font-bold active:bg-blue-900 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                             }`}
-                        /*onClick={(e) => {
-                            if (input.trim() !== "") {
-                                // translateDown();
-                            }
-                        }}*/
                     >
                         {isSubmitting ? "..." : "GO!"}
                     </button>
