@@ -79,8 +79,9 @@ export function AppSidebar() {
 
                             {/* {conversations === undefined ? ( */}
                             {(isLoading && conversPagiStatus == "LoadingFirstPage") ? (
-                                <SidebarMenuItem>
-                                    <span className="text-gray-700 text-sm px-2">Loading...</span>
+                                // Loading Spinner:
+                                <SidebarMenuItem className="w-full flex justify-center items-center">
+                                    <div className="w-8 h-8 animate-spin border-3 border-purple-800 rounded-full border-t-transparent"></div>
                                 </SidebarMenuItem>
                             ) : chats.length === 0 ? (
                                 <SidebarMenuItem>
@@ -99,21 +100,13 @@ export function AppSidebar() {
                                 ))
                             )}
 
-                            {(conversPagiStatus !== "Exhausted") &&
+                            {(conversPagiStatus !== "Exhausted" && conversPagiStatus !== "LoadingFirstPage") &&
                                 <div className="w-full bg-amber-400 text-2xl rounded-[10px] text-center cursor-pointer hover:brightness-125 active:brightness-90 active:text-white" onClick={() => {
                                     loadMore(PAGINATE_LIMIT);
                                 }}>
                                     Load More
                                 </div>
                             }
-
-                            {/* {(conversPagiStatus === "Exhausted") &&
-                                <div className="w-full bg-amber-700 text-2xl text-white rounded-[10px] text-center" onClick={() => {
-                                    setReset(prev => !prev)
-                                }}>
-                                    Collapse
-                                </div>
-                            } */}
 
                         </SidebarMenu>
                     </SidebarGroupContent>
