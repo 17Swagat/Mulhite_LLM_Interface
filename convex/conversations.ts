@@ -71,7 +71,8 @@ async function ensureUserOwnsConvoMutation(
 ) {
     const user = await getCurrentUserMutation(ctx);
     const convo = await ctx.db.get<"conversations">(conversationId);
-    if (!convo || convo.userId !== user._id) throw new Error("Unauthorized");
+    if (!convo || convo.userId !== user._id) 
+        throw new Error("Unauthorized");
 }
 
 export const listConversations = query({
@@ -228,11 +229,10 @@ export const deleteConversation = mutation({
                 q.eq("conversationId", conversationId)
             )
             .collect();
-
         for (const message of messages) {
             await ctx.db.delete(message._id);
         }
-
+        
         // Delete the conversation
         await ctx.db.delete(conversationId);
 
