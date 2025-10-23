@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import {Id} from '@/../convex/_generated/dataModel';
+import { Id } from '@/../convex/_generated/dataModel';
 
 export interface ChatItem {
   _id: Id<"conversations">;
@@ -13,7 +13,7 @@ export interface ChatItem {
 interface ChatStore {
   chats: ChatItem[];
   activeChat: Id<"conversations"> | null;
-  
+
   // Actions
   setChats: (chats: ChatItem[]) => void;
   addChat: (chat: ChatItem) => void;
@@ -40,7 +40,7 @@ export const useChatStore = create<ChatStore>()(
           if (exists) {
             return state; // Don't add duplicates
           }
-          
+
           // Add new chat at the beginning (top)
           return {
             chats: [chat, ...state.chats],
@@ -59,8 +59,9 @@ export const useChatStore = create<ChatStore>()(
 
       updateChatTitle: (id: Id<"conversations">, title: string) =>
         set((state) => ({
-          chats: state.chats.map((chat) =>
-            chat._id === id ? { ...chat, title, updatedAt: Date.now() } : chat
+          chats: state.chats.map(
+            (chat) =>
+              (chat._id === id) ? { ...chat, title, updatedAt: Date.now() } : chat
           ),
         })),
 
@@ -70,7 +71,7 @@ export const useChatStore = create<ChatStore>()(
       clearChats: () =>
         set({ chats: [], activeChat: null }),
     }),
-    
+    // ❓❓❓  :=>
     {
       name: 'chat-store', // localStorage key
       storage: createJSONStorage(() => localStorage),

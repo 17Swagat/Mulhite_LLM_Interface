@@ -7,8 +7,12 @@ import { paginationOptsValidator } from "convex/server";
 
 async function getCurrentUserQuery(ctx: QueryCtx) {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity)
-        throw new Error("Unauthorized");
+    if (!identity) {
+        // FIX:  "Contains some user authentication & retrieval logic error, which occurs when I first run the application (currently checked on dev mode only. When I first run `npx run convex` and `pnpm run dev`"
+        // NOTE: "Issue Fixed After returning `null` here"
+        return null
+        // throw new Error("Unauthorized XYZ");
+    }
 
     const user = await ctx.db
         .query("users")
@@ -25,6 +29,7 @@ async function getCurrentUserQuery(ctx: QueryCtx) {
 async function getCurrentUserMutation(ctx: MutationCtx) {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
+        console.warn("No user identity found; possible session issue");
         throw new Error("Unauthorized");
     }
 
@@ -53,12 +58,15 @@ async function ensureUserOwnsConvoQuery(
     { conversationId }: { conversationId: Id<"conversations"> }
 ) {
     const user = await getCurrentUserQuery(ctx);
-    if (!user) return null;
+    if (!user)
+        return null;
 
     try {
         const convo = await ctx.db.get<"conversations">(conversationId);
-        if (!convo) return null;
-        if (convo.userId !== user._id) throw new Error("Unauthorized");
+        if (!convo)
+            return null;
+        if (convo.userId !== user._id)
+            throw new Error("Unauthorized");
         return convo;
     } catch (error) {
         return null;
@@ -71,7 +79,7 @@ async function ensureUserOwnsConvoMutation(
 ) {
     const user = await getCurrentUserMutation(ctx);
     const convo = await ctx.db.get<"conversations">(conversationId);
-    if (!convo || convo.userId !== user._id) 
+    if (!convo || convo.userId !== user._id)
         throw new Error("Unauthorized");
 }
 
@@ -123,14 +131,21 @@ export const getMessages = query({
         limit: v.optional(v.number()),
         cursor: v.optional(v.string()),
     },
-    handler: async (ctx, { conversationId, limit = 50, cursor }) => {
+    handler: async (ctx, args) => {
+        // NOTE: "Some look back into this limit related code & think about some ways of better it"
+        args.limit = args.limit ?? 50; // 🧪 "Must be done with different values of <limit>"
+
         // Validate ID format
         const validIdRegex = /^[a-z0-9]+$/i;
-        if (!validIdRegex.test(conversationId) || conversationId.length < 10) {
-            return { messages: [], nextCursor: null, notFound: true };
+        if (!validIdRegex.test(args.conversationId) || args.conversationId.length < 10) {
+            return {
+                messages: [],
+                nextCursor: null,
+                notFound: true
+            };
         }
 
-        const convo = await ensureUserOwnsConvoQuery(ctx, { conversationId: conversationId as Id<"conversations"> });
+        const convo = await ensureUserOwnsConvoQuery(ctx, { conversationId: args.conversationId as Id<"conversations"> });
 
         if (!convo) {
             return { messages: [], nextCursor: null, notFound: true };
@@ -139,10 +154,12 @@ export const getMessages = query({
         const messages = await ctx.db
             .query("messages")
             .withIndex("by_conversationId", (q) =>
-                q.eq("conversationId", conversationId as Id<"conversations">)
+                q.eq("conversationId", args.conversationId as Id<"conversations">)
             )
             .order("asc")
-            .paginate({ cursor: cursor ?? null, numItems: limit });
+            .paginate({ cursor: args.cursor ?? null, numItems: args.limit });
+
+        // console.log("Fetched messages:", messages);
 
         return {
             messages: messages.page,
@@ -232,7 +249,7 @@ export const deleteConversation = mutation({
         for (const message of messages) {
             await ctx.db.delete(message._id);
         }
-        
+
         // Delete the conversation
         await ctx.db.delete(conversationId);
 
@@ -242,7 +259,6 @@ export const deleteConversation = mutation({
 
 // Ensure user exists - call this on app initialization
 export const ensureUser = mutation({
-    args: {},
     handler: async (ctx) => {
         const user = await getCurrentUserMutation(ctx);
         return { userId: user._id };

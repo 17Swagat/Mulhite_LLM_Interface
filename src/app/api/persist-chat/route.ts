@@ -43,7 +43,7 @@ export async function POST(req: Request) {
       // model: openai('gpt-4o'), // NOTE: Need To buy API
       // model: google("gemini-2.5-flash-lite-preview-09-2025"), // NOTE: Works!!
       model: ollama('deepseek-r1:1.5b'),
-      // providerOptions: { ollama: { think: true } },
+      providerOptions: { ollama: { think: true } },
       prompt: convertToModelMessages(messages),
     });
 

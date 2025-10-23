@@ -1,4 +1,3 @@
-// 'use client';
 
 import React from 'react';
 import Head from 'next/head';
@@ -8,7 +7,7 @@ export default function Home() {
 
   return (
     <>
-      
+
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
 
@@ -16,7 +15,7 @@ export default function Home() {
         mb-4">
           BEST <span className='bg-gradient-to-tr from-purple-900 via-teal-800 to-pink-700 rounded-2xl p-1.5 hover:text-white hover:bg-gradient-to-r hover:bg-green-500 hover:via-purple-500 hover:from-red-500 transition duration-500 ease-in-out decoration-purple-600 decoration-6  text-white'>
             LLM INTERFACE
-            </span> FOR <span className='decoration-white underline decoration-5 underline-offset-3'>STUDYING</span> AND <span className='decoration-white underline decoration-5 underline-offset-3'>LEARNING</span> SOMETHING!!
+          </span> FOR <span className='decoration-white underline decoration-5 underline-offset-3'>STUDYING</span> AND <span className='decoration-white underline decoration-5 underline-offset-3'>LEARNING</span> SOMETHING!!
         </h2>
 
         <p className="text-2xl text-gray-600 mb-8">
@@ -29,7 +28,7 @@ export default function Home() {
         <Link href="/chat" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md text-lg font-medium hover:bg-blue-700">
           Get Started
         </Link>
-        
+
         {/* #1.2 */}
         {/* [Experimental] */}
         {/* <Link href="/experi_chat" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md text-lg font-medium hover:bg-blue-700">
@@ -37,12 +36,17 @@ export default function Home() {
         </Link> */}
 
 
+        {/* Temporary Test Div for Text-Selection and showing a PopupOver Context Menu on Text Highlight */}
         <div className="mt-12">
           {/* Placeholder for Hero Image */}
           <div className="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
             <span className="text-gray-500">Hero Image Placeholder</span>
+          
+
+      
           </div>
         </div>
+
       </section>
 
 

@@ -10,22 +10,22 @@ import { Conversation, ConversationContent } from '@/components/ui/shadcn-io/ai/
 import { Message, MessageContent } from '@/components/ui/shadcn-io/ai/message';
 import { useChatStore } from '@/stores/chatStore';
 import { useQuery, useMutation } from 'convex/react';
-import {api} from '@/../convex/_generated/api';
-import {Id} from '@/../convex/_generated/dataModel';
+import { api } from '@/../convex/_generated/api';
+import { Id } from '@/../convex/_generated/dataModel';
 // import ChatNotFound from './_ui/ChatNotFound';
 import ChatNotFound from './ChatNotFound';
 
 export default function ChatArea({
     id,
-}: { id?: string | undefined } = {}) 
-{
+}: { id?: string | undefined } = {}) {
+
     const [input, setInput] = useState('');
     const [hasProcessedPendingMessage, setHasProcessedPendingMessage] = useState(false);
     const [isLoadingMessages, setIsLoadingMessages] = useState(true);
     const [conversationNotFound, setConversationNotFound] = useState(false);
-    
+
     // zustand store:
-    const { setActiveChat, addChat, getChatById, updateChatTitle, chats} = useChatStore();
+    const { setActiveChat, addChat, getChatById, updateChatTitle, chats } = useChatStore();
 
     // Convex queries and mutations
     const conversationId = id as Id<"conversations">;
@@ -43,7 +43,8 @@ export default function ChatArea({
             body: { chatId: id },
         }),
         onFinish: async ({ message: finishedMessage, messages: allMessages }) => {
-            if (!id) return;
+            if (!id)
+                return;
 
             try {
                 // Save both user and assistant messages to Convex
@@ -133,14 +134,7 @@ export default function ChatArea({
         }
     }, [id, hasProcessedPendingMessage, status, sendMessage, messages.length]);
 
-    const messagesEndRef = useRef<HTMLDivElement>(null);
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
-    // }, [messages]);
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -176,6 +170,20 @@ export default function ChatArea({
     if (conversationNotFound && !isLoadingMessages) {
         return <ChatNotFound id={id || ''} />;
     }
+
+
+    // Scroll To bottom Behaviour
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        if (status == "ready")// || status == "") {}
+            scrollToBottom();
+    }, [messages, status]);
+
+
 
     return (
         <div className="flex flex-col items-center-safe min-h-screen bg-gray-900 text-white">
@@ -213,7 +221,9 @@ export default function ChatArea({
                                         {message.parts.map((part, index) =>
                                             part.type === 'text' ? (
                                                 <span key={index} className="block">
-                                                    <Response className="text-lg">{part.text}</Response>
+                                                    <Response className="text-lg">
+                                                        {part.text}
+                                                    </Response>
                                                 </span>
                                             ) : null
                                         )}
