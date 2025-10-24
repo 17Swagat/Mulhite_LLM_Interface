@@ -1,0 +1,5 @@
+/* Custom highlight style */
+::highlight(yellow-highlight) {
+  background-color: yellow;
+  color: black; /* ensures text is readable */
+}

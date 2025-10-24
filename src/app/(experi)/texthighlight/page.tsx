@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from "react"
 import { ShareIcon, Highlighter, HighlighterIcon } from 'lucide-react'
+import { useHighlightsStore } from "@/stores/highlightsStore";
 
 interface Type_SelectedTextRectInfo {
     x: number;
@@ -21,6 +22,9 @@ export default function Experiment_TextHighlightPage() {
 
     const textContainerRef = useRef<HTMLDivElement | null>(null)
 
+    // Highlights Store
+    const { addHighlight, highlights } = useHighlightsStore();
+
     useEffect(() => {
         document.addEventListener('selectionchange', (e) => {
             const selection = document.getSelection()
@@ -31,18 +35,31 @@ export default function Experiment_TextHighlightPage() {
                 setSelectedText(selection_Text)
                 setSelectedTextRect(selection_TextRect)
 
-                // Highlighting:
-                // const range = selection.getRangeAt(0);
-                // const span = document.createElement('span');
-                // span.style.backgroundColor = 'yellow';
-                // range.surroundContents(span);
-
                 return;
             }
             setSelectedText('')
             setSelectedTextRect(null)
         })
     }, [textContainerRef])
+
+    useEffect(() => {
+        // console.log("Current Highlights in Store:", highlights);
+        for (const highlight of highlights) {
+            if (highlight.rangeInfo) {
+                const myHighlight = new Highlight(highlight.rangeInfo);
+                CSS.highlights.set('yellow-highlight', myHighlight);
+
+            }
+            // const highlightRange = highlight.rangeInfo as Range;
+            // console.log(highlightRange);
+            // console.log(highlight)
+
+            // console.log(highlight)
+            // if (highlight.highlight instanceof Highlight) {
+            // CSS.highlights.set('yellow-highlight', highlight.highlight as Highlight);
+            // }
+        }
+    }, [highlights])
 
     return (
         <div>
@@ -66,9 +83,15 @@ export default function Experiment_TextHighlightPage() {
                     onClick={() => {
                         if (_selection && !_selection.isCollapsed) {
                             const range = _selection.getRangeAt(0);
-                            const span = document.createElement('span');
-                            span.style.backgroundColor = 'yellow';
-                            range.surroundContents(span);
+                            addHighlight({
+                                rangeInfo: {
+                                    startOffset: range.startOffset,
+                                    endOffset: range.endOffset,
+                                    startContainer: range.startContainer,
+                                    endContainer: range.endContainer,
+                                    commonAncestorContainer: range.commonAncestorContainer,
+                                }
+                            });
                         }
                     }}
                 >
