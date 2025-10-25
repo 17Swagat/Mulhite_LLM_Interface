@@ -271,59 +271,42 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
                         <span key={index} className="block">
                           {message.role === "assistant" && (
                             <>
-                              <div
+                                <div
                                 className="flex items-center gap-1 p-0.5 rounded-full bg-white/90 shadow-lg backdrop-blur-sm border border-gray-200"
                                 style={{
                                   visibility: selectedTextRect
-                                    ? "visible"
-                                    : "hidden",
-                                  position: "absolute",
+                                  ? "visible"
+                                  : "hidden",
+                                  position: "fixed",
                                   top: selectedTextRect
-                                    ? `${
-                                        selectedTextRect.top +
-                                        window.scrollY -
-                                        20
-                                      }px`
-                                    : "0px",
+                                  ? `${selectedTextRect.top - 40}px`
+                                  : "0px",
                                   left: selectedTextRect
-                                    ? `${
-                                        (selectedTextRect.left + selectedTextRect.width / 2 - 80)
-                                        // selectedTextRect.left 
-                                        // selectedTextRect.width / 2 -
-                                        // 80
-                                      }px`
-                                    : "0px",
+                                  ? `${
+                                    selectedTextRect.left +
+                                    selectedTextRect.width / 2 -
+                                    50
+                                    }px`
+                                  : "0px",
                                   opacity: selectedTextRect ? 1 : 0,
                                   transition: "opacity 0.3s ease",
                                   zIndex: 1000,
                                 }}
-                              >
+                                >
                                 {/* Highlight Button */}
                                 <button
                                   type="button"
                                   className="p-1.5 rounded-full hover:bg-amber-100 transition-colors"
                                   aria-label="Highlight"
                                   onClick={() => {
-                                    // console.log('clicked');
-                                    // console.log(_selection);
-                                    if (_selection && !_selection.isCollapsed) {
-                                      // CSS Hightlight API :=> Does not Work Here
-                                      // #1
-                                      const range = _selection.getRangeAt(0);
-                                      // const highlight = new Highlight(range);
-                                      // CSS.highlights.set(
-                                      //     "yellow-highlight", highlight)
-
-                                      // #2
-                                      // const highlightSpan = document.createElement("span");
-                                      // highlightSpan.style.backgroundColor = "yellow";
-                                      // range.surroundContents(highlightSpan);
-                                    }
+                                  if (_selection && !_selection.isCollapsed) {
+                                    const range = _selection.getRangeAt(0);
+                                  }
                                   }}
                                 >
                                   <HighlighterIcon
-                                    size={20}
-                                    className="text-amber-600"
+                                  size={20}
+                                  className="text-amber-600"
                                   />
                                 </button>
 
@@ -334,11 +317,11 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
                                   aria-label="Share"
                                 >
                                   <ShareIcon
-                                    size={20}
-                                    className="text-purple-600"
+                                  size={20}
+                                  className="text-purple-600"
                                   />
                                 </button>
-                              </div>
+                                </div>
                             </>
                           )}
 
