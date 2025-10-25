@@ -39,7 +39,9 @@ export const MessageContent = ({
     )}
     {...props}
   >
-    <div className="is-user:dark">{children}</div>
+    <div className="is-user:dark">
+      {children}
+    </div>
   </div>
 );
 

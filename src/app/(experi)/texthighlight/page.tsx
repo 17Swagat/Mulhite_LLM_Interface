@@ -14,6 +14,8 @@ interface Type_SelectedTextRectInfo {
     right?: number;
 }
 
+
+
 export default function Experiment_TextHighlightPage() {
 
     const [_selection, setSelection] = useState<Selection | null>(null)
@@ -21,9 +23,6 @@ export default function Experiment_TextHighlightPage() {
     const [selectedTextRect, setSelectedTextRect] = useState<DOMRect | null>(null)
 
     const textContainerRef = useRef<HTMLDivElement | null>(null)
-
-    // Highlights Store
-    const { addHighlight, highlights } = useHighlightsStore();
 
     useEffect(() => {
         document.addEventListener('selectionchange', (e) => {
@@ -42,24 +41,9 @@ export default function Experiment_TextHighlightPage() {
         })
     }, [textContainerRef])
 
+
     useEffect(() => {
-        // console.log("Current Highlights in Store:", highlights);
-        for (const highlight of highlights) {
-            if (highlight.rangeInfo) {
-                const myHighlight = new Highlight(highlight.rangeInfo);
-                CSS.highlights.set('yellow-highlight', myHighlight);
-
-            }
-            // const highlightRange = highlight.rangeInfo as Range;
-            // console.log(highlightRange);
-            // console.log(highlight)
-
-            // console.log(highlight)
-            // if (highlight.highlight instanceof Highlight) {
-            // CSS.highlights.set('yellow-highlight', highlight.highlight as Highlight);
-            // }
-        }
-    }, [highlights])
+    }, [])
 
     return (
         <div>
@@ -83,15 +67,23 @@ export default function Experiment_TextHighlightPage() {
                     onClick={() => {
                         if (_selection && !_selection.isCollapsed) {
                             const range = _selection.getRangeAt(0);
-                            addHighlight({
-                                rangeInfo: {
-                                    startOffset: range.startOffset,
-                                    endOffset: range.endOffset,
-                                    startContainer: range.startContainer,
-                                    endContainer: range.endContainer,
-                                    commonAncestorContainer: range.commonAncestorContainer,
-                                }
-                            });
+                            const highlight = new Highlight(range);
+                            CSS.highlights.set('yellow-highlight', highlight);
+                            // Storing to localstorage:
+                            // #1
+                            // localStorage.setItem("highlight", JSON.stringify(range)); //{}
+                            // #2
+                            // console.log(range.cloneRange())
+                            // const range_data = {
+
+                            // };
+                            // localStorage.setItem("highlight", JSON.stringify(range_data)); //{}
+                            
+                            // #3
+                            // Serialize and save
+                            // const serializedRange = serializeRange(range);
+                            // localStorage.setItem("highlight", JSON.stringify(serializedRange));
+
                         }
                     }}
                 >
@@ -112,7 +104,7 @@ export default function Experiment_TextHighlightPage() {
 
             <div ref={textContainerRef} className="px-30">
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia vitae vel perferendis aliquam nemo blanditiis sequi facilis soluta voluptas veritatis.</p>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi aperiam magni cupiditate saepe, quibusdam reprehenderit provident, pariatur libero voluptatum nihil voluptas! Aut aspernatur nostrum quo minima? Soluta optio voluptatem qui repellat, suscipit illo fugiat delectus, veritatis incidunt obcaecati earum iste pariatur esse aliquid rerum excepturi, aliquam at perspiciatis veniam nulla.</p>
+                <p>Lorem ipsum  dolor sit amet consectetur adipisicing elit. Nisi aperiam magni cupiditate saepe, quibusdam reprehenderit provident, pariatur libero voluptatum nihil voluptas! Aut aspernatur nostrum quo minima? Soluta optio voluptatem qui repellat, suscipit illo fugiat delectus, veritatis incidunt obcaecati earum iste pariatur esse aliquid rerum excepturi, aliquam at perspiciatis veniam nulla.</p>
                 <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Impedit harum ut, asperiores blanditiis laudantium quod. Dolore voluptatum ducimus quis. Necessitatibus itaque aspernatur iste explicabo quidem est asperiores nostrum atque ipsum quia in ea possimus eos, soluta debitis harum doloribus non recusandae dolorum placeat eligendi earum saepe reprehenderit! Dolor nobis nemo enim dicta! Vel, commodi sed officia dolorem nisi a dicta aliquid expedita repudiandae voluptas sit deserunt laudantium, ipsam, unde ipsum.</p>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem quas quia dolorum in officia accusamus voluptate nobis, officiis impedit omnis laudantium consequuntur tempore tenetur. Consectetur aperiam harum magni ipsum amet in delectus obcaecati tempora velit similique dolore debitis optio, molestias consequatur ex sint iure sapiente quaerat, nemo maxime aspernatur voluptatum. Iste non vero voluptatem facilis ad modi, tenetur ipsa nesciunt fugit quaerat, porro, doloremque aliquam atque sed sequi culpa suscipit. Vel quia nostrum cumque maxime atque est totam aspernatur nihil laudantium? Expedita, consequuntur itaque ad molestiae voluptates sunt a libero, velit necessitatibus explicabo illo ipsum mollitia ullam ipsa, repellat quisquam.</p>
                 <hr />
@@ -121,6 +113,6 @@ export default function Experiment_TextHighlightPage() {
 
             </div>
 
-        </div>
+        </div >
     )
 }
