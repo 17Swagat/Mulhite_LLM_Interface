@@ -200,38 +200,56 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
   }, [messages, status]);
 
   // Highlight:=>
-
   const [_selection, setSelection] = useState<Selection | null>(null);
-  const [selectedText, setSelectedText] = useState<string>("");
   const [selectedTextRect, setSelectedTextRect] = useState<DOMRect | null>(
     null
   );
 
-  const textContainerRef = useRef<HTMLDivElement | null>(null);
-
-  // Highlights Store
-  // const { addHighlight, highlights } = useHighlightsStore();
-
   useEffect(() => {
-    document.addEventListener("selectionchange", (e) => {
+    const handleSelectionChange = () => {
       const selection = document.getSelection();
-      setSelection(selection);
-      const selection_Text = selection?.toString() || "";
-      if (selection_Text && selection) {
-        const selection_TextRect =
-          selection?.getRangeAt(0).getBoundingClientRect() ?? null;
-        setSelectedText(selection_Text);
-        setSelectedTextRect(selection_TextRect);
+      const selectionText = selection?.toString() || "";
 
-        return;
+      if (selectionText && selection && selection.rangeCount > 0) {
+        // Check if selection is within an assistant message
+        const range = selection.getRangeAt(0);
+        const container = range.commonAncestorContainer;
+        const element =
+          container.nodeType === Node.TEXT_NODE
+            ? container.parentElement
+            : (container as Element);
+
+        // Check if the selection is within an assistant message
+        const isInAssistantMessage = element?.closest(
+          "[data-assistant-message]"
+        );
+
+        if (isInAssistantMessage) {
+          setSelection(selection);
+          setSelectedTextRect(range.getBoundingClientRect());
+          return;
+        }
       }
-      setSelectedText("");
+
+      // Clear selection if not in assistant message or no text selected
+      setSelection(null);
       setSelectedTextRect(null);
-    });
-  }, [textContainerRef]);
+    };
+
+    document.addEventListener("selectionchange", handleSelectionChange);
+    return () => {
+      document.removeEventListener("selectionchange", handleSelectionChange);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col items-center-safe min-h-screen bg-gray-900 text-white">
+      {/* Toolbar - render once at the top level */}
+      <ToolbarOnTextHighlight
+        _selection={_selection}
+        selectedTextRect={selectedTextRect}
+      />
+
       <div className="flex-1 overflow-y-auto p-6">
         <Conversation className="max-w-11/12 mx-auto">
           <ConversationContent>
@@ -269,17 +287,15 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
                     {/* Answer Block: */}
                     {message.parts.map((part, index) =>
                       part.type === "text" ? (
-                        <span key={index} className="block">
-                          {message.role === "assistant" && (
-                            <ToolbarOnTextHighlight
-                              _selection={_selection}
-                              selectedTextRect={selectedTextRect}
-                            />
-                          )}
-
+                        <div
+                          key={index}
+                          data-assistant-message={
+                            message.role === "assistant" ? "true" : undefined
+                          }
+                        >
                           {/* Answer:=> */}
                           <Response className="text-lg">{part.text}</Response>
-                        </span>
+                        </div>
                       ) : null
                     )}
                   </MessageContent>
