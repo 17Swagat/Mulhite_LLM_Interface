@@ -24,6 +24,8 @@ import ChatNotFound from "./ChatNotFound";
 
 import { ShareIcon, HighlighterIcon } from "lucide-react";
 import { ToolbarOnTextHighlight } from "@/components/my/ToolbarOnTextSelection";
+import { getTextOffsetFromSelection, Highlight } from "@/lib/highlights";
+import { HighlightedResponse } from "@/components/my/HighlightedResponse";
 
 export default function ChatArea({ id }: { id?: string | undefined } = {}) {
   const [input, setInput] = useState("");
@@ -46,6 +48,31 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
   const updateConversationMutation = useMutation(
     api.conversations.updateConversation
   );
+
+  // Highlights
+  const highlightsData = useQuery(
+    api.highlights.getHighlightsByConversation,
+    id ? { conversationId } : "skip"
+  );
+  const createHighlightMutation = useMutation(api.highlights.createHighlight);
+  const deleteHighlightMutation = useMutation(api.highlights.deleteHighlight);
+
+  // Store highlights by message ID for quick lookup
+  const highlightsByMessage = useRef<Map<string, Highlight[]>>(new Map());
+
+  useEffect(() => {
+    if (highlightsData) {
+      const map = new Map<string, Highlight[]>();
+      for (const highlight of highlightsData) {
+        const messageId = highlight.messageId;
+        if (!map.has(messageId)) {
+          map.set(messageId, []);
+        }
+        map.get(messageId)!.push(highlight);
+      }
+      highlightsByMessage.current = map;
+    }
+  }, [highlightsData]);
 
   const { sendMessage, messages, status, stop, setMessages } = useChat({
     id,
@@ -204,6 +231,7 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
   const [selectedTextRect, setSelectedTextRect] = useState<DOMRect | null>(
     null
   );
+  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
 
   useEffect(() => {
     const handleSelectionChange = () => {
@@ -220,13 +248,13 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
             : (container as Element);
 
         // Check if the selection is within an assistant message
-        const isInAssistantMessage = element?.closest(
-          "[data-assistant-message]"
-        );
+        const messageElement = element?.closest("[data-assistant-message]");
 
-        if (isInAssistantMessage) {
+        if (messageElement) {
+          const messageId = messageElement.getAttribute("data-message-id");
           setSelection(selection);
           setSelectedTextRect(range.getBoundingClientRect());
+          setSelectedMessageId(messageId);
           return;
         }
       }
@@ -234,6 +262,7 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
       // Clear selection if not in assistant message or no text selected
       setSelection(null);
       setSelectedTextRect(null);
+      setSelectedMessageId(null);
     };
 
     document.addEventListener("selectionchange", handleSelectionChange);
@@ -242,12 +271,135 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
     };
   }, []);
 
+  // Handle highlight creation
+  const handleHighlight = async (selection: Selection, color: string = "yellow") => {
+    if (!selectedMessageId || !id) return;
+
+    const selectedText = selection.toString().trim();
+    if (!selectedText) return;
+
+    const range = selection.getRangeAt(0);
+
+    // Get the message container
+    const messageContainer = range.commonAncestorContainer.parentElement?.closest(
+      "[data-message-text]"
+    );
+
+    if (!messageContainer) {
+      console.error("Could not find message container");
+      return;
+    }
+
+    // Calculate offset by traversing text nodes from the container
+    const treeWalker = document.createTreeWalker(
+      messageContainer,
+      NodeFilter.SHOW_TEXT
+    );
+
+    let currentOffset = 0;
+    let startOffset = -1;
+    let endOffset = -1;
+    let node: Node | null;
+
+    while ((node = treeWalker.nextNode())) {
+      const nodeText = node.textContent || "";
+      const nodeLength = nodeText.length;
+
+      // Check if this text node contains the range start
+      if (startOffset === -1 && node === range.startContainer) {
+        startOffset = currentOffset + range.startOffset;
+      }
+
+      // Check if this text node contains the range end
+      if (node === range.endContainer) {
+        endOffset = currentOffset + range.endOffset;
+        break;
+      }
+
+      currentOffset += nodeLength;
+    }
+
+    // If we couldn't find offsets, try fallback method
+    if (startOffset === -1 || endOffset === -1) {
+      // Fallback: use indexOf with normalized text
+      const renderedText = messageContainer.textContent || "";
+      const normalizedSelected = selectedText.replace(/\s+/g, " ");
+      const normalizedRendered = renderedText.replace(/\s+/g, " ");
+      
+      startOffset = normalizedRendered.indexOf(normalizedSelected);
+      
+      if (startOffset === -1) {
+        console.error("Could not find selected text in rendered content");
+        console.log("Selected:", selectedText);
+        console.log("Rendered:", renderedText.substring(0, 200));
+        return;
+      }
+      
+      endOffset = startOffset + normalizedSelected.length;
+    }
+
+    // Clear selection immediately for better UX
+    selection.removeAllRanges();
+    setSelection(null);
+    setSelectedTextRect(null);
+
+    // Optimistically update local state before database save
+    const tempHighlight: Highlight = {
+      _id: `temp-${Date.now()}` as any,
+      messageId: selectedMessageId as Id<"messages">,
+      conversationId: conversationId,
+      userId: "" as any,
+      startOffset: startOffset,
+      endOffset: endOffset,
+      text: selectedText,
+      color: color,
+      createdAt: Date.now(),
+    };
+
+    // Update local highlights map immediately for optimistic UI
+    const currentHighlights = highlightsByMessage.current.get(selectedMessageId) || [];
+    highlightsByMessage.current.set(selectedMessageId, [...currentHighlights, tempHighlight]);
+
+    try {
+      // Save to database in background
+      await createHighlightMutation({
+        messageId: selectedMessageId as Id<"messages">,
+        conversationId: conversationId,
+        startOffset: startOffset,
+        endOffset: endOffset,
+        text: selectedText,
+        color: color,
+      });
+    } catch (error) {
+      console.error("Failed to create highlight:", error);
+      // Rollback on error
+      highlightsByMessage.current.set(selectedMessageId, currentHighlights);
+    }
+  };
+
+  const handleDeleteHighlight = async (highlightId: string) => {
+    try {
+      await deleteHighlightMutation({ highlightId: highlightId as Id<"highlights"> });
+      
+      // Remove from local map
+      for (const [messageId, highlights] of highlightsByMessage.current.entries()) {
+        const filtered = highlights.filter(h => h._id !== highlightId);
+        if (filtered.length !== highlights.length) {
+          highlightsByMessage.current.set(messageId, filtered);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to delete highlight:", error);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center-safe min-h-screen bg-gray-900 text-white">
       {/* Toolbar - render once at the top level */}
       <ToolbarOnTextHighlight
         _selection={_selection}
         selectedTextRect={selectedTextRect}
+        onHighlight={handleHighlight}
       />
 
       <div className="flex-1 overflow-y-auto p-6">
@@ -285,19 +437,35 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
                     )}
 
                     {/* Answer Block: */}
-                    {message.parts.map((part, index) =>
-                      part.type === "text" ? (
-                        <div
-                          key={index}
-                          data-assistant-message={
-                            message.role === "assistant" ? "true" : undefined
-                          }
-                        >
-                          {/* Answer:=> */}
-                          <Response className="text-lg">{part.text}</Response>
-                        </div>
-                      ) : null
-                    )}
+                    {message.parts.map((part, index) => {
+                      if (part.type !== "text") return null;
+
+                      // Only use HighlightedResponse for assistant messages
+                      if (message.role === "assistant") {
+                        // Get highlights for this message
+                        const messageHighlights = highlightsByMessage.current.get(message.id) || [];
+
+                        return (
+                          <div key={index}>
+                            {/* Answer with highlights */}
+                            <HighlightedResponse
+                              text={part.text || ""}
+                              highlights={messageHighlights}
+                              messageId={message.id}
+                              className="text-lg"
+                              onDeleteHighlight={handleDeleteHighlight}
+                            />
+                          </div>
+                        );
+                      } else {
+                        // User messages: render without highlight support
+                        return (
+                          <div key={index} className="text-lg">
+                            <Response>{part.text || ""}</Response>
+                          </div>
+                        );
+                      }
+                    })}
                   </MessageContent>
                 </Message>
               );

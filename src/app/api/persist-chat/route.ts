@@ -41,10 +41,10 @@ export async function POST(req: Request) {
 
     const result = streamText({
       // model: openai('gpt-4o'), // NOTE: Need To buy API
-      // model: google("gemini-2.5-flash-lite-preview-09-2025"), // NOTE: Works!!
+      model: google("gemini-2.5-flash-lite-preview-09-2025"), // NOTE: Works!!
       // #3
-      model: ollama('deepseek-r1:1.5b'),
-      providerOptions: { ollama: { think: true } },
+      // model: ollama('deepseek-r1:1.5b'),
+      // providerOptions: { ollama: { think: true } },
 
       prompt: convertToModelMessages(messages),
     });

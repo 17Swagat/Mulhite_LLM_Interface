@@ -46,4 +46,18 @@ export default defineSchema({
     })
         .index("by_conversationId", ["conversationId"])  // Fast lookup of all messages in a conversation
         .index("by_timestamp", ["timestamp"]),  // Chronological ordering
+
+    highlights: defineTable({
+        messageId: v.id("messages"),  // Which message this highlight belongs to
+        conversationId: v.id("conversations"),  // For easy querying
+        userId: v.id("users"),  // Who created the highlight
+        startOffset: v.number(),  // Character offset where highlight starts
+        endOffset: v.number(),  // Character offset where highlight ends
+        text: v.string(),  // The highlighted text (for display/search)
+        color: v.optional(v.string()),  // Highlight color (default: yellow)
+        createdAt: v.number(),  // Timestamp
+    })
+        .index("by_messageId", ["messageId"])  // Get all highlights for a message
+        .index("by_conversationId", ["conversationId"])  // Get all highlights in a conversation
+        .index("by_userId", ["userId"]),  // Get all user's highlights
 });

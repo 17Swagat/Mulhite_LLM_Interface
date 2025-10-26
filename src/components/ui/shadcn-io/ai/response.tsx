@@ -68,10 +68,6 @@ function parseIncompleteMarkdown(text: string): string {
 }
 
 const HardenedMarkdown = hardenReactMarkdown(ReactMarkdown);
-// const HardenedMarkdown = hardenReactMarkdown(ReactMarkdown, {
-//   allowedTags: ["span", "mark"],
-//   allowedAttributes: { span: ["style", "class"], mark: ["style", "class"] },
-// });
 
 /* -----------------------------------------------
    3️⃣ STEP 3: Same custom components setup
@@ -240,7 +236,8 @@ export const Response = memo(
         {...props}
       >
         <HardenedMarkdown
-          // allowedElements={['mark']}
+          allowedElements={undefined}
+          disallowedElements={undefined}
           allowedImagePrefixes={allowedImagePrefixes ?? ["*"]}
           allowedLinkPrefixes={allowedLinkPrefixes ?? ["*"]}
           components={components}

@@ -1,0 +1,30 @@
+.highlight-toolbar {
+  visibility: hidden;
+  position: fixed;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+}
+
+.highlight-toolbar.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.toolbar-container {
+  position: fixed;
+}
+
+.color-picker {
+  position: absolute;
+  top: 100%;
+  margin-top: 0.5rem;
+  left: 0;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem 0.25rem;
+  z-index: 50;
+  min-width: 180px;
+}
