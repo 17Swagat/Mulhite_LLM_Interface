@@ -1,15 +1,11 @@
 import Link from "next/link";
 import {
     SignInButton,
-    SignOutButton,
     SignUpButton,
-    // SignUp,
     SignedIn,
     SignedOut,
     UserButton,
 } from '@clerk/nextjs'
-
-// import { Authenticated } from "convex/react";
 
 export default function Navbar() {
     return (

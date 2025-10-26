@@ -1,16 +1,7 @@
-// #1
 import { google } from '@ai-sdk/google'
 import { saveChat } from '@/utils/chat-store';
-import { streamText, UIMessage, convertToModelMessages, uiMessageChunkSchema } from 'ai';
-import { createOllama } from 'ollama-ai-provider-v2';
+import { streamText, UIMessage, convertToModelMessages } from 'ai';
 import { v7 as uuidv7 } from 'uuid';
-
-// export const maxDuration = 30;
-
-const ollama = createOllama({
-  baseURL: 'http://localhost:11434/api',
-  compatibility: 'strict',
-});
 
 type ExtendedUIMessage = UIMessage & {
   metadata?: {
@@ -40,12 +31,7 @@ export async function POST(req: Request) {
     }
 
     const result = streamText({
-      // model: openai('gpt-4o'), // NOTE: Need To buy API
-      model: google("gemini-2.5-flash-lite-preview-09-2025"), // NOTE: Works!!
-      // #3
-      // model: ollama('deepseek-r1:1.5b'),
-      // providerOptions: { ollama: { think: true } },
-
+      model: google("gemini-2.5-flash-lite-preview-09-2025"),
       prompt: convertToModelMessages(messages),
     });
 
@@ -53,7 +39,6 @@ export async function POST(req: Request) {
     return result.toUIMessageStreamResponse({
       originalMessages: messages,
       onFinish: ({ messages }) => {
-        // console.log('Saving chat with ID:', chatId);
         saveChat({ chatId: chatId, messages })
       },
       sendReasoning: true

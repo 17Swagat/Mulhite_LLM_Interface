@@ -1,20 +1,14 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
-interface Highlights {
-    rangeInfo: Range;
+interface HighlightRange {
+    range: Range;
 }
 
-
 interface HighlightsStore {
-    // converstionId:
-    // chatId:
-    highlights: Highlights[] //Hightlights[]
-
-    // Actions
-    setHighlights: (highlights: Highlights[]) => void
-    addHighlight: (highlight: Highlights) => void
-    // clearHighlights: () => void
+    highlights: HighlightRange[];
+    setHighlights: (highlights: HighlightRange[]) => void;
+    addHighlight: (highlight: HighlightRange) => void;
 }
 
 export const useHighlightsStore = create<HighlightsStore>()(
@@ -22,11 +16,9 @@ export const useHighlightsStore = create<HighlightsStore>()(
         (set, get) => ({
             highlights: [],
             setHighlights: (highlights) => set({ highlights }),
-            addHighlight: (highlight) => set(
-                {
-                    highlights: [...get().highlights, highlight]
-                }),
-            // clearHighlights: () => set({ highlights: [] }),
+            addHighlight: (highlight) => set({
+                highlights: [...get().highlights, highlight]
+            }),
         }),
         {
             name: 'highlights-storage',

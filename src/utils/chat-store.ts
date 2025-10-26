@@ -1,24 +1,22 @@
 import { generateId } from 'ai';
-
 import fs from 'fs';
 import { existsSync, mkdirSync } from 'fs';
 import { writeFile, readFile } from 'fs/promises';
 import path from 'path';
-
 import { UIMessage } from 'ai';
-
 import { Error_ChatNotFound } from './custom_errors/chat_errors';
 
 function getChatFileLocation(id: string): string {
     const chatDir = path.join(process.cwd(), '.CHATS');
-    if (!existsSync(chatDir))
+    if (!existsSync(chatDir)) {
         mkdirSync(chatDir, { recursive: true });
+    }
     return path.join(chatDir, `${id}.json`);
 }
 
 export async function createChat(): Promise<string> {
-    const id = generateId(); // generate a unique chat ID
-    await writeFile(getChatFileLocation(id), '[]'); // create an empty chat file
+    const id = generateId();
+    await writeFile(getChatFileLocation(id), '[]');
     return id;
 }
 
@@ -27,7 +25,6 @@ export async function loadChat(id: string): Promise<UIMessage[]> {
         return JSON.parse(await readFile(getChatFileLocation(id), 'utf8'));
     } catch (error: Error | any) {
         if (error.code === 'ENOENT') {
-            // throw error;
             throw new Error_ChatNotFound(id);
         }
         return [];
@@ -45,11 +42,7 @@ export async function saveChat({
     await writeFile(getChatFileLocation(chatId), content);
 }
 
-
-// type JsonObject = Record<string, any>;
-// export function getChatHistory(): JsonObject[] {
 export function getChatHistory(): UIMessage[] {
-
     const folderPath = path.join(process.cwd(), '.CHATS');
     const result: UIMessage[] = [];
     const files = fs.readdirSync(folderPath);
@@ -63,8 +56,6 @@ export function getChatHistory(): UIMessage[] {
                 const jsonArray: unknown = JSON.parse(fileContent);
 
                 if (Array.isArray(jsonArray) && jsonArray.length > 0 && typeof jsonArray[0] === 'object') {
-
-
                     result.push(jsonArray[0] as UIMessage);
                 }
             } catch (err) {
@@ -76,20 +67,15 @@ export function getChatHistory(): UIMessage[] {
     return result;
 }
 
-export function getLocalChatFileNames() {
-    // function to return file names in .CHATS folder
-
+export function getLocalChatFileNames(): string[] {
     const folderPath = path.join(process.cwd(), '.CHATS');
-    const result: any = [];
+    const result: string[] = [];
     const files = fs.readdirSync(folderPath);
 
     for (const file of files) {
-        const fullPath = path.join(folderPath, file);
-
         if (path.extname(file) === '.json') {
             try {
-                // console.log(file);
-                result.push(path.basename(file, '.json'))
+                result.push(path.basename(file, '.json'));
             } catch (err) {
                 console.error(`Error processing ${file}:`, (err as Error).message);
             }

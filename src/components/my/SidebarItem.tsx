@@ -113,15 +113,13 @@ export default function SidebarItem(
     }
 
     return (
-        <div className={
-            `text-white font-semibold  hover:bg-gradient-to-br hover:from-[#6b46c1] hover:to-[#b83280] bg-black w-full h-full 
-            ${isActive ? 'brightness-125 text-black __ bg-gradient-to-r from-[#001f3f] via-[#083358] to-[#0da574]  ' : 'brightness-125 bg-gradient-to-tl from-[#030637] via-[#3c0753] to-[#720455]' //'bg-pink-800'
+        <div className={`text-white font-semibold hover:bg-gradient-to-br hover:from-[#6b46c1] hover:to-[#b83280] bg-black w-full h-full 
+            ${isActive ? 'brightness-125 text-black bg-gradient-to-r from-[#001f3f] via-[#083358] to-[#0da574]' : 'brightness-125 bg-gradient-to-tl from-[#030637] via-[#3c0753] to-[#720455]'
             } flex items-center gap-1 rounded-2xl transition-colors duration-500 group relative`}>
             <Link
                 href={`${navLink}`}
                 onClick={() => setActiveChat(chatId)}
-                // className="flex-1 flex items-center hover:bg-green-500 p-1 rounded-l-2xl min-w-0"
-                className="flex-1 flex items-center  p-1 rounded-l-2xl min-w-0"
+                className="flex-1 flex items-center p-1 rounded-l-2xl min-w-0"
             >
                 <span className="text-white text-ellipsis truncate p-1">
                     {title || 'Untitled Chat'}

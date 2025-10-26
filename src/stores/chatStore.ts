@@ -71,12 +71,10 @@ export const useChatStore = create<ChatStore>()(
       clearChats: () =>
         set({ chats: [], activeChat: null }),
     }),
-    // ❓❓❓  :=>
     {
       name: 'chat-store', // localStorage key
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ activeChat: state.activeChat }), // Only persist activeChat
     }
-
   )
 );

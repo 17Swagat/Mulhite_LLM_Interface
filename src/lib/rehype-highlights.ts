@@ -7,7 +7,7 @@ import { Highlight } from "./highlights";
  */
 export function rehypeHighlights(highlights: Highlight[]) {
   if (!highlights || highlights.length === 0) {
-    return () => (tree: any) => tree;
+    return (tree: any) => tree;
   }
 
   // Sort highlights by start offset for easier processing
@@ -15,7 +15,7 @@ export function rehypeHighlights(highlights: Highlight[]) {
     (a, b) => a.startOffset - b.startOffset
   );
 
-  return () => (tree: any) => {
+  return (tree: any) => {
     let currentOffset = 0;
 
     visit(tree, "text", (node: any, index: number | undefined, parent: any) => {

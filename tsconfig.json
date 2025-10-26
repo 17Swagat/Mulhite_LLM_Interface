@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    // "target": "ES2018",// // ⬅️ or "es2020", "es2022", "esnext"
     "lib": [
       "dom",
       "dom.iterable",
@@ -34,11 +33,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
-    "src/app/(home)/page.tsx",
-    ".next\\dev/types/**/*.ts",
-    ".next\\dev/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

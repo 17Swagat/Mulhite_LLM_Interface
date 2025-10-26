@@ -15,7 +15,7 @@ import {
 import SidebarItem from "./SidebarItem";
 import { useChatStore } from "@/stores/chatStore";
 import { useEffect, useState } from "react";
-import { useQuery, useMutation, usePaginatedQuery, useConvexAuth, Authenticated, AuthLoading } from "convex/react";
+import { useMutation, usePaginatedQuery, useConvexAuth } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
 
@@ -42,11 +42,9 @@ export function AppSidebar() {
     // Create user if doesn't exist
     useEffect(() => {
         if (!isLoadingAuth && isAuthenticated) {
-            console.log('ABCD: Ensuring user in Convex...');
             ensureUser().catch((err: unknown) => {
                 console.error("Failed to ensure user:", err);
-                console.warn("This may cause issues with chat storage and retrieval.");
-                console.log('Please refresh the page.');
+                console.warn("This may cause issues with chat storage and retrieval. Please refresh the page.");
             });
         }
     }, [ensureUser]);
