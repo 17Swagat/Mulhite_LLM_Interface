@@ -7,10 +7,10 @@ export default async function ChatLayout({
   children: React.ReactNode, 
 }) {
   return (
-    <SidebarProvider>
+    <SidebarProvider className="bg-black">
       <AppSidebar />
       <main className="w-screen">
-        <SidebarTrigger className="m-2 fixed top-0" />
+        <SidebarTrigger className="m-2 fixed top-0 bg-linear-to-br from-purple-700 to-blue-700 text-white" />
         {children}
       </main>
     </SidebarProvider>
