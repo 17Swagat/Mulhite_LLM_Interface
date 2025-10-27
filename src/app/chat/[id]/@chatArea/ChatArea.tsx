@@ -14,7 +14,11 @@ import {
   Conversation,
   ConversationContent,
 } from "@/components/ui/shadcn-io/ai/conversation";
-import { Message, MessageContent } from "@/components/ui/shadcn-io/ai/message";
+import {
+  Message,
+  MessageAvatar,
+  MessageContent,
+} from "@/components/ui/shadcn-io/ai/message";
 import { useChatStore } from "@/stores/chatStore";
 import {
   useQuery,
@@ -310,6 +314,7 @@ export default function ChatArea({ id }: { id: string }) {
     };
 
     document.addEventListener("selectionchange", handleSelectionChange);
+
     return () => {
       document.removeEventListener("selectionchange", handleSelectionChange);
     };
@@ -534,13 +539,25 @@ export default function ChatArea({ id }: { id: string }) {
                         } else {
                           // User messages: render without highlight support
                           return (
-                            <div key={index} className="text-lg">
-                              <Response>{part.text || ""}</Response>
-                            </div>
+                            // <div key={index} className="text-lg">
+                            <Response
+                              key={index + message.id}
+                              className="text-lg"
+                            >
+                              {part.text || ""}
+                            </Response>
+                            // </div>
                           );
                         }
                       })}
                     </MessageContent>
+                    <MessageAvatar
+                      name={message.role}
+                      src={
+                        message.role == "assistant" ? "/ai-models/grok.svg" : "/user.png"
+                      }
+                      className="bg-white"
+                    />
                   </Message>
                 );
               })}
