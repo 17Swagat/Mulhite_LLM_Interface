@@ -57,8 +57,8 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
   const createHighlightMutation = useMutation(api.highlights.createHighlight);
   const deleteHighlightMutation = useMutation(api.highlights.deleteHighlight);
 
-  // Store highlights by message ID for quick lookup
-  const highlightsByMessage = useRef<Map<string, Highlight[]>>(new Map());
+  // Store highlights by message ID for quick lookup - use state instead of ref to trigger re-renders
+  const [highlightsByMessage, setHighlightsByMessage] = useState<Map<string, Highlight[]>>(new Map());
 
   useEffect(() => {
     if (highlightsData) {
@@ -70,7 +70,7 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
         }
         map.get(messageId)!.push(highlight);
       }
-      highlightsByMessage.current = map;
+      setHighlightsByMessage(map);
     }
   }, [highlightsData]);
 
@@ -357,8 +357,10 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
     };
   
     // Update local highlights map immediately for optimistic UI
-    const currentHighlights = highlightsByMessage.current.get(selectedMessageId) || [];
-    highlightsByMessage.current.set(selectedMessageId, [...currentHighlights, tempHighlight]);
+    const currentHighlights = highlightsByMessage.get(selectedMessageId) || [];
+    const newMap = new Map(highlightsByMessage);
+    newMap.set(selectedMessageId, [...currentHighlights, tempHighlight]);
+    setHighlightsByMessage(newMap);
 
     try {
       // Save to database in background
@@ -373,7 +375,9 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
     } catch (error) {
       console.error("Failed to create highlight:", error);
       // Rollback on error
-      highlightsByMessage.current.set(selectedMessageId, currentHighlights);
+      const rollbackMap = new Map(highlightsByMessage);
+      rollbackMap.set(selectedMessageId, currentHighlights);
+      setHighlightsByMessage(rollbackMap);
     }
   };
 
@@ -381,13 +385,8 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
     try {
       await deleteHighlightMutation({ highlightId: highlightId as Id<"highlights"> });
       
-      // Remove from local map
-      for (const [messageId, highlights] of highlightsByMessage.current.entries()) {
-        const filtered = highlights.filter(h => h._id !== highlightId);
-        if (filtered.length !== highlights.length) {
-          highlightsByMessage.current.set(messageId, filtered);
-        }
-      }
+      // Remove from local map - update will come from highlightsData reactively
+      // No need to manually update state here as the useEffect will handle it
     } catch (error) {
       console.error("Failed to delete highlight:", error);
     }
@@ -443,7 +442,7 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
                       // Only use HighlightedResponse for assistant messages
                       if (message.role === "assistant") {
                         // Get highlights for this message
-                        const messageHighlights = highlightsByMessage.current.get(message.id) || [];
+                        const messageHighlights = highlightsByMessage.get(message.id) || [];
 
                         return (
                           <div key={index}>

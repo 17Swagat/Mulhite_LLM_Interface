@@ -25,20 +25,46 @@ export function HighlightedResponse({
 
   // Apply CSS Highlight API
   useEffect(() => {
-    if (!containerRef.current || !highlights.length) return;
+    if (!containerRef.current) return;
+
+    const colorMap: Record<string, string> = {
+      yellow: "rgb(254 240 138)",
+      green: "rgb(187 247 208)",
+      blue: "rgb(191 219 254)",
+      pink: "rgb(251 207 232)",
+      orange: "rgb(254 215 170)",
+      red: "rgb(254 202 202)",
+      purple: "rgb(233 213 255)",
+    };
+
+    // Clear existing highlights for this message
+    const clearHighlights = () => {
+      if (typeof CSS !== "undefined" && CSS.highlights) {
+        // Remove all color highlights for this message
+        Object.keys(colorMap).forEach((color) => {
+          CSS.highlights.delete(`msg-${messageId}-${color}`);
+        });
+      }
+
+      // Remove associated styles
+      const styleId = `hl-${messageId}`;
+      const existingStyle = document.getElementById(styleId);
+      if (existingStyle) {
+        existingStyle.remove();
+      }
+    };
+
+    // If no highlights, just clean up and return
+    if (!highlights.length) {
+      clearHighlights();
+      return;
+    }
 
     const timer = setTimeout(() => {
       if (!containerRef.current) return;
 
-      const colorMap: Record<string, string> = {
-        yellow: "rgb(254 240 138)",
-        green: "rgb(187 247 208)",
-        blue: "rgb(191 219 254)",
-        pink: "rgb(251 207 232)",
-        orange: "rgb(254 215 170)",
-        red: "rgb(254 202 202)",
-        purple: "rgb(233 213 255)",
-      };
+      // Clear before applying new highlights
+      clearHighlights();
 
       // Group by color
       const byColor = highlights.reduce((acc, h) => {
@@ -107,7 +133,10 @@ export function HighlightedResponse({
       });
     }, 50);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      clearHighlights();
+    };
   }, [highlights, messageId]);
 
   const scrollToHighlight = (h: Highlight) => {
