@@ -525,7 +525,7 @@ export default function ChatArea({ id }: { id: string }) {
                             emptyHighlightsArray.current;
 
                           return (
-                            <div key={index}>
+                            <div key={index + message.id}>
                               {/* Answer with highlights */}
                               <HighlightedResponse
                                 text={part.text || ""}
@@ -537,6 +537,7 @@ export default function ChatArea({ id }: { id: string }) {
                             </div>
                           );
                         } else {
+                          
                           // User messages: render without highlight support
                           return (
                             // <div key={index} className="text-lg">
@@ -554,7 +555,9 @@ export default function ChatArea({ id }: { id: string }) {
                     <MessageAvatar
                       name={message.role}
                       src={
-                        message.role == "assistant" ? "/ai-models/grok.svg" : "/user.png"
+                        message.role == "assistant"
+                          ? "/ai-models/grok.svg"
+                          : "/user.png"
                       }
                       className="bg-white"
                     />

@@ -27,7 +27,11 @@ export function HighlightedResponse({
 
   // Create a stable dependency key based on highlight IDs and positions
   const highlightsKey = useMemo(
-    () => highlights.map(h => `${h._id}-${h.startOffset}-${h.endOffset}-${h.color}`).sort().join("|"),
+    () =>
+      highlights
+        .map((h) => `${h._id}-${h.startOffset}-${h.endOffset}-${h.color}`)
+        .sort()
+        .join("|"),
     [highlights]
   );
 
@@ -183,11 +187,17 @@ export function HighlightedResponse({
       setTimeout(() => {
         const range = document.createRange();
         range.setStart(targetNode!, targetOffset);
-        range.setEnd(targetNode!, Math.min(targetOffset + 10, (targetNode!.textContent || "").length));
-        
+        range.setEnd(
+          targetNode!,
+          Math.min(targetOffset + 10, (targetNode!.textContent || "").length)
+        );
+
         const rect = range.getBoundingClientRect();
         const absoluteTop = window.scrollY + rect.top;
-        const targetScroll = Math.max(0, absoluteTop - window.innerHeight / 2 + rect.height / 2);
+        const targetScroll = Math.max(
+          0,
+          absoluteTop - window.innerHeight / 2 + rect.height / 2
+        );
 
         window.scrollTo({ top: targetScroll, behavior: "smooth" });
 
@@ -239,14 +249,26 @@ export function HighlightedResponse({
           >
             <HighlighterIcon size={14} />
             <span>{highlights.length} Highlights</span>
-            <ChevronDown size={12} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+            <ChevronDown
+              size={12}
+              className={`transition-transform ${open ? "rotate-180" : ""}`}
+            />
           </button>
 
           {open && (
-            <div className="mt-2 bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
+            <div className="mt-2 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
               <div className="px-3 py-2 bg-gray-700 border-b border-gray-600 flex items-center justify-between">
-                <span className="text-sm font-medium text-white">Your Highlights</span>
-                <button onClick={() => setOpen(false)} className="p-1 hover:bg-gray-600 rounded" aria-label="Close menu">
+                
+                <span className="text-sm font-medium text-white">
+                  Your Highlights
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  className="p-1 hover:bg-gray-600 rounded"
+                  aria-label="Close menu"
+                >
                   <X size={14} className="text-gray-300" />
                 </button>
               </div>
@@ -258,12 +280,19 @@ export function HighlightedResponse({
                     className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
                     onClick={() => scrollToHighlight(h)}
                   >
-                    <div className={`w-2 h-2 rounded-full mt-1 shrink-0 ${getColorClass(h.color || "yellow")}`} />
+                    <div
+                      className={`w-2 h-2 rounded-full mt-1 shrink-0 ${getColorClass(
+                        h.color || "yellow"
+                      )}`}
+                    />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-200 line-clamp-2">{h.text}</p>
+                      <p className="text-sm text-gray-200 line-clamp-2">
+                        {h.text}
+                      </p>
                       <p className="text-xs text-gray-500 mt-1">#{idx + 1}</p>
                     </div>
                     <button
+                      type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         onDeleteHighlight?.(h._id);
@@ -271,7 +300,10 @@ export function HighlightedResponse({
                       className="p-1 hover:bg-red-900/40 rounded opacity-0 group-hover:opacity-100"
                       aria-label="Delete highlight"
                     >
-                      <Trash2 size={12} className="text-gray-400 hover:text-red-400" />
+                      <Trash2
+                        size={12}
+                        className="text-gray-400 hover:text-red-400"
+                      />
                     </button>
                   </div>
                 ))}
@@ -297,4 +329,3 @@ function getColorClass(color: string): string {
   };
   return colorMap[color] || colorMap.yellow;
 }
-
