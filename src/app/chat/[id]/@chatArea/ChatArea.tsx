@@ -16,7 +16,12 @@ import {
 } from "@/components/ui/shadcn-io/ai/conversation";
 import { Message, MessageContent } from "@/components/ui/shadcn-io/ai/message";
 import { useChatStore } from "@/stores/chatStore";
-import { useQuery, useMutation } from "convex/react";
+import {
+  useQuery,
+  useMutation,
+  Authenticated,
+  AuthLoading,
+} from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { Id } from "@/../convex/_generated/dataModel";
 // import ChatNotFound from './_ui/ChatNotFound';
@@ -28,7 +33,13 @@ import { getTextOffsetFromSelection, Highlight } from "@/lib/highlights";
 import { HighlightedResponse } from "@/components/my/HighlightedResponse";
 import { isConversationOwnedByUser } from "../../../../../convex/conversations";
 
-export default function ChatArea({ id }: { id?: string | undefined } = {}) {
+export default function ChatArea({
+  id,
+}: {
+  // id?: string | undefined
+  id: string;
+}) {
+  // } = {}) {
   const [input, setInput] = useState("");
   const [hasProcessedPendingMessage, setHasProcessedPendingMessage] =
     useState(false);
@@ -56,7 +67,6 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
     api.highlights.getHighlightsByConversation,
     id ? { conversationId } : "skip"
   );
-
 
   const createHighlightMutation = useMutation(api.highlights.createHighlight);
   const deleteHighlightMutation = useMutation(api.highlights.deleteHighlight);
@@ -263,9 +273,9 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
   };
 
   // Show ChatNotFound if conversation doesn't exist
-  if (conversationNotFound && !isLoadingMessages) {
-    return <ChatNotFound id={id || ""} />;
-  }
+  // if (conversationNotFound && !isLoadingMessages) {
+  //   return <ChatNotFound id={id || ""} />;
+  // }
 
   // Scroll To bottom Behaviour
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -453,123 +463,134 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
     }
   };
 
-
-
-
   return (
-    <div className="flex flex-col items-center-safe min-h-screen bg-gray-900 text-white">
-      {/* Toolbar - render once at the top level */}
-      <ToolbarOnTextHighlight
-        _selection={_selection}
-        selectedTextRect={selectedTextRect}
-        onHighlight={handleHighlight}
-      />
+    <>
+      <Authenticated>
+        <div className="flex flex-col items-center-safe min-h-screen bg-gray-900 text-white">
+          {/* Toolbar - render once at the top level */}
+          <ToolbarOnTextHighlight
+            _selection={_selection}
+            selectedTextRect={selectedTextRect}
+            onHighlight={handleHighlight}
+          />
 
-      <div className="flex-1 overflow-y-auto p-6">
-        <Conversation className="max-w-11/12 mx-auto">
-          <ConversationContent>
-            {messages.map((message, messageIndex) => {
-              if (message.id.trim() === "") {
-                message.id = uuidv7();
-              }
-              // Only consider streaming if it's the last message
-              const isLastMessage = messageIndex === messages.length - 1;
-              const isCurrentlyStreaming =
-                status === "streaming" && isLastMessage;
+          <div className="flex-1 overflow-y-auto p-6">
+            <Conversation className="max-w-11/12 mx-auto">
+              <ConversationContent>
+                {messages.map((message, messageIndex) => {
+                  if (message.id.trim() === "") {
+                    message.id = uuidv7();
+                  }
+                  // Only consider streaming if it's the last message
+                  const isLastMessage = messageIndex === messages.length - 1;
+                  const isCurrentlyStreaming =
+                    status === "streaming" && isLastMessage;
 
-              return (
-                <Message from={message.role} key={message.id} className="mb-4">
-                  <MessageContent className="bg-gray-800 p-3 rounded-lg">
-                    {/* Reasoning Block: */}
-                    {message.parts.map((part, index) =>
-                      part.type === "reasoning" ? (
-                        <div key={index} className="mb-2">
-                          <Reasoning
-                            className="w-full"
-                            isStreaming={isCurrentlyStreaming}
-                            duration={0}
-                            defaultOpen={false}
-                          >
-                            <ReasoningTrigger />
-                            <ReasoningContent className="bg-yellow-600 text-white p-2 rounded">
-                              {part.text}
-                            </ReasoningContent>
-                          </Reasoning>
-                        </div>
-                      ) : null
-                    )}
+                  return (
+                    <Message
+                      from={message.role}
+                      key={message.id}
+                      className="mb-4"
+                    >
+                      <MessageContent className="bg-gray-800 p-3 rounded-lg">
+                        {/* Reasoning Block: */}
+                        {message.parts.map((part, index) =>
+                          part.type === "reasoning" ? (
+                            <div key={index} className="mb-2">
+                              <Reasoning
+                                className="w-full"
+                                isStreaming={isCurrentlyStreaming}
+                                duration={0}
+                                defaultOpen={false}
+                              >
+                                <ReasoningTrigger />
+                                <ReasoningContent className="bg-yellow-600 text-white p-2 rounded">
+                                  {part.text}
+                                </ReasoningContent>
+                              </Reasoning>
+                            </div>
+                          ) : null
+                        )}
 
-                    {/* Answer Block: */}
-                    {message.parts.map((part, index) => {
-                      if (part.type !== "text") return null;
+                        {/* Answer Block: */}
+                        {message.parts.map((part, index) => {
+                          if (part.type !== "text") return null;
 
-                      // Only use HighlightedResponse for assistant messages
-                      if (message.role === "assistant") {
-                        // Get highlights for this message - use stable empty array reference
-                        const messageHighlights =
-                          highlightsByMessage.get(message.id) ||
-                          emptyHighlightsArray.current;
+                          // Only use HighlightedResponse for assistant messages
+                          if (message.role === "assistant") {
+                            // Get highlights for this message - use stable empty array reference
+                            const messageHighlights =
+                              highlightsByMessage.get(message.id) ||
+                              emptyHighlightsArray.current;
 
-                        return (
-                          <div key={index}>
-                            {/* Answer with highlights */}
-                            <HighlightedResponse
-                              text={part.text || ""}
-                              highlights={messageHighlights}
-                              messageId={message.id}
-                              className="text-lg"
-                              onDeleteHighlight={handleDeleteHighlight}
-                            />
-                          </div>
-                        );
-                      } else {
-                        // User messages: render without highlight support
-                        return (
-                          <div key={index} className="text-lg">
-                            <Response>{part.text || ""}</Response>
-                          </div>
-                        );
-                      }
-                    })}
-                  </MessageContent>
-                </Message>
-              );
-            })}
-            <div ref={messagesEndRef} />
-          </ConversationContent>
-        </Conversation>
-      </div>
+                            return (
+                              <div key={index}>
+                                {/* Answer with highlights */}
+                                <HighlightedResponse
+                                  text={part.text || ""}
+                                  highlights={messageHighlights}
+                                  messageId={message.id}
+                                  className="text-lg"
+                                  onDeleteHighlight={handleDeleteHighlight}
+                                />
+                              </div>
+                            );
+                          } else {
+                            // User messages: render without highlight support
+                            return (
+                              <div key={index} className="text-lg">
+                                <Response>{part.text || ""}</Response>
+                              </div>
+                            );
+                          }
+                        })}
+                      </MessageContent>
+                    </Message>
+                  );
+                })}
+                <div ref={messagesEndRef} />
+              </ConversationContent>
+            </Conversation>
+          </div>
 
-      <div className="h-20"></div>
+          <div className="h-20"></div>
 
-      <form className="flex gap-1 fixed bottom-2" onSubmit={handleSubmit}>
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          disabled={status !== "ready"}
-          placeholder="Say something..."
-          className="w-[600px] h-[70px] placeholder-white text-white border-2 bg-black/90 border-white px-4 rounded-l-lg focus:border-pink-400 focus:outline-none"
-        />
-        <button
-          type="submit"
-          className={`w-[70px] h-[70px] flex justify-center items-center ${
-            status === "ready" ? "bg-blue-500" : "bg-red-500"
-          }`}
-          onClick={() => {
-            if (status === "submitted" || status === "streaming") {
-              stop();
-            }
-          }}
-        >
-          {status === "ready" ? (
-            <div className="h-full flex items-center">Submit</div>
-          ) : (
-            <div className="h-full flex items-center justify-center">
-              <div className="w-6 h-6 animate-spin rounded-full border-4 border-solid border-white border-t-transparent"></div>
-            </div>
-          )}
-        </button>
-      </form>
-    </div>
+          {/* User-Question-Input */}
+          <form className="flex gap-1 fixed bottom-2" onSubmit={handleSubmit}>
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={status !== "ready"}
+              placeholder="Say something..."
+              className="w-[600px] h-[70px] placeholder-white text-white border-2 bg-black/90 border-white px-4 rounded-l-lg focus:border-pink-400 focus:outline-none"
+            />
+            <button
+              type="submit"
+              className={`w-[70px] h-[70px] flex justify-center items-center ${
+                status === "ready" ? "bg-blue-500" : "bg-red-500"
+              }`}
+              onClick={() => {
+                if (status === "submitted" || status === "streaming") {
+                  stop();
+                }
+              }}
+            >
+              {status === "ready" ? (
+                <div className="h-full flex items-center">Submit</div>
+              ) : (
+                <div className="h-full flex items-center justify-center">
+                  <div className="w-6 h-6 animate-spin rounded-full border-4 border-solid border-white border-t-transparent"></div>
+                </div>
+              )}
+            </button>
+          </form>
+        </div>
+      </Authenticated>
+      <AuthLoading>
+        <div className="h-full flex items-center justify-center bg-white">
+          Loading...fuckersss
+        </div>
+      </AuthLoading>
+    </>
   );
 }
