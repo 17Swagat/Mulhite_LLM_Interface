@@ -57,3 +57,9 @@ tmp/
 
 # Agent Work:
 AGENT_WORK/
+
+
+# Images
+public/ai-models/
+public/*.png
+public/*.svg
