@@ -463,6 +463,19 @@ export default function ChatArea({
     }
   };
 
+  
+  
+  
+  // Chat Not Found Case:=>
+  const isOwned = useQuery(api.conversations.isConversationOwnedByUser, {
+    conversationId: id || "",
+  });
+  //   console.log("check: " + isOwned);
+  if (isOwned === false) {
+    console.log("Triggered!!");
+    return <ChatNotFound id={id || ""} />;
+  }
+
   return (
     <>
       <Authenticated>

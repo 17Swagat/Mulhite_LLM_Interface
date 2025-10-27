@@ -25,23 +25,13 @@ export default function ChatPage_ID({
 
   // Handling-ChatId NotFound
   // NOTE: Need to modify it
-  const isOwned = useQuery(api.conversations.isConversationOwnedByUser, {
-    conversationId: id || "",
-  });
-  //   console.log("check: " + isOwned);
-  if (isOwned === false) {
-    console.log("Triggered!!");
-    return <ChatNotFound id={id || ""} />;
-  }
-
-  // if (!id) {
-  // return <></>;
-  //     return (
-  //       // Chat-Loading:=>
-  //       <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-purple-700/40 via-pink-600/80 to-red-800/90">
-  //         <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-white ml-4"></div>
-  //       </div>
-  //     );
+  // const isOwned = useQuery(api.conversations.isConversationOwnedByUser, {
+  //   conversationId: id || "",
+  // });
+  // //   console.log("check: " + isOwned);
+  // if (isOwned === false) {
+  //   console.log("Triggered!!");
+  //   return <ChatNotFound id={id || ""} />;
   // }
 
   // ChatArea now loads messages from Convex internally
