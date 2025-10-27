@@ -13,7 +13,7 @@ export default function ChatPage_ID({
   params: Promise<{ id: string }>;
 }) {
   // const [id, setId] = useState<string | null>(null);
-  const [id, setId] = useState<string | null>(null);
+  const [id, setId] = useState<string>("");
 
   useEffect(() => {
     const getId = async () => {
@@ -34,15 +34,15 @@ export default function ChatPage_ID({
     return <ChatNotFound id={id || ""} />;
   }
 
-  if (!id) {
-    return <></>;
-    //     return (
-    //       // Chat-Loading:=>
-    //       <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-purple-700/40 via-pink-600/80 to-red-800/90">
-    //         <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-white ml-4"></div>
-    //       </div>
-    //     );
-  }
+  // if (!id) {
+  // return <></>;
+  //     return (
+  //       // Chat-Loading:=>
+  //       <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-purple-700/40 via-pink-600/80 to-red-800/90">
+  //         <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-white ml-4"></div>
+  //       </div>
+  //     );
+  // }
 
   // ChatArea now loads messages from Convex internally
   return <ChatArea id={id} />;
