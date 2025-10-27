@@ -22,15 +22,16 @@ export function HighlightedResponse({
 }: HighlightedResponseProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
+  // Track which color highlight names are currently applied for this message
+  const prevColorsRef = useRef<Set<string>>(new Set());
 
   // Create a stable dependency key based on highlight IDs and positions
-  // This prevents unnecessary re-renders when the array reference changes but content is the same
-  const highlightsKey = useMemo(() => 
-    highlights.map(h => `${h._id}-${h.startOffset}-${h.endOffset}-${h.color}`).sort().join('|'),
+  const highlightsKey = useMemo(
+    () => highlights.map(h => `${h._id}-${h.startOffset}-${h.endOffset}-${h.color}`).sort().join("|"),
     [highlights]
   );
 
-  // Apply CSS Highlight API
+  // Apply CSS Highlight API without clearing everything (diff updates per color)
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -44,107 +45,112 @@ export function HighlightedResponse({
       purple: "rgb(233 213 255)",
     };
 
-    // Clear existing highlights for this message
-    const clearHighlights = () => {
+    // Helper: ensure a single style element per message; add rules if missing
+    const ensureStyleAndRule = (color: string) => {
+      const styleId = `hl-${messageId}`;
+      let style = document.getElementById(styleId) as HTMLStyleElement | null;
+      if (!style) {
+        style = document.createElement("style");
+        style.id = styleId;
+        document.head.appendChild(style);
+      }
+      const bgColor = colorMap[color] || colorMap.yellow;
+      const cssRule = `::highlight(msg-${messageId}-${color}) { background-color: ${bgColor}; border-radius: 2px; }`;
+      if (!style.textContent?.includes(cssRule)) {
+        style.textContent = (style.textContent || "") + cssRule;
+      }
+    };
+
+    const prevColors = prevColorsRef.current;
+
+    // If no highlights now: remove any previously applied highlights and exit
+    if (!highlights.length) {
       if (typeof CSS !== "undefined" && CSS.highlights) {
-        // Remove all color highlights for this message
-        Object.keys(colorMap).forEach((color) => {
+        prevColors.forEach((color) => {
           CSS.highlights.delete(`msg-${messageId}-${color}`);
         });
       }
-
-      // Remove associated styles
-      const styleId = `hl-${messageId}`;
-      const existingStyle = document.getElementById(styleId);
-      if (existingStyle) {
-        existingStyle.remove();
-      }
-    };
-
-    // If no highlights, just clean up and return
-    if (!highlights.length) {
-      clearHighlights();
+      prevColorsRef.current = new Set();
       return;
     }
 
-    const timer = setTimeout(() => {
-      if (!containerRef.current) return;
+    // Group by color for efficient Highlight instances
+    const byColor = highlights.reduce((acc, h) => {
+      const color = h.color || "yellow";
+      if (!acc[color]) acc[color] = [];
+      acc[color].push(h);
+      return acc;
+    }, {} as Record<string, Highlight[]>);
 
-      // Clear before applying new highlights
-      clearHighlights();
+    const currentColors = new Set<string>(Object.keys(byColor));
 
-      // Group by color
-      const byColor = highlights.reduce((acc, h) => {
-        const color = h.color || "yellow";
-        if (!acc[color]) acc[color] = [];
-        acc[color].push(h);
-        return acc;
-      }, {} as Record<string, Highlight[]>);
+    // Update or create highlights only for colors present in current set
+    Object.entries(byColor).forEach(([color, colorHighlights]) => {
+      // Build ranges for this color
+      const ranges: Range[] = [];
+      colorHighlights.forEach((h) => {
+        const walker = document.createTreeWalker(
+          containerRef.current!,
+          NodeFilter.SHOW_TEXT
+        );
 
-      // Create ranges
-      Object.entries(byColor).forEach(([color, colorHighlights]) => {
-        const ranges: Range[] = [];
+        let offset = 0;
+        let node: Node | null;
+        let startNode: Node | null = null;
+        let startOffset = 0;
 
-        colorHighlights.forEach((h) => {
-          const walker = document.createTreeWalker(
-            containerRef.current!,
-            NodeFilter.SHOW_TEXT
-          );
+        while ((node = walker.nextNode())) {
+          const text = node.textContent || "";
+          const end = offset + text.length;
 
-          let offset = 0;
-          let node: Node | null;
-          let startNode: Node | null = null;
-          let startOffset = 0;
-
-          while ((node = walker.nextNode())) {
-            const text = node.textContent || "";
-            const end = offset + text.length;
-
-            if (!startNode && h.startOffset >= offset && h.startOffset <= end) {
-              startNode = node;
-              startOffset = h.startOffset - offset;
-            }
-
-            if (startNode && h.endOffset >= offset && h.endOffset <= end) {
-              const range = document.createRange();
-              range.setStart(startNode, startOffset);
-              range.setEnd(node, h.endOffset - offset);
-              ranges.push(range);
-              break;
-            }
-
-            offset = end;
+          if (!startNode && h.startOffset >= offset && h.startOffset <= end) {
+            startNode = node;
+            startOffset = h.startOffset - offset;
           }
-        });
 
-        if (ranges.length > 0 && typeof CSS !== "undefined" && CSS.highlights) {
-          const highlight = new Highlight(...ranges);
-          CSS.highlights.set(`msg-${messageId}-${color}`, highlight);
+          if (startNode && h.endOffset >= offset && h.endOffset <= end) {
+            const range = document.createRange();
+            range.setStart(startNode, startOffset);
+            range.setEnd(node, h.endOffset - offset);
+            ranges.push(range);
+            break;
+          }
 
-          const styleId = `hl-${messageId}`;
-          let style = document.getElementById(styleId) as HTMLStyleElement | null;
-          
-          if (!style) {
-            style = document.createElement("style");
-            style.id = styleId;
-            document.head.appendChild(style);
-          }
-          
-          const bgColor = colorMap[color] || colorMap.yellow;
-          const cssRule = `::highlight(msg-${messageId}-${color}) { background-color: ${bgColor}; border-radius: 2px; }`;
-          
-          if (!style.textContent?.includes(cssRule)) {
-            style.textContent = (style.textContent || "") + cssRule;
-          }
+          offset = end;
         }
       });
-    }, 50);
 
+      if (typeof CSS !== "undefined" && CSS.highlights) {
+        const hl = new Highlight(...ranges);
+        // Replace or set atomically (no intermediate clear)
+        CSS.highlights.set(`msg-${messageId}-${color}`, hl);
+        // Ensure style rule exists for this color
+        ensureStyleAndRule(color);
+      }
+    });
+
+    // Remove colors that were previously applied but are no longer present
+    if (typeof CSS !== "undefined" && CSS.highlights) {
+      prevColors.forEach((color) => {
+        if (!currentColors.has(color)) {
+          CSS.highlights.delete(`msg-${messageId}-${color}`);
+        }
+      });
+    }
+
+    // Update previous colors set
+    prevColorsRef.current = currentColors;
+
+    // Cleanup only on unmount: remove all remaining colors for this message
     return () => {
-      clearTimeout(timer);
-      clearHighlights();
+      if (typeof CSS !== "undefined" && CSS.highlights) {
+        prevColorsRef.current.forEach((color) => {
+          CSS.highlights.delete(`msg-${messageId}-${color}`);
+        });
+      }
+      prevColorsRef.current = new Set();
     };
-  }, [highlightsKey, messageId, highlights]); // Use highlightsKey as primary dependency
+  }, [highlightsKey, messageId]);
 
   const scrollToHighlight = (h: Highlight) => {
     if (!containerRef.current) return;

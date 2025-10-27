@@ -60,17 +60,53 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
   // Store highlights by message ID for quick lookup - use state instead of ref to trigger re-renders
   const [highlightsByMessage, setHighlightsByMessage] = useState<Map<string, Highlight[]>>(new Map());
 
+  // Cache for stable empty arrays - prevent creating new [] on every render
+  const emptyHighlightsArray = useRef<Highlight[]>([]);
+  
+  // Cache to store previous highlights and only update if they actually changed
+  const prevHighlightsByMessageRef = useRef<Map<string, Highlight[]>>(new Map());
+
   useEffect(() => {
     if (highlightsData) {
-      const map = new Map<string, Highlight[]>();
+      const newMap = new Map<string, Highlight[]>();
+      
+      // Group highlights by message ID
       for (const highlight of highlightsData) {
         const messageId = highlight.messageId;
-        if (!map.has(messageId)) {
-          map.set(messageId, []);
+        if (!newMap.has(messageId)) {
+          newMap.set(messageId, []);
         }
-        map.get(messageId)!.push(highlight);
+        newMap.get(messageId)!.push(highlight);
       }
-      setHighlightsByMessage(map);
+
+      // Only update state if highlights actually changed for any message
+      let hasChanges = false;
+      const prevMap = prevHighlightsByMessageRef.current;
+
+      // Check if any message has different highlights
+      if (newMap.size !== prevMap.size) {
+        hasChanges = true;
+      } else {
+        for (const [messageId, newHighlights] of newMap.entries()) {
+          const prevHighlights = prevMap.get(messageId);
+          if (!prevHighlights || prevHighlights.length !== newHighlights.length) {
+            hasChanges = true;
+            break;
+          }
+          // Compare highlight IDs
+          const newIds = newHighlights.map(h => h._id).sort().join(',');
+          const prevIds = prevHighlights.map(h => h._id).sort().join(',');
+          if (newIds !== prevIds) {
+            hasChanges = true;
+            break;
+          }
+        }
+      }
+
+      if (hasChanges) {
+        prevHighlightsByMessageRef.current = newMap;
+        setHighlightsByMessage(newMap);
+      }
     }
   }, [highlightsData]);
 
@@ -441,8 +477,8 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
 
                       // Only use HighlightedResponse for assistant messages
                       if (message.role === "assistant") {
-                        // Get highlights for this message
-                        const messageHighlights = highlightsByMessage.get(message.id) || [];
+                        // Get highlights for this message - use stable empty array reference
+                        const messageHighlights = highlightsByMessage.get(message.id) || emptyHighlightsArray.current;
 
                         return (
                           <div key={index}>
