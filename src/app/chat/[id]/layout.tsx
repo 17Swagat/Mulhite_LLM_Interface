@@ -1,12 +1,9 @@
 export default async function Layout({
+  // children,
   chatArea,
 }: {
-  chatArea: React.ReactNode,
+  // children: React.ReactNode;
+  chatArea: React.ReactNode;
 }) {
-
-  return (
-    <>
-      {chatArea}
-    </>
-  )
+  return <>{chatArea}</>;
 }

@@ -26,6 +26,7 @@ import { ShareIcon, HighlighterIcon } from "lucide-react";
 import { ToolbarOnTextHighlight } from "@/components/my/ToolbarOnTextSelection";
 import { getTextOffsetFromSelection, Highlight } from "@/lib/highlights";
 import { HighlightedResponse } from "@/components/my/HighlightedResponse";
+import { isConversationOwnedByUser } from "../../../../../convex/conversations";
 
 export default function ChatArea({ id }: { id?: string | undefined } = {}) {
   const [input, setInput] = useState("");
@@ -40,6 +41,7 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
 
   // Convex queries and mutations
   const conversationId = id as Id<"conversations">;
+
   const messagesData = useQuery(
     api.conversations.getMessages,
     id ? { conversationId } : "skip"
@@ -54,22 +56,28 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
     api.highlights.getHighlightsByConversation,
     id ? { conversationId } : "skip"
   );
+
+
   const createHighlightMutation = useMutation(api.highlights.createHighlight);
   const deleteHighlightMutation = useMutation(api.highlights.deleteHighlight);
 
   // Store highlights by message ID for quick lookup - use state instead of ref to trigger re-renders
-  const [highlightsByMessage, setHighlightsByMessage] = useState<Map<string, Highlight[]>>(new Map());
+  const [highlightsByMessage, setHighlightsByMessage] = useState<
+    Map<string, Highlight[]>
+  >(new Map());
 
   // Cache for stable empty arrays - prevent creating new [] on every render
   const emptyHighlightsArray = useRef<Highlight[]>([]);
-  
+
   // Cache to store previous highlights and only update if they actually changed
-  const prevHighlightsByMessageRef = useRef<Map<string, Highlight[]>>(new Map());
+  const prevHighlightsByMessageRef = useRef<Map<string, Highlight[]>>(
+    new Map()
+  );
 
   useEffect(() => {
     if (highlightsData) {
       const newMap = new Map<string, Highlight[]>();
-      
+
       // Group highlights by message ID
       for (const highlight of highlightsData) {
         const messageId = highlight.messageId;
@@ -89,13 +97,22 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
       } else {
         for (const [messageId, newHighlights] of newMap.entries()) {
           const prevHighlights = prevMap.get(messageId);
-          if (!prevHighlights || prevHighlights.length !== newHighlights.length) {
+          if (
+            !prevHighlights ||
+            prevHighlights.length !== newHighlights.length
+          ) {
             hasChanges = true;
             break;
           }
           // Compare highlight IDs
-          const newIds = newHighlights.map(h => h._id).sort().join(',');
-          const prevIds = prevHighlights.map(h => h._id).sort().join(',');
+          const newIds = newHighlights
+            .map((h) => h._id)
+            .sort()
+            .join(",");
+          const prevIds = prevHighlights
+            .map((h) => h._id)
+            .sort()
+            .join(",");
           if (newIds !== prevIds) {
             hasChanges = true;
             break;
@@ -267,7 +284,9 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
   const [selectedTextRect, setSelectedTextRect] = useState<DOMRect | null>(
     null
   );
-  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
+  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     const handleSelectionChange = () => {
@@ -308,7 +327,10 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
   }, []);
 
   // Handle highlight creation
-  const handleHighlight = async (selection: Selection, color: string = "yellow") => {
+  const handleHighlight = async (
+    selection: Selection,
+    color: string = "yellow"
+  ) => {
     if (!selectedMessageId || !id) return;
 
     const selectedText = selection.toString().trim();
@@ -317,9 +339,10 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
     const range = selection.getRangeAt(0);
 
     // Get the message container
-    const messageContainer = range.commonAncestorContainer.parentElement?.closest(
-      "[data-message-text]"
-    );
+    const messageContainer =
+      range.commonAncestorContainer.parentElement?.closest(
+        "[data-message-text]"
+      );
 
     if (!messageContainer) {
       console.error("Could not find message container");
@@ -361,16 +384,16 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
       const renderedText = messageContainer.textContent || "";
       const normalizedSelected = selectedText.replace(/\s+/g, " ");
       const normalizedRendered = renderedText.replace(/\s+/g, " ");
-      
+
       startOffset = normalizedRendered.indexOf(normalizedSelected);
-      
+
       if (startOffset === -1) {
         console.error("Could not find selected text in rendered content");
         console.log("Selected:", selectedText);
         console.log("Rendered:", renderedText.substring(0, 200));
         return;
       }
-      
+
       endOffset = startOffset + normalizedSelected.length;
     }
 
@@ -391,7 +414,7 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
       color: color,
       createdAt: Date.now(),
     };
-  
+
     // Update local highlights map immediately for optimistic UI
     const currentHighlights = highlightsByMessage.get(selectedMessageId) || [];
     const newMap = new Map(highlightsByMessage);
@@ -419,14 +442,19 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
 
   const handleDeleteHighlight = async (highlightId: string) => {
     try {
-      await deleteHighlightMutation({ highlightId: highlightId as Id<"highlights"> });
-      
+      await deleteHighlightMutation({
+        highlightId: highlightId as Id<"highlights">,
+      });
+
       // Remove from local map - update will come from highlightsData reactively
       // No need to manually update state here as the useEffect will handle it
     } catch (error) {
       console.error("Failed to delete highlight:", error);
     }
   };
+
+
+
 
   return (
     <div className="flex flex-col items-center-safe min-h-screen bg-gray-900 text-white">
@@ -478,7 +506,9 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
                       // Only use HighlightedResponse for assistant messages
                       if (message.role === "assistant") {
                         // Get highlights for this message - use stable empty array reference
-                        const messageHighlights = highlightsByMessage.get(message.id) || emptyHighlightsArray.current;
+                        const messageHighlights =
+                          highlightsByMessage.get(message.id) ||
+                          emptyHighlightsArray.current;
 
                         return (
                           <div key={index}>

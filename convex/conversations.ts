@@ -170,6 +170,31 @@ export const getMessages = query({
 });
 
 
+export const isConversationOwnedByUser = query({
+    args: {
+        conversationId: v.optional(v.string()),
+    },
+    handler: async (ctx, { conversationId }) => {
+        const user = await getCurrentUserQuery(ctx);
+        if (!user) return false;
+
+        // Validate that the ID belongs to the conversations table
+        const normalizedId = ctx.db.normalizeId("conversations", conversationId ?? '');
+        if (normalizedId === null) {
+            // Invalid ID or ID from wrong table
+            return false;
+        }
+
+        const convo = await ctx.db.get(normalizedId);
+        if (!convo) {
+            // ID is valid but document doesn't exist
+            return false;
+        }
+
+        return convo.userId === user._id;
+    },
+});
+
 export const createConversation = mutation({
     args: {
         title: v.optional(v.string())

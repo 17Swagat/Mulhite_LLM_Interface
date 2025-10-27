@@ -65,18 +65,50 @@ export const getHighlightsByMessage = query({
   },
 });
 
+
+
+// const isConversationOwnedByUser = query({
+//   args: {
+//     conversationId: v.optional(v.string()),
+//   },
+//   handler: async (ctx, { conversationId }) => {
+//     const user = await getCurrentUser(ctx);
+//     if (!user) return false;
+
+//     // Validate that the ID belongs to the conversations table
+//     const normalizedId = ctx.db.normalizeId("conversations", conversationId ?? '');
+//     if (normalizedId === null) {
+//       // Invalid ID or ID from wrong table
+//       return false;
+//     }
+
+//     const convo = await ctx.db.get(normalizedId);
+//     if (!convo) {
+//       // ID is valid but document doesn't exist
+//       return false;
+//     }
+
+//     return convo.userId === user._id;
+//   },
+// });
+
 // Get all highlights for a conversation
 export const getHighlightsByConversation = query({
   args: {
-    conversationId: v.id("conversations"),
+    conversationId: v.string() //v.id("conversations"),
   },
   handler: async (ctx, args) => {
     const user = await getCurrentUser(ctx);
 
+    const normalizedId = ctx.db.normalizeId("conversations", args.conversationId);
+    if (normalizedId === null) {
+      return null;
+    }
+
     return await ctx.db
       .query("highlights")
       .withIndex("by_conversationId", (q) =>
-        q.eq("conversationId", args.conversationId)
+        q.eq("conversationId", args.conversationId as Id<"conversations">)
       )
       .filter((q) => q.eq(q.field("userId"), user._id))
       .collect();
