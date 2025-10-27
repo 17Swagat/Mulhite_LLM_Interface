@@ -2,7 +2,7 @@
 
 import { Response } from "@/components/ui/shadcn-io/ai/response";
 import type { Highlight } from "@/lib/highlights";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { Trash2, HighlighterIcon, X, ChevronDown } from "lucide-react";
 
 interface HighlightedResponseProps {
@@ -22,6 +22,13 @@ export function HighlightedResponse({
 }: HighlightedResponseProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
+
+  // Create a stable dependency key based on highlight IDs and positions
+  // This prevents unnecessary re-renders when the array reference changes but content is the same
+  const highlightsKey = useMemo(() => 
+    highlights.map(h => `${h._id}-${h.startOffset}-${h.endOffset}-${h.color}`).sort().join('|'),
+    [highlights]
+  );
 
   // Apply CSS Highlight API
   useEffect(() => {
@@ -137,7 +144,7 @@ export function HighlightedResponse({
       clearTimeout(timer);
       clearHighlights();
     };
-  }, [highlights, messageId]);
+  }, [highlightsKey, messageId, highlights]); // Use highlightsKey as primary dependency
 
   const scrollToHighlight = (h: Highlight) => {
     if (!containerRef.current) return;

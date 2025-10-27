@@ -3,7 +3,7 @@
 
 import { cn } from "@/lib/utils";
 import type { ComponentProps, HTMLAttributes } from "react";
-import { isValidElement, memo, useRef } from "react";
+import { isValidElement, memo} from "react";
 
 import ReactMarkdown, { type Options } from "react-markdown";
 import rehypeKatex from "rehype-katex";
