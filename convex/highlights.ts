@@ -6,7 +6,8 @@ import { Id } from "./_generated/dataModel";
 async function getCurrentUser(ctx: QueryCtx | MutationCtx) {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {
-    throw new Error("Unauthorized");
+    // throw new Error("Unauthorized");
+    return null;
   }
 
   const user = await ctx.db
@@ -34,6 +35,10 @@ export const createHighlight = mutation({
   handler: async (ctx, args) => {
     const user = await getCurrentUser(ctx);
 
+    if (user === null) {
+      return null;
+    }
+
     const highlightId = await ctx.db.insert("highlights", {
       messageId: args.messageId,
       conversationId: args.conversationId,
@@ -57,6 +62,10 @@ export const getHighlightsByMessage = query({
   handler: async (ctx, args) => {
     const user = await getCurrentUser(ctx);
 
+    if (!user) {
+      return [];
+    }
+
     return await ctx.db
       .query("highlights")
       .withIndex("by_messageId", (q) => q.eq("messageId", args.messageId))
@@ -67,31 +76,6 @@ export const getHighlightsByMessage = query({
 
 
 
-// const isConversationOwnedByUser = query({
-//   args: {
-//     conversationId: v.optional(v.string()),
-//   },
-//   handler: async (ctx, { conversationId }) => {
-//     const user = await getCurrentUser(ctx);
-//     if (!user) return false;
-
-//     // Validate that the ID belongs to the conversations table
-//     const normalizedId = ctx.db.normalizeId("conversations", conversationId ?? '');
-//     if (normalizedId === null) {
-//       // Invalid ID or ID from wrong table
-//       return false;
-//     }
-
-//     const convo = await ctx.db.get(normalizedId);
-//     if (!convo) {
-//       // ID is valid but document doesn't exist
-//       return false;
-//     }
-
-//     return convo.userId === user._id;
-//   },
-// });
-
 // Get all highlights for a conversation
 export const getHighlightsByConversation = query({
   args: {
@@ -101,7 +85,7 @@ export const getHighlightsByConversation = query({
     const user = await getCurrentUser(ctx);
 
     const normalizedId = ctx.db.normalizeId("conversations", args.conversationId);
-    if (normalizedId === null) {
+    if (normalizedId === null || user === null) {
       return null;
     }
 
@@ -122,10 +106,14 @@ export const deleteHighlight = mutation({
   },
   handler: async (ctx, args) => {
     const user = await getCurrentUser(ctx);
+    if (user === null) {
+      return null;
+    }
 
     const highlight = await ctx.db.get(args.highlightId);
     if (!highlight || highlight.userId !== user._id) {
-      throw new Error("Unauthorized");
+      // throw new Error("Unauthorized");
+      return null;
     }
 
     await ctx.db.delete(args.highlightId);
