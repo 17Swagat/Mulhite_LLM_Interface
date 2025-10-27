@@ -355,7 +355,7 @@ export default function ChatArea({ id }: { id?: string | undefined } = {}) {
       color: color,
       createdAt: Date.now(),
     };
-
+  
     // Update local highlights map immediately for optimistic UI
     const currentHighlights = highlightsByMessage.current.get(selectedMessageId) || [];
     highlightsByMessage.current.set(selectedMessageId, [...currentHighlights, tempHighlight]);

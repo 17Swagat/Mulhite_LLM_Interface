@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import SidebarItem from "./SidebarItem";
 import { useChatStore } from "@/stores/chatStore";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation, usePaginatedQuery, useConvexAuth } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import cssStyleSidebar from "./AppSidebar.module.css";
@@ -30,7 +30,7 @@ export function AppSidebar() {
   // Fetch conversations from Convex
   // const conversations = useQuery(api.conversations.listConversations); // *** 📌
   const [reset, setReset] = useState(false);
-  const PAGINATE_LIMIT = 20;
+  const PAGINATE_LIMIT = 10;
   const {
     results: conversations,
     status: conversPagiStatus,
@@ -43,6 +43,10 @@ export function AppSidebar() {
     },
     { initialNumItems: PAGINATE_LIMIT }
   );
+
+  // Infinite scroll sentinel and guard
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const [autoLoading, setAutoLoading] = useState(false);
 
   // Create user if doesn't exist
   useEffect(() => {
@@ -62,6 +66,48 @@ export function AppSidebar() {
       setChats(conversations);
     }
   }, [conversations, setChats]);
+
+  // Observe the sentinel to auto-load more when nearing the end
+  useEffect(() => {
+    const node = sentinelRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry?.isIntersecting) return;
+
+        // Only trigger when we can load more and not already loading
+        if (
+          !isLoading &&
+          conversPagiStatus !== "Exhausted" &&
+          !autoLoading
+        ) {
+          setAutoLoading(true);
+          // Trigger loading next page
+          loadMore(PAGINATE_LIMIT);
+        }
+      },
+      {
+        root: null, // viewport
+        rootMargin: "200px", // prefetch before reaching the bottom
+        threshold: 0,
+      }
+    );
+
+    observer.observe(node);
+    return () => {
+      observer.unobserve(node);
+      observer.disconnect();
+    };
+  }, [conversPagiStatus, isLoading, autoLoading, loadMore]);
+
+  // Reset autoLoading flag when the load completes
+  useEffect(() => {
+    if (autoLoading && !isLoading) {
+      setAutoLoading(false);
+    }
+  }, [autoLoading, isLoading]);
 
   return (
     <>
@@ -120,17 +166,30 @@ export function AppSidebar() {
                   ))
                 )}
 
-                {conversPagiStatus !== "Exhausted" &&
+                {/* Loading-more spinner (for subsequent pages) */}
+                {isLoading && conversPagiStatus === "LoadingMore" && (
+                  <SidebarMenuItem className="w-full flex justify-center items-center py-2">
+                    <div className="w-6 h-6 animate-spin border-2 border-purple-800 rounded-full border-t-transparent"></div>
+                  </SidebarMenuItem>
+                )}
+
+                {/* Sentinel for infinite scroll. Placed before the fallback button to pre-trigger loads. */}
+                <SidebarMenuItem>
+                  <div ref={sentinelRef} className="h-1 w-full" />
+                </SidebarMenuItem>
+
+                {/* Fallback manual loader (kept for accessibility and no-IO edge cases) */}
+                {/* {conversPagiStatus !== "Exhausted" &&
                   conversPagiStatus !== "LoadingFirstPage" && (
                     <div
-                      className="w-full bg-amber-400 text-2xl rounded-[10px] text-center cursor-pointer hover:brightness-125 active:brightness-90 active:text-white"
+                      className="w-full bg-amber-700 text-white text-[15px] rounded-[10px] text-center cursor-pointer hover:brightness-125 active:brightness-90 active:text-white"
                       onClick={() => {
                         loadMore(PAGINATE_LIMIT);
                       }}
                     >
                       Load More
                     </div>
-                  )}
+                  )} */}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
