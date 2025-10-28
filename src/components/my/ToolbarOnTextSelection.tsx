@@ -77,13 +77,13 @@ export function ToolbarOnTextHighlight({
     }
   }, [isColorPickerOpen]);
 
-  const handleHighlight = (color: string) => {
-    if (_selection && !_selection.isCollapsed && onHighlight) {
-      onHighlight(_selection, color);
-      setSelectedColor(color);
-      setIsColorPickerOpen(false);
-    }
-  };
+  // const handleHighlight = (color: string) => {
+  //   if (_selection && !_selection.isCollapsed && onHighlight) {
+  //     onHighlight(_selection, color);
+  //     setSelectedColor(color);
+  //     setIsColorPickerOpen(false);
+  //   }
+  // };
 
   // Quick highlight with current color
   const handleQuickHighlight = () => {
@@ -100,7 +100,7 @@ export function ToolbarOnTextHighlight({
 
   return (
     <div
-      className="fixed z-50 flex items-center gap-1 p-1 rounded-[10px] bg-black  backdrop-blur-sm"
+      className="fixed z-50 flex items-center gap-1 p-1 rounded-md bg-gray-800  backdrop-blur-sm"
       style={
         {
           top: `${selectedTextRect.top - 50}px`,
@@ -108,11 +108,11 @@ export function ToolbarOnTextHighlight({
         } as React.CSSProperties
       }
     >
-      <div className="flex items-center bg-gray-200 p-1 justify-center rounded-[10px]">
+      <div className="flex items-center bg-gray-200 p-1 justify-center rounded-md">
         {/* Quick Highlight Button - Highlights with current color */}
         <button
           type="button"
-          className={`px-3 py-2 rounded-full transition-colors flex items-center gap-1.5 font-medium text-sm ${currentColorObj?.bg} ${currentColorObj?.hover}`}
+          className={`px-3 py-2 rounded-full transition-colors flex items-center  font-medium text-sm ${currentColorObj?.bg} ${currentColorObj?.hover}`}
           aria-label={`Highlight with ${currentColorObj?.name}`}
           onClick={handleQuickHighlight}
           title={`Highlight with ${currentColorObj?.name}`}
@@ -166,14 +166,14 @@ export function ToolbarOnTextHighlight({
       </div>
 
       {/* Share Button */}
-      <button
+      {/* <button
         type="button"
         className="p-2 rounded-full hover:bg-purple-100 transition-colors"
         aria-label="Share"
         title="Share selection"
       >
-        <ShareIcon size={18} className="text-purple-600" />
-      </button>
+        <ShareIcon size={18} className="text-white" />
+      </button> */}
     </div>
   );
 }
