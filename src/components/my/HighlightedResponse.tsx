@@ -4,6 +4,13 @@ import { Response } from "@/components/ui/shadcn-io/ai/response";
 import type { Highlight } from "@/lib/highlights";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { Trash2, HighlighterIcon, X, ChevronDown } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@radix-ui/react-popover";
+import { Button } from "../ui/button";
+import highlightMenuStyles from "./HighlightedResponse.module.css";
 
 interface HighlightedResponseProps {
   text: string;
@@ -242,74 +249,81 @@ export function HighlightedResponse({
 
       {/* Simple highlight button and menu */}
       {highlights.length > 0 && (
-        <div className="mt-4">
-          <button
-            onClick={() => setOpen(!open)}
-            className="flex items-center gap-2 px-3 py-1.5 text-sm bg-yellow-600 hover:bg-yellow-500 text-white rounded-lg"
-          >
-            <HighlighterIcon size={14} />
-            <span>{highlights.length} Highlights</span>
-            <ChevronDown
-              size={12}
-              className={`transition-transform ${open ? "rotate-180" : ""}`}
-            />
-          </button>
+        // <div className="mt-4 bg-linear-to-r from-[#423b64]  to-[#334155]  p-2 mx-auto rounded-lg">
+        <div className="mt-2   mx-auto rounded-lg">
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger className="bg-black" asChild>
+              <Button
+                variant="outline"
+                style={{ backgroundColor: open ? "#cce60aff" : "white" }}
+              >
+                <HighlighterIcon size={14} />
+                <span>{highlights.length} Highlights</span>
+                <ChevronDown
+                  size={12}
+                  className={`transition-transform ${open ? "rotate-180" : ""}`}
+                />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 bg-gray-900 text-white z-50">
+              <div
+                className={`mt-2 bg-gray-800 border border-gray-700 rounded-lg overflow-hidden `}
+              >
+                <div className="px-3 py-2 bg-gray-700 border-b border-gray-600 flex items-center justify-between">
+                  <span className="text-sm font-medium text-white">
+                    Your Highlights
+                  </span>
 
-          {open && (
-            <div className="mt-2 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
-              <div className="px-3 py-2 bg-gray-700 border-b border-gray-600 flex items-center justify-between">
-                
-                <span className="text-sm font-medium text-white">
-                  Your Highlights
-                </span>
-
-                <button
-                  type="button"
-                  onClick={() => setOpen(false)}
-                  className="p-1 hover:bg-gray-600 rounded"
-                  aria-label="Close menu"
-                >
-                  <X size={14} className="text-gray-300" />
-                </button>
-              </div>
-
-              <div className="max-h-80 overflow-y-auto">
-                {highlights.map((h, idx) => (
-                  <div
-                    key={h._id}
-                    className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
-                    onClick={() => scrollToHighlight(h)}
+                  <button
+                    type="button"
+                    onClick={() => setOpen(false)}
+                    className="p-1 hover:bg-gray-600 rounded"
+                    aria-label="Close menu"
                   >
+                    <X size={20} className="text-gray-300" />
+                  </button>
+                </div>
+
+                <div
+                  className={`max-h-80 overflow-y-auto ${highlightMenuStyles.highlight_scrollbar}`}
+                >
+                  {highlights.map((h, idx) => (
                     <div
-                      className={`w-2 h-2 rounded-full mt-1 shrink-0 ${getColorClass(
-                        h.color || "yellow"
-                      )}`}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-200 line-clamp-2">
-                        {h.text}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">#{idx + 1}</p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDeleteHighlight?.(h._id);
-                      }}
-                      className="p-1 hover:bg-red-900/40 rounded opacity-0 group-hover:opacity-100"
-                      aria-label="Delete highlight"
+                      key={h._id}
+                      className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
+                      onClick={() => scrollToHighlight(h)}
                     >
-                      <Trash2
-                        size={12}
-                        className="text-gray-400 hover:text-red-400"
+                      <div
+                        className={`w-2 h-2 rounded-full mt-1 shrink-0 ${getColorClass(
+                          h.color || "yellow"
+                        )}`}
                       />
-                    </button>
-                  </div>
-                ))}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-gray-200 line-clamp-2">
+                          {h.text}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">#{idx + 1}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDeleteHighlight?.(h._id);
+                        }}
+                        className="p-1 hover:bg-red-900/40 rounded opacity-0 group-hover:opacity-100"
+                        aria-label="Delete highlight"
+                      >
+                        <Trash2
+                          size={12}
+                          className="text-gray-400 hover:text-red-400"
+                        />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            </PopoverContent>
+          </Popover>
         </div>
       )}
     </div>
