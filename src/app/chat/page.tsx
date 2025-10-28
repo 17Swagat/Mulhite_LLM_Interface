@@ -19,6 +19,7 @@ import {
   PromptInputTools,
 } from "@/components/ui/shadcn-io/ai/prompt-input";
 import { MicIcon, PaperclipIcon } from "lucide-react";
+import { NewChatPromptInput } from "@/components/my/PromptInputField";
 
 export default function ChatPage() {
   const router = useRouter();
@@ -87,7 +88,7 @@ export default function ChatPage() {
         <h1 className="text-3xl mb-2 font-semibold">Let's Start Learning 😊</h1>
 
         <div className="md:w-2xl max-w-3xl mx-auto py-2 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md rounded-2xl">
-          <PromptInput onSubmit={handleSubmit}>
+          {/* <PromptInput onSubmit={handleSubmit}>
             <PromptInputTextarea
               value={input}
               onChange={(e) => setInput(e.currentTarget.value)}
@@ -127,11 +128,23 @@ export default function ChatPage() {
                 status={isSubmitting ? "streaming" : "ready"}
               />
             </PromptInputToolbar>
-          </PromptInput>
+          </PromptInput> */}
+
+          {/* <ABC
+            handleSubmit={handleSubmit}
+            whenToDisable_InputTextarea={isSubmitting}
+            whenToDisable_InputSubmit={isSubmitting || !input.trim()}
+          /> */}
+
+          <NewChatPromptInput
+            onSubmit={handleSubmit}
+            input={input}
+            onInputChange={setInput}
+            isSubmitting={isSubmitting}
+            // you can pass a custom model list / selected model here if you need to
+          />
         </div>
       </div>
     </div>
   );
 }
-
-
