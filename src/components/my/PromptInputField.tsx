@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/shadcn-io/ai/prompt-input";
 import { MicIcon, PaperclipIcon } from "lucide-react";
 import type { ChatStatus } from "ai";
+import scrollbarStyle from "./PromptInputField.module.css";
 
 // Hooks:=>
 import { useState } from "react";
@@ -40,6 +41,8 @@ export function PromptInputField({
   return (
     <PromptInput onSubmit={handleSubmit}>
       <PromptInputTextarea
+        className={`max-h-[16lh] ${scrollbarStyle.promptInput_Scrollbar}`}
+        // style={{}}
         value={input}
         onChange={(e) => setInput(e.currentTarget.value)}
         disabled={chatStatus === "streaming"}

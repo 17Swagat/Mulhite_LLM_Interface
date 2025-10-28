@@ -1,0 +1,17 @@
+.promptInput_Scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.promptInput_Scrollbar::-webkit-scrollbar-track {
+  /* background: #f1f1f1; */
+  background: #131212;
+}
+
+.promptInput_Scrollbar::-webkit-scrollbar-thumb {
+  background: #ac0382;
+  border-radius: 5px;
+}
+
+.promptInput_Scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
