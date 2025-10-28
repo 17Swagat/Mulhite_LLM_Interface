@@ -13,6 +13,7 @@ import {
 import {
   Conversation,
   ConversationContent,
+  ConversationScrollButton,
 } from "@/components/ui/shadcn-io/ai/conversation";
 import {
   Message,
@@ -33,6 +34,7 @@ import ChatNotFound from "./ChatNotFound";
 import { ToolbarOnTextHighlight } from "@/components/my/ToolbarOnTextSelection";
 import { Highlight } from "@/lib/highlights";
 import { HighlightedResponse } from "@/components/my/HighlightedResponse";
+import { PromptInputField } from "@/components/my/PromptInputField";
 
 export default function ChatArea({ id }: { id: string }) {
   const [input, setInput] = useState("");
@@ -55,7 +57,13 @@ export default function ChatArea({ id }: { id: string }) {
   );
 
   // AI SDK chat hook:
-  const { sendMessage, messages, status, stop, setMessages } = useChat({
+  const {
+    sendMessage,
+    messages,
+    status: chatStatus,
+    stop,
+    setMessages,
+  } = useChat({
     id,
     transport: new DefaultChatTransport({
       api: "/api/persist-chat",
@@ -89,7 +97,13 @@ export default function ChatArea({ id }: { id: string }) {
   // User question submission handler:
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim() && status === "ready" && id) {
+    // Stop any ongoing generation
+    if (chatStatus === "streaming") {
+      stop();
+      return;
+    }
+
+    if (input.trim() && chatStatus === "ready" && id) {
       const userMessage = input.trim();
 
       // Update chat title with first message if it's the first user message
@@ -167,7 +181,7 @@ export default function ChatArea({ id }: { id: string }) {
     if (
       id &&
       !hasProcessedPendingMessage &&
-      status === "ready" &&
+      chatStatus === "ready" &&
       messages.length === 0
     ) {
       const pendingMessageKey = `pendingMessage_${id}`;
@@ -182,7 +196,13 @@ export default function ChatArea({ id }: { id: string }) {
         setHasProcessedPendingMessage(true);
       }
     }
-  }, [id, hasProcessedPendingMessage, status, sendMessage, messages.length]);
+  }, [
+    id,
+    hasProcessedPendingMessage,
+    chatStatus,
+    sendMessage,
+    messages.length,
+  ]);
 
   // Scroll To bottom Behaviour
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -191,10 +211,10 @@ export default function ChatArea({ id }: { id: string }) {
   };
 
   useEffect(() => {
-    if (status == "ready")
+    if (chatStatus == "ready")
       // || status == "") {}
       scrollToBottom();
-  }, [messages, status]);
+  }, [messages, chatStatus]);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   // [Handling Highlights]:===>
@@ -485,7 +505,7 @@ export default function ChatArea({ id }: { id: string }) {
                 // Only consider streaming if it's the last message
                 const isLastMessage = messageIndex === messages.length - 1;
                 const isCurrentlyStreaming =
-                  status === "streaming" && isLastMessage;
+                  chatStatus === "streaming" && isLastMessage;
 
                 return (
                   <Message
@@ -537,7 +557,6 @@ export default function ChatArea({ id }: { id: string }) {
                             </div>
                           );
                         } else {
-                          
                           // User messages: render without highlight support
                           return (
                             // <div key={index} className="text-lg">
@@ -566,32 +585,35 @@ export default function ChatArea({ id }: { id: string }) {
               })}
               <div ref={messagesEndRef} />
             </ConversationContent>
+            {/* <ConversationScrollButton className="h-2" /> */}
           </Conversation>
           {/* </div> */}
 
-          <div className="h-20"></div>
+          {/* <div className="xl:h-20"></div> */}
 
+          {/* //////////////////////////////////////////////////////////////////////////////// */}
+          {/* //////////////////////////////////////////////////////////////////////////////// */}
           {/* User-Question-Input */}
-          <form className="flex gap-1 fixed bottom-2" onSubmit={handleSubmit}>
+          {/* <form className="flex gap-1 fixed bottom-2" onSubmit={handleSubmit}>
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              disabled={status !== "ready"}
+              disabled={chatStatus !== "ready"}
               placeholder="Say something..."
               className="w-[600px] h-[70px] placeholder-white text-white border-2 bg-black/90 border-white px-4 rounded-l-lg focus:border-pink-400 focus:outline-none"
             />
             <button
               type="submit"
               className={`w-[70px] h-[70px] flex justify-center items-center ${
-                status === "ready" ? "bg-blue-500" : "bg-red-500"
+                chatStatus === "ready" ? "bg-blue-500" : "bg-red-500"
               }`}
               onClick={() => {
-                if (status === "submitted" || status === "streaming") {
+                if (chatStatus === "submitted" || chatStatus === "streaming") {
                   stop();
                 }
               }}
             >
-              {status === "ready" ? (
+              {chatStatus === "ready" ? (
                 <div className="h-full flex items-center">Submit</div>
               ) : (
                 <div className="h-full flex items-center justify-center">
@@ -599,7 +621,25 @@ export default function ChatArea({ id }: { id: string }) {
                 </div>
               )}
             </button>
-          </form>
+          </form> */}
+
+          {/* # */}
+
+          <div
+            // className="md:w-2xl sticky bottom-2 max-w-3xl mx-auto py-2 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md rounded-2xl"
+            className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-0"
+          >
+            <PromptInputField
+              handleSubmit={handleSubmit}
+              input={input}
+              setInput={setInput}
+              chatStatus={chatStatus}
+              inConversation={true}
+            />
+          </div>
+
+          {/* //////////////////////////////////////////////////////////////////////////////// */}
+          {/* //////////////////////////////////////////////////////////////////////////////// */}
         </div>
       </Authenticated>
       <AuthLoading>

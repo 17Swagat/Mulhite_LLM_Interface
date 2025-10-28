@@ -1,6 +1,3 @@
-"use client";
-
-import { PaperclipIcon, MicIcon } from "lucide-react";
 import {
   PromptInput,
   PromptInputButton,
@@ -14,63 +11,38 @@ import {
   PromptInputToolbar,
   PromptInputTools,
 } from "@/components/ui/shadcn-io/ai/prompt-input";
+import { MicIcon, PaperclipIcon } from "lucide-react";
+import type { ChatStatus } from "ai";
+
+// Hooks:=>
 import { useState } from "react";
 
-export type Model = {
-  id: string;
-  name: string;
-};
+const MODELS = [
+  { id: "ollama-deepseek", name: "Ollama DeepSeek" },
+  { id: "Gemeni", name: "Gemeni Flash Lite 2025" },
+];
 
-export interface NewChatPromptInputProps {
-  /** Called when the user presses Enter / clicks the submit button */
-  onSubmit: (e: React.FormEvent) => void;
-  /** Current textarea value */
-  input: string;
-  /** Called when the textarea changes */
-  onInputChange: (value: string) => void;
-  /** Whether a request is in-flight */
-  isSubmitting: boolean;
-  /** List of available models */
-  models?: Model[];
-  /** Currently selected model id */
-  selectedModel?: string;
-  /** Called when the model selection changes */
-  onModelChange?: (modelId: string) => void;
-}
-
-/**
- * Re-usable “new-chat” prompt input.
- * It contains:
- *  • textarea
- *  • file + voice buttons
- *  • model selector
- *  • submit button
- */
-export function NewChatPromptInput({
-  onSubmit,
+export function PromptInputField({
+  handleSubmit,
   input,
-  onInputChange,
-  isSubmitting,
-  models = [
-    { id: "ollama-deepseek", name: "Ollama DeepSeek" },
-    { id: "Gemeni", name: "Gemeni Flash Lite 2025" },
-  ],
-  selectedModel = models[0].id,
-  onModelChange,
-}: NewChatPromptInputProps) {
-  const [localModel, setLocalModel] = useState(selectedModel);
-
-  const handleModelChange = (value: string) => {
-    setLocalModel(value);
-    onModelChange?.(value);
-  };
+  setInput,
+  chatStatus,
+  inConversation = false,
+}: {
+  handleSubmit: (e: React.FormEvent) => void;
+  input: string;
+  setInput: (value: string) => void;
+  chatStatus: ChatStatus;
+  inConversation?: boolean;
+}) {
+  const [selectedModel, setSelectedModel] = useState(MODELS[0].id);
 
   return (
-    <PromptInput onSubmit={onSubmit}>
+    <PromptInput onSubmit={handleSubmit}>
       <PromptInputTextarea
         value={input}
-        onChange={(e) => onInputChange(e.currentTarget.value)}
-        disabled={isSubmitting}
+        onChange={(e) => setInput(e.currentTarget.value)}
+        disabled={chatStatus === "streaming"}
         placeholder="What do you want to learn about?"
       />
       <PromptInputToolbar>
@@ -78,22 +50,19 @@ export function NewChatPromptInput({
           <PromptInputButton>
             <PaperclipIcon size={16} />
           </PromptInputButton>
-
           <PromptInputButton>
             <MicIcon size={16} />
             <span>Voice</span>
           </PromptInputButton>
-
           <PromptInputModelSelect
-            value={localModel}
-            onValueChange={handleModelChange}
+            value={selectedModel}
+            onValueChange={setSelectedModel}
           >
             <PromptInputModelSelectTrigger>
               <PromptInputModelSelectValue />
             </PromptInputModelSelectTrigger>
-
             <PromptInputModelSelectContent>
-              {models.map((model) => (
+              {MODELS.map((model) => (
                 <PromptInputModelSelectItem key={model.id} value={model.id}>
                   {model.name}
                 </PromptInputModelSelectItem>
@@ -101,10 +70,14 @@ export function NewChatPromptInput({
             </PromptInputModelSelectContent>
           </PromptInputModelSelect>
         </PromptInputTools>
-
         <PromptInputSubmit
-          disabled={isSubmitting || !input.trim()}
-          status={isSubmitting ? "streaming" : "ready"}
+          className="transition duration-300 ease-in hover:brightness-105 bg-purple-700 hover:bg-purple-400 active:bg-purple-900"
+          disabled={
+            (!inConversation &&
+              (chatStatus === "streaming" || !input.trim())) ||
+            (inConversation && !input.trim())
+          }
+          status={chatStatus}
         />
       </PromptInputToolbar>
     </PromptInput>

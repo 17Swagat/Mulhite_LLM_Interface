@@ -19,7 +19,7 @@ import {
   PromptInputTools,
 } from "@/components/ui/shadcn-io/ai/prompt-input";
 import { MicIcon, PaperclipIcon } from "lucide-react";
-import { NewChatPromptInput } from "@/components/my/PromptInputField";
+import { PromptInputField } from "@/components/my/PromptInputField";
 
 export default function ChatPage() {
   const router = useRouter();
@@ -44,10 +44,8 @@ export default function ChatPage() {
         // Create conversation in Convex
         const title = input.substring(0, 50) + (input.length > 50 ? "..." : "");
         const result = await createConversation({ title });
-
         const conversationId = result._id;
         const now = Date.now();
-
         // Add the new chat to Zustand store
         addChat({
           _id: conversationId,
@@ -56,10 +54,8 @@ export default function ChatPage() {
           updatedAt: now,
           userId: "" as Id<"users">,
         });
-
         // Set as active chat
         setActiveChat(conversationId);
-
         // Store the initial message in sessionStorage with the conversation ID as key
         sessionStorage.setItem(`pendingMessage_${conversationId}`, input);
 
@@ -76,11 +72,11 @@ export default function ChatPage() {
     }
   };
 
-  const models = [
-    { id: "ollama-deepseek", name: "Ollama DeepSeek" },
-    { id: "Gemeni", name: "Gemeni Flash Lite 2025" },
-  ];
-  const [selectedModel, setSelectedModel] = useState(models[0].id);
+  //   const models = [
+  //     { id: "ollama-deepseek", name: "Ollama DeepSeek" },
+  //     { id: "Gemeni", name: "Gemeni Flash Lite 2025" },
+  //   ];
+  //   const [selectedModel, setSelectedModel] = useState(models[0].id);
 
   return (
     <div className="w-full h-screen bg-purple-700/80 text-white flex justify-center items-center">
@@ -130,18 +126,11 @@ export default function ChatPage() {
             </PromptInputToolbar>
           </PromptInput> */}
 
-          {/* <ABC
+          <PromptInputField
             handleSubmit={handleSubmit}
-            whenToDisable_InputTextarea={isSubmitting}
-            whenToDisable_InputSubmit={isSubmitting || !input.trim()}
-          /> */}
-
-          <NewChatPromptInput
-            onSubmit={handleSubmit}
             input={input}
-            onInputChange={setInput}
-            isSubmitting={isSubmitting}
-            // you can pass a custom model list / selected model here if you need to
+            setInput={setInput}
+            chatStatus={"ready"}
           />
         </div>
       </div>
