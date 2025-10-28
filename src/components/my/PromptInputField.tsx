@@ -47,13 +47,15 @@ export function PromptInputField({
       />
       <PromptInputToolbar>
         <PromptInputTools>
-          <PromptInputButton>
+          {/* #1 */}
+          {/* <PromptInputButton>
             <PaperclipIcon size={16} />
-          </PromptInputButton>
-          <PromptInputButton>
+          </PromptInputButton> */}
+          {/* #2 */}
+          {/* <PromptInputButton>
             <MicIcon size={16} />
             <span>Voice</span>
-          </PromptInputButton>
+          </PromptInputButton> */}
           <PromptInputModelSelect
             value={selectedModel}
             onValueChange={setSelectedModel}
