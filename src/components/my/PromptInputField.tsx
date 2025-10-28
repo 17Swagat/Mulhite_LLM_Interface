@@ -77,7 +77,7 @@ export function PromptInputField({
           disabled={
             (!inConversation &&
               (chatStatus === "streaming" || !input.trim())) ||
-            (inConversation && !input.trim())
+            (inConversation && !input.trim() && chatStatus === "ready")
           }
           status={chatStatus}
         />

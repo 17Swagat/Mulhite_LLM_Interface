@@ -211,13 +211,13 @@ export default function ChatArea({ id }: { id: string }) {
   };
 
   useEffect(() => {
-    if (chatStatus == "ready")
-      // || status == "") {}
+    if (chatStatus == "ready" || chatStatus == "submitted") {
       scrollToBottom();
+    }
   }, [messages, chatStatus]);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
-  // [Handling Highlights]:===>
+  // [Handling Highlights]:===> [START]
   /////////////////////////////////////////////////////////////////////////////////////////////////
   const highlightsData = useQuery(
     api.highlights.getHighlightsByConversation,
@@ -467,6 +467,10 @@ export default function ChatArea({ id }: { id: string }) {
     }
   };
 
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  // [Handling Highlights]:===> [END]
+  ///////////////////////////////////////////////////////////////////////////////
+
   // <ChatNotFound>:=>
   const conversationExists = useQuery(
     api.conversations.isConversationOwnedByUser,
@@ -539,8 +543,8 @@ export default function ChatArea({ id }: { id: string }) {
                           const messageHighlights =
                             highlightsByMessage.get(message.id) ||
                             emptyHighlightsArray.current;
-                          
-                            return (
+
+                          return (
                             <div key={index + message.id}>
                               {/* Answer with highlights */}
                               <HighlightedResponse
@@ -587,7 +591,6 @@ export default function ChatArea({ id }: { id: string }) {
 
           {/* <div className="xl:h-20"></div> */}
 
-
           <div
             // className="md:w-2xl sticky bottom-2 max-w-3xl mx-auto py-2 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md rounded-2xl"
             className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-0"
@@ -600,7 +603,6 @@ export default function ChatArea({ id }: { id: string }) {
               inConversation={true}
             />
           </div>
-
         </div>
       </Authenticated>
       <AuthLoading>
