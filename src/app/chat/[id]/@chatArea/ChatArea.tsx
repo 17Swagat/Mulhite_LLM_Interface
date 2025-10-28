@@ -467,10 +467,6 @@ export default function ChatArea({ id }: { id: string }) {
     }
   };
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-
   // <ChatNotFound>:=>
   const conversationExists = useQuery(
     api.conversations.isConversationOwnedByUser,
@@ -537,14 +533,14 @@ export default function ChatArea({ id }: { id: string }) {
                       {message.parts.map((part, index) => {
                         if (part.type !== "text") return null;
 
-                        // Only use HighlightedResponse for assistant messages
+                        // 📌 Only use <HighlightedResponse for assistant messages>
                         if (message.role === "assistant") {
                           // Get highlights for this message - use stable empty array reference
                           const messageHighlights =
                             highlightsByMessage.get(message.id) ||
                             emptyHighlightsArray.current;
-
-                          return (
+                          
+                            return (
                             <div key={index + message.id}>
                               {/* Answer with highlights */}
                               <HighlightedResponse
@@ -557,7 +553,7 @@ export default function ChatArea({ id }: { id: string }) {
                             </div>
                           );
                         } else {
-                          // User messages: render without highlight support
+                          // 📌 User messages: <Render without highlight support>
                           return (
                             // <div key={index} className="text-lg">
                             <Response
@@ -591,39 +587,6 @@ export default function ChatArea({ id }: { id: string }) {
 
           {/* <div className="xl:h-20"></div> */}
 
-          {/* //////////////////////////////////////////////////////////////////////////////// */}
-          {/* //////////////////////////////////////////////////////////////////////////////// */}
-          {/* User-Question-Input */}
-          {/* <form className="flex gap-1 fixed bottom-2" onSubmit={handleSubmit}>
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              disabled={chatStatus !== "ready"}
-              placeholder="Say something..."
-              className="w-[600px] h-[70px] placeholder-white text-white border-2 bg-black/90 border-white px-4 rounded-l-lg focus:border-pink-400 focus:outline-none"
-            />
-            <button
-              type="submit"
-              className={`w-[70px] h-[70px] flex justify-center items-center ${
-                chatStatus === "ready" ? "bg-blue-500" : "bg-red-500"
-              }`}
-              onClick={() => {
-                if (chatStatus === "submitted" || chatStatus === "streaming") {
-                  stop();
-                }
-              }}
-            >
-              {chatStatus === "ready" ? (
-                <div className="h-full flex items-center">Submit</div>
-              ) : (
-                <div className="h-full flex items-center justify-center">
-                  <div className="w-6 h-6 animate-spin rounded-full border-4 border-solid border-white border-t-transparent"></div>
-                </div>
-              )}
-            </button>
-          </form> */}
-
-          {/* # */}
 
           <div
             // className="md:w-2xl sticky bottom-2 max-w-3xl mx-auto py-2 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md rounded-2xl"
@@ -638,8 +601,6 @@ export default function ChatArea({ id }: { id: string }) {
             />
           </div>
 
-          {/* //////////////////////////////////////////////////////////////////////////////// */}
-          {/* //////////////////////////////////////////////////////////////////////////////// */}
         </div>
       </Authenticated>
       <AuthLoading>
