@@ -114,7 +114,7 @@ export function AppSidebar() {
       <Sidebar
         // variant="inset"
         className="dark"
-        style={{ scrollbarWidth: "thin" }}
+        style={{ scrollbarWidth: "thin"}}
       >
         <SidebarHeader>
           <Link href={"/"}>

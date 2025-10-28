@@ -90,31 +90,7 @@ export default function ChatPage() {
       <div className="flex flex-col items-center">
         <h1 className="text-3xl">Write Your Prompt</h1>
 
-        {/* Input */}
-        {/* <form onSubmit={handleSubmit}>
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            disabled={isSubmitting}
-            placeholder="Say something..."
-            className="w-[600px] h-[70px] placeholder-white text-white border-2 bg-black/90 border-white px-4 rounded-l-lg focus:border-pink-400 focus:outline-none"
-          />
-          <button
-            type="submit"
-            disabled={isSubmitting || !input.trim()}
-            className={`w-[70px] h-[70px] bg-blue-700 font-bold active:bg-blue-900 ${
-              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-          >
-            {isSubmitting ? "..." : "GO!"}
-          </button>
-        </form> */}
-
-        {/* Experimental */}
-        {/* <UserChatInputBox /> */}
-        {/* ///////////////////////////////////////////////////// */}
-
-        <div className="w-2xl max-w-3xl mx-auto py-4 px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md rounded-2xl">
+        <div className="md:w-2xl max-w-3xl mx-auto py-2 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md rounded-2xl">
           <PromptInput onSubmit={handleSubmit}>
             <PromptInputTextarea
               value={input}
