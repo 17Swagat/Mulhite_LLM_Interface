@@ -5,7 +5,8 @@ export default function ChatNotFound({ id }: { id: string }) {
     <div className="flex flex-col justify-center items-center min-h-screen w-full bg-gray-900 text-white p-50 px-[200px]">
       <h1 className="text-4xl font-bold mb-4">Chat Conversation Not Found</h1>
       <p className="text-lg">
-        The chat conversation with ID {id} does not exist.
+        The chat conversation: <span className="font-semibold text-amber-600">{id}</span> not
+        found.
       </p>
       <Link
         href="/chat"

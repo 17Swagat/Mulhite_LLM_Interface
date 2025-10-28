@@ -77,13 +77,6 @@ export function ToolbarOnTextHighlight({
     }
   }, [isColorPickerOpen]);
 
-  // const handleHighlight = (color: string) => {
-  //   if (_selection && !_selection.isCollapsed && onHighlight) {
-  //     onHighlight(_selection, color);
-  //     setSelectedColor(color);
-  //     setIsColorPickerOpen(false);
-  //   }
-  // };
 
   // Quick highlight with current color
   const handleQuickHighlight = () => {
