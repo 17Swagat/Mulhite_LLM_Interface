@@ -99,6 +99,7 @@ export default function ChatArea({ id }: { id: string }) {
   // User question submission handler:
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     // Stop any ongoing generation
     if (chatStatus === "streaming") {
       stop();
@@ -485,6 +486,9 @@ export default function ChatArea({ id }: { id: string }) {
     return <ChatNotFound id={id || ""} />;
   }
 
+  // Model-Selection
+  const [selectedModel, setSelectedModel] = useState(AI_MODELS[0].id);
+
   return (
     <>
       <Authenticated>
@@ -598,6 +602,9 @@ export default function ChatArea({ id }: { id: string }) {
             className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-0"
           >
             <PromptInputField
+              AI_MODESLS={AI_MODELS}
+              selectedModel={selectedModel}
+              setSelectedModelFunc={setSelectedModel}
               handleSubmit={handleSubmit}
               input={input}
               setInput={setInput}

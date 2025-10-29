@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       prompt: convertToModelMessages(messages),
       // model: google("gemini-2.5-flash-lite-preview-09-2025"),
       model: ollama('deepseek-r1:1.5b'),
-      providerOptions: { ollama: { think: true } },
+      // providerOptions: { ollama: { think: true } },
     });
 
 

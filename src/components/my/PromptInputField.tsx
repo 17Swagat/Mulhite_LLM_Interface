@@ -19,7 +19,7 @@ import scrollbarStyle from "./PromptInputField.module.css";
 import { useState } from "react";
 
 // constants:
-import { AI_MODELS as MODELS } from "@/constants/models";
+import { AI_MODELS } from "@/constants/models";
 
 export function PromptInputField({
   handleSubmit,
@@ -37,7 +37,7 @@ export function PromptInputField({
   setInput: (value: string) => void;
   chatStatus: ChatStatus;
   inConversation?: boolean;
-  AI_MODESLS: [];
+  AI_MODESLS: typeof AI_MODELS;
   selectedModel: string;
   setSelectedModelFunc: (modelId: string) => void;
 }) {
@@ -72,13 +72,13 @@ export function PromptInputField({
               <PromptInputModelSelectValue />
             </PromptInputModelSelectTrigger>
             <PromptInputModelSelectContent>
-              {MODELS.map((model) => (
+              {AI_MODESLS.map((model) => (
                 <PromptInputModelSelectItem
                   key={model.id}
                   value={model.id}
-                  onClick={() => {
-                    // setSelectedModel
-                  }}
+                  // onClick={() => {
+                  //   // setSelectedModel
+                  // }}
                 >
                   {model.name}
                 </PromptInputModelSelectItem>
