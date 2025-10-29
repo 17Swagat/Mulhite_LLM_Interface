@@ -36,6 +36,8 @@ import { Highlight } from "@/lib/highlights";
 import { HighlightedResponse } from "@/components/my/HighlightedResponse";
 import { PromptInputField } from "@/components/my/PromptInputField";
 
+import { AI_MODELS } from "@/constants/models";
+
 export default function ChatArea({ id }: { id: string }) {
   const [input, setInput] = useState("");
   const [hasProcessedPendingMessage, setHasProcessedPendingMessage] =

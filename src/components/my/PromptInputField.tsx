@@ -18,10 +18,8 @@ import scrollbarStyle from "./PromptInputField.module.css";
 // Hooks:=>
 import { useState } from "react";
 
-const MODELS = [
-  { id: "ollama-deepseek", name: "Ollama DeepSeek" },
-  { id: "Gemeni", name: "Gemeni Flash Lite 2025" },
-];
+// constants:
+import { AI_MODELS as MODELS } from "@/constants/models";
 
 export function PromptInputField({
   handleSubmit,
@@ -29,14 +27,21 @@ export function PromptInputField({
   setInput,
   chatStatus,
   inConversation = false,
+  // AI-Models:
+  AI_MODESLS,
+  selectedModel,
+  setSelectedModelFunc,
 }: {
   handleSubmit: (e: React.FormEvent) => void;
   input: string;
   setInput: (value: string) => void;
   chatStatus: ChatStatus;
   inConversation?: boolean;
+  AI_MODESLS: [];
+  selectedModel: string;
+  setSelectedModelFunc: (modelId: string) => void;
 }) {
-  const [selectedModel, setSelectedModel] = useState(MODELS[0].id);
+  // const [selectedModel, setSelectedModel] = useState(MODELS[0].id);
 
   return (
     <PromptInput onSubmit={handleSubmit}>
@@ -61,14 +66,20 @@ export function PromptInputField({
           </PromptInputButton> */}
           <PromptInputModelSelect
             value={selectedModel}
-            onValueChange={setSelectedModel}
+            onValueChange={setSelectedModelFunc}
           >
             <PromptInputModelSelectTrigger>
               <PromptInputModelSelectValue />
             </PromptInputModelSelectTrigger>
             <PromptInputModelSelectContent>
               {MODELS.map((model) => (
-                <PromptInputModelSelectItem key={model.id} value={model.id}>
+                <PromptInputModelSelectItem
+                  key={model.id}
+                  value={model.id}
+                  onClick={() => {
+                    // setSelectedModel
+                  }}
+                >
                   {model.name}
                 </PromptInputModelSelectItem>
               ))}
