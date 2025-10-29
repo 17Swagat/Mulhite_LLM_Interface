@@ -60,6 +60,11 @@ export default function ChatPage() {
         // Store the initial message in sessionStorage with the conversation ID as key
         sessionStorage.setItem(`pendingMessage_${conversationId}`, input);
 
+        sessionStorage.setItem(
+          `pendingMessage_Model_${conversationId}`,
+          selectedModel
+        );
+
         // Navigate to the chat page with the new ID
         router.push(`/chat/${conversationId}`);
 
@@ -73,11 +78,7 @@ export default function ChatPage() {
     }
   };
 
-  //   const models = [
-  //     { id: "ollama-deepseek", name: "Ollama DeepSeek" },
-  //     { id: "Gemeni", name: "Gemeni Flash Lite 2025" },
-  //   ];
-  //   const [selectedModel, setSelectedModel] = useState(models[0].id);
+  const [selectedModel, setSelectedModel] = useState(AI_MODELS[0].id);
 
   return (
     <div className="w-full h-screen bg-purple-700/80 text-white flex justify-center items-center">
@@ -128,8 +129,10 @@ export default function ChatPage() {
           </PromptInput> */}
 
           <PromptInputField
-            AI_MODESLS={AI_MODELS}
+            // AI_MODESLS={AI_MODELS}
             handleSubmit={handleSubmit}
+            selectedModel={selectedModel}
+            setSelectedModelFunc={setSelectedModel}
             input={input}
             setInput={setInput}
             chatStatus={"ready"}

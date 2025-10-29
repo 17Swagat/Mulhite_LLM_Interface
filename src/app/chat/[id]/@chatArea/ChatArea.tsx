@@ -59,12 +59,30 @@ export default function ChatArea({ id }: { id: string }) {
   );
 
   // Model-Selection
-  const [selectedModel, setSelectedModel] = useState(AI_MODELS[0].id);
-  useEffect(() => {
-    console.log("Selected Model Changed: " + selectedModel);
-  }, [selectedModel]);
+  let initalModel: string = AI_MODELS[0].id;
+  if (!hasProcessedPendingMessage) {
+    const pendingMessageModelKey = `pendingMessage_Model_${id}`;
+    const pendingMessageModel = sessionStorage.getItem(pendingMessageModelKey);
+    if (pendingMessageModel) {
+      initalModel = pendingMessageModel;
+    }
+    sessionStorage.removeItem(pendingMessageModelKey);
+  }
+  const [selectedModel, setSelectedModel] = useState(initalModel);
+  // useEffect(() => {
+  //   if (!hasProcessedPendingMessage) {
+  //     const pendingMessageModelKey = `pendingMessage_Model_${id}`;
+  //     const pendingMessageModel = sessionStorage.getItem(
+  //       pendingMessageModelKey
+  //     );
+  //     if (pendingMessageModel) {
+  //       setSelectedModel(pendingMessageModel);
+  //       sessionStorage.removeItem(pendingMessageModelKey);
+  //     }
+  //   }
+  // }, [hasProcessedPendingMessage, id]); // Only re-run if these dependencies change
 
-  // AI SDK chat hook:
+  // AI SDK chat `` hook:
   const {
     sendMessage,
     messages,
@@ -196,7 +214,9 @@ export default function ChatArea({ id }: { id: string }) {
     }
   }, [messagesData, setMessages]);
 
+  // Pending Messages
   useEffect(() => {
+    // NOTE: `id`: Conversation ID
     if (
       id &&
       !hasProcessedPendingMessage &&
@@ -207,10 +227,17 @@ export default function ChatArea({ id }: { id: string }) {
       const pendingMessage = sessionStorage.getItem(pendingMessageKey);
 
       if (pendingMessage) {
-        sendMessage({
-          text: pendingMessage,
-          metadata: { chatId: id },
-        });
+        sendMessage(
+          {
+            text: pendingMessage,
+            metadata: { chatId: id },
+          },
+          {
+            body: {
+              model: selectedModel,
+            },
+          }
+        );
         sessionStorage.removeItem(pendingMessageKey);
         setHasProcessedPendingMessage(true);
       }
@@ -615,7 +642,7 @@ export default function ChatArea({ id }: { id: string }) {
             className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-0"
           >
             <PromptInputField
-              AI_MODESLS={AI_MODELS}
+              // AI_MODESLS={AI_MODELS}
               selectedModel={selectedModel}
               setSelectedModelFunc={setSelectedModel}
               handleSubmit={handleSubmit}
