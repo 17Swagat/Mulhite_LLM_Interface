@@ -58,30 +58,6 @@ export default function ChatArea({ id }: { id: string }) {
     api.conversations.updateConversation
   );
 
-  // Model-Selection
-  let initalModel: string = AI_MODELS[0].id;
-  if (!hasProcessedPendingMessage) {
-    const pendingMessageModelKey = `pendingMessage_Model_${id}`;
-    const pendingMessageModel = sessionStorage.getItem(pendingMessageModelKey);
-    if (pendingMessageModel) {
-      initalModel = pendingMessageModel;
-    }
-    sessionStorage.removeItem(pendingMessageModelKey);
-  }
-  const [selectedModel, setSelectedModel] = useState(initalModel);
-  // useEffect(() => {
-  //   if (!hasProcessedPendingMessage) {
-  //     const pendingMessageModelKey = `pendingMessage_Model_${id}`;
-  //     const pendingMessageModel = sessionStorage.getItem(
-  //       pendingMessageModelKey
-  //     );
-  //     if (pendingMessageModel) {
-  //       setSelectedModel(pendingMessageModel);
-  //       sessionStorage.removeItem(pendingMessageModelKey);
-  //     }
-  //   }
-  // }, [hasProcessedPendingMessage, id]); // Only re-run if these dependencies change
-
   // AI SDK chat `` hook:
   const {
     sendMessage,
@@ -120,6 +96,19 @@ export default function ChatArea({ id }: { id: string }) {
       }
     },
   });
+
+  // Model-Selection
+  let initalModel: string = AI_MODELS[0].id;
+  // console.log(messagesData?.messages);
+  if (typeof window !== "undefined" && !hasProcessedPendingMessage) {
+    const pendingMessageModelKey = `pendingMessage_Model_${id}`;
+    const pendingMessageModel = sessionStorage.getItem(pendingMessageModelKey);
+    if (pendingMessageModel) {
+      initalModel = pendingMessageModel;
+    }
+    sessionStorage.removeItem(pendingMessageModelKey);
+  }
+  const [selectedModel, setSelectedModel] = useState(initalModel);
 
   // User question submission handler:
   const handleSubmit = async (e: React.FormEvent) => {
@@ -191,7 +180,7 @@ export default function ChatArea({ id }: { id: string }) {
 
   // Load messages from Convex
   useEffect(() => {
-    if (messagesData !== undefined) {
+    if (messagesData !== undefined && messages.length === 0) {
       // Check if conversation was not found
       if (messagesData.notFound) {
         return;
