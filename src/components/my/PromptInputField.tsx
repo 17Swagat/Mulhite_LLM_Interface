@@ -38,8 +38,8 @@ export function PromptInputField({
   chatStatus: ChatStatus;
   inConversation?: boolean;
   AI_MODESLS: typeof AI_MODELS;
-  selectedModel: string;
-  setSelectedModelFunc: (modelId: string) => void;
+  selectedModel?: string;
+  setSelectedModelFunc?: (modelId: string) => void;
 }) {
   // const [selectedModel, setSelectedModel] = useState(MODELS[0].id);
 

@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/shadcn-io/ai/prompt-input";
 import { MicIcon, PaperclipIcon } from "lucide-react";
 import { PromptInputField } from "@/components/my/PromptInputField";
+import { AI_MODELS } from "@/constants/models";
 
 export default function ChatPage() {
   const router = useRouter();
@@ -127,6 +128,7 @@ export default function ChatPage() {
           </PromptInput> */}
 
           <PromptInputField
+            AI_MODESLS={AI_MODELS}
             handleSubmit={handleSubmit}
             input={input}
             setInput={setInput}

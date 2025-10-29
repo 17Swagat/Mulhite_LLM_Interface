@@ -58,6 +58,12 @@ export default function ChatArea({ id }: { id: string }) {
     api.conversations.updateConversation
   );
 
+  // Model-Selection
+  const [selectedModel, setSelectedModel] = useState(AI_MODELS[0].id);
+  useEffect(() => {
+    console.log("Selected Model Changed: " + selectedModel);
+  }, [selectedModel]);
+
   // AI SDK chat hook:
   const {
     sendMessage,
@@ -68,7 +74,8 @@ export default function ChatArea({ id }: { id: string }) {
   } = useChat({
     id,
     transport: new DefaultChatTransport({
-      api: "/api/persist-chat",
+      // api: "/api/persist-chat",
+      api: "/api/multi-model",
       body: { chatId: id },
     }),
     onFinish: async ({ message: finishedMessage, messages: allMessages }) => {
@@ -99,6 +106,7 @@ export default function ChatArea({ id }: { id: string }) {
   // User question submission handler:
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Model Selected: " + selectedModel);
 
     // Stop any ongoing generation
     if (chatStatus === "streaming") {
@@ -127,10 +135,18 @@ export default function ChatArea({ id }: { id: string }) {
       }
 
       // Send message to AI (will be saved to Convex in onFinish callback)
-      sendMessage({
-        text: userMessage,
-        metadata: { chatId: id },
-      });
+      sendMessage(
+        {
+          text: userMessage,
+          metadata: { chatId: id },
+        },
+        {
+          body: {
+            model: selectedModel,
+          },
+        }
+      );
+
       setInput("");
     }
   };
@@ -485,9 +501,6 @@ export default function ChatArea({ id }: { id: string }) {
     // Conversation does not exist or not owned by user
     return <ChatNotFound id={id || ""} />;
   }
-
-  // Model-Selection
-  const [selectedModel, setSelectedModel] = useState(AI_MODELS[0].id);
 
   return (
     <>
