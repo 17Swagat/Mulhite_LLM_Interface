@@ -125,8 +125,8 @@ export const listConversationsPaginate = query({
 })
 
 // Constants for message limits
-const MESSAGES_PER_PAGE = 50; // Number of messages to load per pagination request
-const MAX_MESSAGES_PER_CONVERSATION = 200; // Maximum messages allowed in a single conversation
+const MESSAGES_PER_PAGE = 6; // Number of messages to load per pagination request
+const MAX_MESSAGES_PER_CONVERSATION = 10; // Maximum messages allowed in a single conversation
 
 export const getMessages = query({
     args: {
@@ -320,7 +320,7 @@ export const getMessageCount = query({
         return {
             count,
             maxLimit: MAX_MESSAGES_PER_CONVERSATION,
-            isNearLimit: count >= MAX_MESSAGES_PER_CONVERSATION * 0.9, // 90% threshold
+            isNearLimit: count >= MAX_MESSAGES_PER_CONVERSATION * 0.8, // 80% threshold
         };
     },
 });
