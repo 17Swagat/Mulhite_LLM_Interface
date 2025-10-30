@@ -52,8 +52,20 @@ export default function ChatArea({ id }: { id: string }) {
   // Convex queries and mutations
   const conversationId = id as Id<"conversations">;
 
+  // Pagination state
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [allMessagesLoaded, setAllMessagesLoaded] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [autoLoadAll, setAutoLoadAll] = useState(true);
+
   const messagesData = useQuery(
     api.conversations.getMessages,
+    id ? { conversationId, cursor: cursor || undefined } : "skip"
+  );
+
+  const messageCount = useQuery(
+    api.conversations.getMessageCount,
     id ? { conversationId } : "skip"
   );
 
@@ -103,8 +115,13 @@ export default function ChatArea({ id }: { id: string }) {
             })),
           });
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Failed to save messages to Convex:", error);
+        
+        // Show user-friendly error if message limit reached
+        if (error?.message?.includes("maximum limit")) {
+          alert(error.message);
+        }
       }
     },
   });
@@ -135,6 +152,14 @@ export default function ChatArea({ id }: { id: string }) {
     }
 
     if (input.trim() && chatStatus === "ready" && id) {
+      // Check if near message limit
+      if (messageCount && messageCount.count >= messageCount.maxLimit) {
+        alert(
+          `This conversation has reached the maximum limit of ${messageCount.maxLimit} messages. Please start a new conversation.`
+        );
+        return;
+      }
+
       const userMessage = input.trim();
 
       // Update chat title with first message if it's the first user message
@@ -171,10 +196,17 @@ export default function ChatArea({ id }: { id: string }) {
     }
   };
 
-  // Set this chat as active when component mounts
+  // Set this chat as active when component mounts and reset pagination
   useEffect(() => {
     if (id) {
       setActiveChat(conversationId);
+      
+      // Reset pagination state when switching conversations
+      setCursor(null);
+      setIsLoadingMore(false);
+      setAllMessagesLoaded(false);
+      setIsInitialLoad(true);
+  setAutoLoadAll(true);
 
       // If chat doesn't exist in store, add it
       const existingChat = getChatById(conversationId);
@@ -191,16 +223,16 @@ export default function ChatArea({ id }: { id: string }) {
     }
   }, [id, conversationId, setActiveChat, addChat, getChatById]);
 
-  // Load messages from Convex
+  // Load messages from Convex with pagination support
   useEffect(() => {
-    if (messagesData !== undefined && messages.length === 0) {
+    if (messagesData !== undefined) {
       // Check if conversation was not found
       if (messagesData.notFound) {
         return;
       }
 
       // Valid conversation, load messages
-      if (messagesData.messages) {
+      if (messagesData.messages !== undefined) {
         const convexMessages: UIMessage[] = messagesData.messages.map(
           (msg) => ({
             id: msg._id,
@@ -209,12 +241,47 @@ export default function ChatArea({ id }: { id: string }) {
           })
         );
 
-        if (convexMessages.length > 0) {
-          setMessages(convexMessages);
+        if (cursor === null && isInitialLoad) {
+          // Initial load - replace all messages
+          if (convexMessages.length > 0) {
+            setMessages(convexMessages);
+          }
+          setIsInitialLoad(false);
+          // Check if there are more messages to load
+          setAllMessagesLoaded(!messagesData.hasMore);
+        } else if (cursor !== null) {
+          // Loading more - prepend to existing messages (older messages go to top)
+          if (convexMessages.length > 0) {
+            setMessages((prev) => [...convexMessages, ...prev]);
+          }
+          setIsLoadingMore(false);
+          setAllMessagesLoaded(!messagesData.hasMore);
         }
       }
     }
-  }, [messagesData, setMessages]);
+  }, [messagesData, setMessages, cursor]);
+
+  // Auto-load older messages until all are fetched on initial mount
+  useEffect(() => {
+    if (!autoLoadAll) {
+      return;
+    }
+
+    if (isInitialLoad) {
+      return;
+    }
+
+    if (isLoadingMore) {
+      return;
+    }
+
+    if (!messagesData?.hasMore || !messagesData?.nextCursor) {
+      setAutoLoadAll(false);
+      return;
+    }
+
+    handleLoadMore();
+  }, [autoLoadAll, isInitialLoad, isLoadingMore, messagesData?.hasMore, messagesData?.nextCursor]);
 
   // Pending Messages
   useEffect(() => {
@@ -519,21 +586,60 @@ export default function ChatArea({ id }: { id: string }) {
   // [Handling Highlights]:===> [END]
   ///////////////////////////////////////////////////////////////////////////////
 
+  // Handle loading more messages
+  const handleLoadMore = () => {
+    if (messagesData?.nextCursor && !isLoadingMore && !allMessagesLoaded) {
+      setIsLoadingMore(true);
+      setCursor(messagesData.nextCursor);
+    }
+  };
+
+  // Intersection observer for auto-loading older messages
+  const loadMoreTriggerRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    // Only set up observer if there are actually more messages to load
+    if (!messagesData?.hasMore || isLoadingMore || allMessagesLoaded) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && messagesData?.hasMore && !isLoadingMore && !allMessagesLoaded) {
+          handleLoadMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentTrigger = loadMoreTriggerRef.current;
+    if (currentTrigger) {
+      observer.observe(currentTrigger);
+    }
+
+    return () => {
+      if (currentTrigger) {
+        observer.unobserve(currentTrigger);
+      }
+    };
+  }, [allMessagesLoaded, isLoadingMore, messagesData?.hasMore]);
+
   // Scroll To bottom Behaviour
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   
-  // Scroll to bottom when messages change
+  // Scroll to bottom on initial load and new messages (but not when loading more history)
   useEffect(() => {
-    if (messagesEndRef.current) {
+    if (messagesEndRef.current && !isLoadingMore) {
       // Use RAF to ensure DOM is fully updated before scrolling
       requestAnimationFrame(() => {
         scrollToBottom();
       });
     }
-  }, [messages.length, chatStatus]);
+  }, [messages.length, chatStatus, isLoadingMore]);
 
   // Memoize rendered message list to avoid recomputing on unrelated state changes
   const renderedMessages = useMemo(() => {
@@ -656,6 +762,32 @@ export default function ChatArea({ id }: { id: string }) {
           {/* <Conversation className="max-w-11/12 mx-auto"> */}
           <Conversation className="max-w-5xl lg:max-w-7xl mx-auto">
             <ConversationContent>
+              {/* Message count warning */}
+              {messageCount && messageCount.isNearLimit && (
+                <div className="mb-4 p-3 bg-yellow-600/20 border border-yellow-600 rounded-lg text-sm">
+                  ⚠️ This conversation is approaching the maximum limit of{" "}
+                  {messageCount.maxLimit} messages ({messageCount.count}/
+                  {messageCount.maxLimit}). Consider starting a new
+                  conversation soon.
+                </div>
+              )}
+
+                {/* Loading trigger for infinite scroll at top */}
+                {messagesData?.hasMore &&
+                messages.length > 0 &&
+                !isInitialLoad &&
+                !autoLoadAll &&
+                !allMessagesLoaded && (
+                  <div ref={loadMoreTriggerRef} className="flex justify-center py-1">
+                  {isLoadingMore && (
+                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Loading older messages...
+                    </div>
+                  )}
+                  </div>
+                )}
+
               {renderedMessages}
               {/* <ConversationScrollButton className="h-2" /> */}
               {/* <div ref={messagesEndRef} /> */}

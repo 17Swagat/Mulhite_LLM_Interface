@@ -124,6 +124,9 @@ export const listConversationsPaginate = query({
     }
 })
 
+// Constants for message limits
+const MESSAGES_PER_PAGE = 50; // Number of messages to load per pagination request
+const MAX_MESSAGES_PER_CONVERSATION = 200; // Maximum messages allowed in a single conversation
 
 export const getMessages = query({
     args: {
@@ -132,9 +135,7 @@ export const getMessages = query({
         cursor: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
-        // NOTE: "Some look back into this limit related code & think about some ways of better it"
-        // args.limit = args.limit ?? 50; // 🧪 "Must be done with different values of <limit>"
-        args.limit = args.limit ?? 150; // 🧪 "Must be done with different values of <limit>"
+        args.limit = args.limit ?? MESSAGES_PER_PAGE;
 
         // Validate ID format
         const validIdRegex = /^[a-z0-9]+$/i;
@@ -142,14 +143,15 @@ export const getMessages = query({
             return {
                 messages: [],
                 nextCursor: null,
-                notFound: true
+                notFound: true,
+                hasMore: false,
             };
         }
 
         const convo = await ensureUserOwnsConvoQuery(ctx, { conversationId: args.conversationId as Id<"conversations"> });
 
         if (!convo) {
-            return { messages: [], nextCursor: null, notFound: true };
+            return { messages: [], nextCursor: null, notFound: true, hasMore: false };
         }
 
         const messages = await ctx.db
@@ -157,15 +159,14 @@ export const getMessages = query({
             .withIndex("by_conversationId", (q) =>
                 q.eq("conversationId", args.conversationId as Id<"conversations">)
             )
-            .order("asc")
+            .order("desc")
             .paginate({ cursor: args.cursor ?? null, numItems: args.limit });
 
-        // console.log("Fetched messages:", messages);
-
         return {
-            messages: messages.page,
+            messages: messages.page.reverse(),
             nextCursor: messages.continueCursor,
-            notFound: false
+            notFound: false,
+            hasMore: messages.continueCursor !== null,
         };
     },
 });
@@ -228,6 +229,22 @@ export const addMessage = mutation({
     },
     handler: async (ctx, args) => {
         await ensureUserOwnsConvoMutation(ctx, { conversationId: args.conversationId });
+
+        // Check message count limit
+        const messageCount = await ctx.db
+            .query("messages")
+            .withIndex("by_conversationId", (q) =>
+                q.eq("conversationId", args.conversationId)
+            )
+            .collect()
+            .then(msgs => msgs.length);
+
+        if (messageCount >= MAX_MESSAGES_PER_CONVERSATION) {
+            throw new Error(
+                `Conversation has reached the maximum limit of ${MAX_MESSAGES_PER_CONVERSATION} messages. Please start a new conversation.`
+            );
+        }
+
         const now = Date.now();
 
         const messageId = await ctx.db.insert("messages", {
@@ -284,6 +301,30 @@ export const deleteConversation = mutation({
     },
 });
 
+// Get message count for a conversation
+export const getMessageCount = query({
+    args: {
+        conversationId: v.id("conversations"),
+    },
+    handler: async (ctx, { conversationId }) => {
+        await ensureUserOwnsConvoQuery(ctx, { conversationId });
+
+        const count = await ctx.db
+            .query("messages")
+            .withIndex("by_conversationId", (q) =>
+                q.eq("conversationId", conversationId)
+            )
+            .collect()
+            .then(msgs => msgs.length);
+
+        return {
+            count,
+            maxLimit: MAX_MESSAGES_PER_CONVERSATION,
+            isNearLimit: count >= MAX_MESSAGES_PER_CONVERSATION * 0.9, // 90% threshold
+        };
+    },
+});
+
 // Ensure user exists - call this on app initialization
 export const ensureUser = mutation({
     handler: async (ctx) => {
@@ -291,4 +332,5 @@ export const ensureUser = mutation({
         return { userId: user._id };
     },
 });
+
 
