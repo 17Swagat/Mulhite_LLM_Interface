@@ -792,10 +792,7 @@ export default function ChatArea({ id }: { id: string }) {
           </Conversation>
           {/* </div> */}
 
-          <div
-            // className="md:w-2xl sticky bottom-2 max-w-3xl mx-auto py-2 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md rounded-2xl"
-            className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-0"
-          >
+          <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-2 rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md  ">
             <PromptInputField
               // AI_MODESLS={AI_MODELS}
               selectedModel={selectedModel}
