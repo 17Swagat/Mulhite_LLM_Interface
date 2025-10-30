@@ -85,7 +85,7 @@ export default function ChatPage() {
       <div className="flex flex-col items-center">
         <h1 className="text-3xl mb-2 font-semibold">Let's Start Learning 😊</h1>
 
-        <div className="md:w-2xl max-w-3xl mx-auto py-2 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md rounded-2xl">
+        <div className="md:w-2xl max-w-3xl mx-auto py-2 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md rounded-2xl ">
           {/* <PromptInput onSubmit={handleSubmit}>
             <PromptInputTextarea
               value={input}
