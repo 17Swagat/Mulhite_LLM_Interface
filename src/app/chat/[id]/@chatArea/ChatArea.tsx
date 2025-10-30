@@ -2,7 +2,7 @@
 
 import { UIMessage, useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { Response } from "@/components/ui/shadcn-io/ai/response";
 import { v7 as uuidv7 } from "uuid";
 import {
@@ -26,6 +26,8 @@ import {
   useMutation,
   Authenticated,
   AuthLoading,
+  useConvexAuth,
+  useConvexConnectionState,
 } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { Id } from "@/../convex/_generated/dataModel";
@@ -49,16 +51,30 @@ export default function ChatArea({ id }: { id: string }) {
 
   // Convex queries and mutations
   const conversationId = id as Id<"conversations">;
+
   const messagesData = useQuery(
     api.conversations.getMessages,
     id ? { conversationId } : "skip"
   );
+
   const addMessageToConvex = useMutation(api.conversations.addMessage);
   const updateConversationMutation = useMutation(
     api.conversations.updateConversation
   );
 
-  // AI SDK chat `` hook:
+
+  // Memoize transport to avoid recreating it on re-renders
+  const transport = useMemo(
+    () =>
+      new DefaultChatTransport({
+        // api: "/api/persist-chat",
+        api: "/api/multi-model",
+        body: { chatId: id },
+      }),
+    [id]
+  );
+
+  // AI SDK chat hook
   const {
     sendMessage,
     messages,
@@ -67,11 +83,7 @@ export default function ChatArea({ id }: { id: string }) {
     setMessages,
   } = useChat({
     id,
-    transport: new DefaultChatTransport({
-      // api: "/api/persist-chat",
-      api: "/api/multi-model",
-      body: { chatId: id },
-    }),
+    transport,
     onFinish: async ({ message: finishedMessage, messages: allMessages }) => {
       if (!id) return;
 
@@ -97,24 +109,25 @@ export default function ChatArea({ id }: { id: string }) {
     },
   });
 
-  // Model-Selection
-  let initalModel: string = AI_MODELS[0].id;
-  // console.log(messagesData?.messages);
-  if (typeof window !== "undefined" && !hasProcessedPendingMessage) {
-    const pendingMessageModelKey = `pendingMessage_Model_${id}`;
-    const pendingMessageModel = sessionStorage.getItem(pendingMessageModelKey);
-    if (pendingMessageModel) {
-      initalModel = pendingMessageModel;
+  // Model-Selection (initialize lazily once)
+  const [selectedModel, setSelectedModel] = useState<string>(() => {
+    let model = AI_MODELS[0].id;
+    if (typeof window !== "undefined") {
+      const pendingMessageModelKey = `pendingMessage_Model_${id}`;
+      const pendingMessageModel = sessionStorage.getItem(
+        pendingMessageModelKey
+      );
+      if (pendingMessageModel) {
+        model = pendingMessageModel;
+        sessionStorage.removeItem(pendingMessageModelKey);
+      }
     }
-    sessionStorage.removeItem(pendingMessageModelKey);
-  }
-  const [selectedModel, setSelectedModel] = useState(initalModel);
+    return model;
+  });
 
   // User question submission handler:
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Model Selected: " + selectedModel);
-
     // Stop any ongoing generation
     if (chatStatus === "streaming") {
       stop();
@@ -239,17 +252,17 @@ export default function ChatArea({ id }: { id: string }) {
     messages.length,
   ]);
 
-  // Scroll To bottom Behaviour
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    if (chatStatus == "ready" || chatStatus == "submitted") {
-      scrollToBottom();
-    }
-  }, [messages, chatStatus]);
+  // useEffect(() => {
+  //   // const prev = prevMessageCountRef.current;
+  //   // if (messages.length > prev && chatStatus !== "streaming") {
+  //   //   // Let layout settle before scrolling to minimize layout thrash
+  //   //   window.requestAnimationFrame(() => {
+  //   //     scrollToBottom();
+  //   //   });
+  //   // }
+  //   // prevMessageCountRef.current = messages.length;
+  //   scrollToBottom();
+  // }, [messages.length, chatStatus]);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   // [Handling Highlights]:===> [START]
@@ -506,6 +519,116 @@ export default function ChatArea({ id }: { id: string }) {
   // [Handling Highlights]:===> [END]
   ///////////////////////////////////////////////////////////////////////////////
 
+  // Scroll To bottom Behaviour
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      // Use RAF to ensure DOM is fully updated before scrolling
+      requestAnimationFrame(() => {
+        scrollToBottom();
+      });
+    }
+  }, [messages.length, chatStatus]);
+
+  // Memoize rendered message list to avoid recomputing on unrelated state changes
+  const renderedMessages = useMemo(() => {
+    return (
+      <>
+        {
+          messages.map((message, messageIndex) => {
+            if (message.id.trim() === "") {
+              message.id = uuidv7();
+            }
+            // Only consider streaming if it's the last message
+            const isLastMessage = messageIndex === messages.length - 1;
+            const isCurrentlyStreaming =
+              chatStatus === "streaming" && isLastMessage;
+
+            return (
+              <Message from={message.role} key={message.id} className="mb-4">
+                <MessageContent className="bg-gray-800 p-3 rounded-lg">
+                  {/* Reasoning Block: */}
+                  {message.parts.map((part, index) =>
+                    part.type === "reasoning" ? (
+                      <div key={index} className="mb-2">
+                        <Reasoning
+                          className="w-full"
+                          isStreaming={isCurrentlyStreaming}
+                          duration={0}
+                          defaultOpen={false}
+                        >
+                          <ReasoningTrigger />
+                          <ReasoningContent className="bg-yellow-600 text-white p-2 rounded">
+                            {part.text}
+                          </ReasoningContent>
+                        </Reasoning>
+                      </div>
+                    ) : null
+                  )}
+
+                  {/* Answer Block: */}
+                  {message.parts.map((part, index) => {
+                    if (part.type !== "text") return null;
+
+                    // Only use <HighlightedResponse> for assistant messages
+                    if (message.role === "assistant") {
+                      // Get highlights for this message - use stable empty array reference
+                      const messageHighlights =
+                        highlightsByMessage.get(message.id) ||
+                        emptyHighlightsArray.current;
+
+                      return (
+                        <div key={index + message.id}>
+                          {/* Answer with highlights */}
+                          <HighlightedResponse
+                            text={part.text || ""}
+                            highlights={messageHighlights}
+                            messageId={message.id}
+                            className="text-lg"
+                            onDeleteHighlight={handleDeleteHighlight}
+                          />
+                        </div>
+                      );
+                    } else {
+                      // User messages: Render without highlight support
+                      return (
+                        <Response key={index + message.id} className="text-lg">
+                          {part.text || ""}
+                        </Response>
+                      );
+                    }
+                  })}
+
+                  {/* <ConversationScrollButton className="h-2" /> */}
+                </MessageContent>
+                <MessageAvatar
+                  name={message.role}
+                  src={
+                    message.role == "assistant"
+                      ? "/ai-models/grok.svg"
+                      : "/user.png"
+                  }
+                  className="bg-white"
+                />
+              </Message>
+            );
+          })
+        }
+
+        <div ref={messagesEndRef} />
+      </>
+    );
+  }, [
+    messages,
+    chatStatus,
+    highlightsByMessage,
+  ]);
+
   // <ChatNotFound>:=>
   const conversationExists = useQuery(
     api.conversations.isConversationOwnedByUser,
@@ -533,98 +656,12 @@ export default function ChatArea({ id }: { id: string }) {
           {/* <Conversation className="max-w-11/12 mx-auto"> */}
           <Conversation className="max-w-5xl lg:max-w-7xl mx-auto">
             <ConversationContent>
-              {messages.map((message, messageIndex) => {
-                if (message.id.trim() === "") {
-                  message.id = uuidv7();
-                }
-                // Only consider streaming if it's the last message
-                const isLastMessage = messageIndex === messages.length - 1;
-                const isCurrentlyStreaming =
-                  chatStatus === "streaming" && isLastMessage;
-
-                return (
-                  <Message
-                    from={message.role}
-                    key={message.id}
-                    className="mb-4"
-                  >
-                    <MessageContent className="bg-gray-800 p-3 rounded-lg">
-                      {/* Reasoning Block: */}
-                      {message.parts.map((part, index) =>
-                        part.type === "reasoning" ? (
-                          <div key={index} className="mb-2">
-                            <Reasoning
-                              className="w-full"
-                              isStreaming={isCurrentlyStreaming}
-                              duration={0}
-                              defaultOpen={false}
-                            >
-                              <ReasoningTrigger />
-                              <ReasoningContent className="bg-yellow-600 text-white p-2 rounded">
-                                {part.text}
-                              </ReasoningContent>
-                            </Reasoning>
-                          </div>
-                        ) : null
-                      )}
-
-                      {/* Answer Block: */}
-                      {message.parts.map((part, index) => {
-                        if (part.type !== "text") return null;
-
-                        // 📌 Only use <HighlightedResponse for assistant messages>
-                        if (message.role === "assistant") {
-                          // Get highlights for this message - use stable empty array reference
-                          const messageHighlights =
-                            highlightsByMessage.get(message.id) ||
-                            emptyHighlightsArray.current;
-
-                          return (
-                            <div key={index + message.id}>
-                              {/* Answer with highlights */}
-                              <HighlightedResponse
-                                text={part.text || ""}
-                                highlights={messageHighlights}
-                                messageId={message.id}
-                                className="text-lg"
-                                onDeleteHighlight={handleDeleteHighlight}
-                              />
-                            </div>
-                          );
-                        } else {
-                          // 📌 User messages: <Render without highlight support>
-                          return (
-                            // <div key={index} className="text-lg">
-                            <Response
-                              key={index + message.id}
-                              className="text-lg"
-                            >
-                              {part.text || ""}
-                            </Response>
-                            // </div>
-                          );
-                        }
-                      })}
-                    </MessageContent>
-                    <MessageAvatar
-                      name={message.role}
-                      src={
-                        message.role == "assistant"
-                          ? "/ai-models/grok.svg"
-                          : "/user.png"
-                      }
-                      className="bg-white"
-                    />
-                  </Message>
-                );
-              })}
-              <div ref={messagesEndRef} />
+              {renderedMessages}
+              {/* <ConversationScrollButton className="h-2" /> */}
+              {/* <div ref={messagesEndRef} /> */}
             </ConversationContent>
-            {/* <ConversationScrollButton className="h-2" /> */}
           </Conversation>
           {/* </div> */}
-
-          {/* <div className="xl:h-20"></div> */}
 
           <div
             // className="md:w-2xl sticky bottom-2 max-w-3xl mx-auto py-2 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md rounded-2xl"
@@ -641,6 +678,8 @@ export default function ChatArea({ id }: { id: string }) {
               inConversation={true}
             />
           </div>
+
+          {/* <div className="h-0.5" ref={messagesEndRef} /> */}
         </div>
       </Authenticated>
       <AuthLoading>

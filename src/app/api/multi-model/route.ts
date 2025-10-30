@@ -29,7 +29,6 @@ export async function POST(req: Request) {
         } = req_;
 
         console.log('AI Model Requested: ' + ai_model)
-        console.log('chatId: ' + (providedChatId ?? 'none'))
 
         // Use provided chatId or generate a new one
         const chatId = providedChatId ?? messages?.[0]?.metadata?.chatId ?? uuidv7();

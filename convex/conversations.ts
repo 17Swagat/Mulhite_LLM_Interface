@@ -133,7 +133,8 @@ export const getMessages = query({
     },
     handler: async (ctx, args) => {
         // NOTE: "Some look back into this limit related code & think about some ways of better it"
-        args.limit = args.limit ?? 50; // 🧪 "Must be done with different values of <limit>"
+        // args.limit = args.limit ?? 50; // 🧪 "Must be done with different values of <limit>"
+        args.limit = args.limit ?? 150; // 🧪 "Must be done with different values of <limit>"
 
         // Validate ID format
         const validIdRegex = /^[a-z0-9]+$/i;
@@ -168,6 +169,7 @@ export const getMessages = query({
         };
     },
 });
+
 
 
 export const isConversationOwnedByUser = query({
