@@ -64,16 +64,15 @@ export default function ChatArea({ id }: { id: string }) {
     id ? { conversationId, cursor: cursor || undefined } : "skip"
   );
 
-  const messageCount = useQuery(
-    api.conversations.getMessageCount,
-    id ? { conversationId } : "skip"
-  );
+  // const messageCount = useQuery(
+  //   api.conversations.getMessageCount,
+  //   id ? { conversationId } : "skip"
+  // );
 
   const addMessageToConvex = useMutation(api.conversations.addMessage);
   const updateConversationMutation = useMutation(
     api.conversations.updateConversation
   );
-
 
   // Memoize transport to avoid recreating it on re-renders
   const transport = useMemo(
@@ -104,9 +103,12 @@ export default function ChatArea({ id }: { id: string }) {
         // Get the last 2 messages (user message + assistant response)
         const lastTwoMessages = allMessages.slice(-2);
 
+        // Track the mapping of AI SDK IDs to Convex IDs
+        const idMapping: { aiSdkId: string; convexId: string }[] = [];
+
         for (const msg of lastTwoMessages) {
           // Check if message is already in Convex to avoid duplicates
-          await addMessageToConvex({
+          const result = await addMessageToConvex({
             conversationId: conversationId,
             role: msg.role as "user" | "assistant",
             parts: msg.parts.map((part: any) => ({
@@ -114,10 +116,27 @@ export default function ChatArea({ id }: { id: string }) {
               text: part.text,
             })),
           });
+
+          if (result && result._id) {
+            idMapping.push({ aiSdkId: msg.id, convexId: result._id });
+          }
+        }
+
+        // Update message IDs in the local state to use Convex IDs
+        if (idMapping.length > 0) {
+          setMessages((prevMessages) =>
+            prevMessages.map((msg) => {
+              const mapping = idMapping.find((m) => m.aiSdkId === msg.id);
+              if (mapping) {
+                return { ...msg, id: mapping.convexId };
+              }
+              return msg;
+            })
+          );
         }
       } catch (error: any) {
         console.error("Failed to save messages to Convex:", error);
-        
+
         // Show user-friendly error if message limit reached
         if (error?.message?.includes("maximum limit")) {
           alert(error.message);
@@ -153,12 +172,12 @@ export default function ChatArea({ id }: { id: string }) {
 
     if (input.trim() && chatStatus === "ready" && id) {
       // Check if near message limit
-      if (messageCount && messageCount.count >= messageCount.maxLimit) {
-        alert(
-          `This conversation has reached the maximum limit of ${messageCount.maxLimit} messages. Please start a new conversation.`
-        );
-        return;
-      }
+      // if (messageCount && messageCount.count >= messageCount.maxTokens) {
+      //   alert(
+      //     `This conversation has reached the maximum limit of ${messageCount.maxTokens} messages. Please start a new conversation.`
+      //   );
+      //   return;
+      // }
 
       const userMessage = input.trim();
 
@@ -200,13 +219,13 @@ export default function ChatArea({ id }: { id: string }) {
   useEffect(() => {
     if (id) {
       setActiveChat(conversationId);
-      
+
       // Reset pagination state when switching conversations
       setCursor(null);
       setIsLoadingMore(false);
       setAllMessagesLoaded(false);
       setIsInitialLoad(true);
-  setAutoLoadAll(true);
+      setAutoLoadAll(true);
 
       // If chat doesn't exist in store, add it
       const existingChat = getChatById(conversationId);
@@ -281,7 +300,13 @@ export default function ChatArea({ id }: { id: string }) {
     }
 
     handleLoadMore();
-  }, [autoLoadAll, isInitialLoad, isLoadingMore, messagesData?.hasMore, messagesData?.nextCursor]);
+  }, [
+    autoLoadAll,
+    isInitialLoad,
+    isLoadingMore,
+    messagesData?.hasMore,
+    messagesData?.nextCursor,
+  ]);
 
   // Pending Messages
   useEffect(() => {
@@ -318,18 +343,6 @@ export default function ChatArea({ id }: { id: string }) {
     sendMessage,
     messages.length,
   ]);
-
-  // useEffect(() => {
-  //   // const prev = prevMessageCountRef.current;
-  //   // if (messages.length > prev && chatStatus !== "streaming") {
-  //   //   // Let layout settle before scrolling to minimize layout thrash
-  //   //   window.requestAnimationFrame(() => {
-  //   //     scrollToBottom();
-  //   //   });
-  //   // }
-  //   // prevMessageCountRef.current = messages.length;
-  //   scrollToBottom();
-  // }, [messages.length, chatStatus]);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   // [Handling Highlights]:===> [START]
@@ -461,6 +474,21 @@ export default function ChatArea({ id }: { id: string }) {
     color: string = "yellow"
   ) => {
     if (!selectedMessageId || !id) return;
+
+    // Check if the message ID is a valid Convex ID (not AI SDK ID)
+    // Convex IDs are longer (typically 24+ chars) and contain specific patterns
+    // AI SDK IDs are shorter (typically 16 chars)
+    if (selectedMessageId.length < 20) {
+      console.warn(
+        "Cannot highlight: Message not yet saved to database. Please wait a moment and try again."
+      );
+      // Clear selection
+      selection.removeAllRanges();
+      setSelection(null);
+      setSelectedTextRect(null);
+      setSelectedMessageId(null);
+      return;
+    }
 
     const selectedText = selection.toString().trim();
     if (!selectedText) return;
@@ -596,7 +624,7 @@ export default function ChatArea({ id }: { id: string }) {
 
   // Intersection observer for auto-loading older messages
   const loadMoreTriggerRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     // Only set up observer if there are actually more messages to load
     if (!messagesData?.hasMore || isLoadingMore || allMessagesLoaded) {
@@ -606,7 +634,12 @@ export default function ChatArea({ id }: { id: string }) {
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        if (entry.isIntersecting && messagesData?.hasMore && !isLoadingMore && !allMessagesLoaded) {
+        if (
+          entry.isIntersecting &&
+          messagesData?.hasMore &&
+          !isLoadingMore &&
+          !allMessagesLoaded
+        ) {
           handleLoadMore();
         }
       },
@@ -630,7 +663,7 @@ export default function ChatArea({ id }: { id: string }) {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  
+
   // Scroll to bottom on initial load and new messages (but not when loading more history)
   useEffect(() => {
     if (messagesEndRef.current && !isLoadingMore) {
@@ -645,95 +678,89 @@ export default function ChatArea({ id }: { id: string }) {
   const renderedMessages = useMemo(() => {
     return (
       <>
-        {
-          messages.map((message, messageIndex) => {
-            if (message.id.trim() === "") {
-              message.id = uuidv7();
-            }
-            // Only consider streaming if it's the last message
-            const isLastMessage = messageIndex === messages.length - 1;
-            const isCurrentlyStreaming =
-              chatStatus === "streaming" && isLastMessage;
+        {messages.map((message, messageIndex) => {
+          if (message.id.trim() === "") {
+            message.id = uuidv7();
+          }
+          // Only consider streaming if it's the last message
+          const isLastMessage = messageIndex === messages.length - 1;
+          const isCurrentlyStreaming =
+            chatStatus === "streaming" && isLastMessage;
 
-            return (
-              <Message from={message.role} key={message.id} className="mb-4">
-                <MessageContent className="bg-gray-800 p-3 rounded-lg">
-                  {/* Reasoning Block: */}
-                  {message.parts.map((part, index) =>
-                    part.type === "reasoning" ? (
-                      <div key={index} className="mb-2">
-                        <Reasoning
-                          className="w-full"
-                          isStreaming={isCurrentlyStreaming}
-                          duration={0}
-                          defaultOpen={false}
-                        >
-                          <ReasoningTrigger />
-                          <ReasoningContent className="bg-yellow-600 text-white p-2 rounded">
-                            {part.text}
-                          </ReasoningContent>
-                        </Reasoning>
+          return (
+            <Message from={message.role} key={message.id} className="mb-4">
+              <MessageContent className="bg-gray-800 p-3 rounded-lg">
+                {/* Reasoning Block: */}
+                {message.parts.map((part, index) =>
+                  part.type === "reasoning" ? (
+                    <div key={index} className="mb-2">
+                      <Reasoning
+                        className="w-full"
+                        isStreaming={isCurrentlyStreaming}
+                        duration={0}
+                        defaultOpen={false}
+                      >
+                        <ReasoningTrigger />
+                        <ReasoningContent className="bg-yellow-600 text-white p-2 rounded">
+                          {part.text}
+                        </ReasoningContent>
+                      </Reasoning>
+                    </div>
+                  ) : null
+                )}
+
+                {/* Answer Block: */}
+                {message.parts.map((part, index) => {
+                  if (part.type !== "text") return null;
+
+                  // Only use <HighlightedResponse> for assistant messages
+                  if (message.role === "assistant") {
+                    // Get highlights for this message - use stable empty array reference
+                    const messageHighlights =
+                      highlightsByMessage.get(message.id) ||
+                      emptyHighlightsArray.current;
+
+                    return (
+                      <div key={index + message.id}>
+                        {/* Answer with highlights */}
+                        <HighlightedResponse
+                          text={part.text || ""}
+                          highlights={messageHighlights}
+                          messageId={message.id}
+                          className="text-lg"
+                          onDeleteHighlight={handleDeleteHighlight}
+                        />
                       </div>
-                    ) : null
-                  )}
-
-                  {/* Answer Block: */}
-                  {message.parts.map((part, index) => {
-                    if (part.type !== "text") return null;
-
-                    // Only use <HighlightedResponse> for assistant messages
-                    if (message.role === "assistant") {
-                      // Get highlights for this message - use stable empty array reference
-                      const messageHighlights =
-                        highlightsByMessage.get(message.id) ||
-                        emptyHighlightsArray.current;
-
-                      return (
-                        <div key={index + message.id}>
-                          {/* Answer with highlights */}
-                          <HighlightedResponse
-                            text={part.text || ""}
-                            highlights={messageHighlights}
-                            messageId={message.id}
-                            className="text-lg"
-                            onDeleteHighlight={handleDeleteHighlight}
-                          />
-                        </div>
-                      );
-                    } else {
-                      // User messages: Render without highlight support
-                      return (
-                        <Response key={index + message.id} className="text-lg">
-                          {part.text || ""}
-                        </Response>
-                      );
-                    }
-                  })}
-
-                  {/* <ConversationScrollButton className="h-2" /> */}
-                </MessageContent>
-                <MessageAvatar
-                  name={message.role}
-                  src={
-                    message.role == "assistant"
-                      ? "/ai-models/grok.svg"
-                      : "/user.png"
+                    );
+                  } else {
+                    // User messages: Render without highlight support
+                    return (
+                      <Response key={index + message.id} className="text-lg">
+                        {part.text || ""}
+                      </Response>
+                    );
                   }
-                  className="bg-white"
-                />
-              </Message>
-            );
-          })
-        }
+                })}
+
+                {/* <ConversationScrollButton className="h-2" /> */}
+              </MessageContent>
+              <MessageAvatar
+                name={message.role}
+                src={
+                  message.role == "assistant"
+                    ? "/ai-models/grok.svg"
+                    : "/user.png"
+                }
+                className="bg-white"
+              />
+            </Message>
+          );
+        })}
 
         <div ref={messagesEndRef} />
       </>
     );
-  }, [
-    messages,
-    chatStatus,
-    highlightsByMessage,
-  ]);
+  }, [messages, chatStatus, highlightsByMessage]);
 
   // <ChatNotFound>:=>
   const conversationExists = useQuery(
@@ -761,37 +788,7 @@ export default function ChatArea({ id }: { id: string }) {
           {/* <div className="flex overflow-y-auto "> */}
           {/* <Conversation className="max-w-11/12 mx-auto"> */}
           <Conversation className="max-w-5xl lg:max-w-7xl mx-auto">
-            <ConversationContent>
-              {/* Message count warning */}
-              {messageCount && messageCount.isNearLimit && (
-                <div className="mb-4 p-3 bg-yellow-600/20 border border-yellow-600 rounded-lg text-sm">
-                  ⚠️ This conversation is approaching the maximum limit of{" "}
-                  {messageCount.maxLimit} messages ({messageCount.count}/
-                  {messageCount.maxLimit}). Consider starting a new
-                  conversation soon.
-                </div>
-              )}
-
-                {/* Loading trigger for infinite scroll at top */}
-                {messagesData?.hasMore &&
-                messages.length > 0 &&
-                !isInitialLoad &&
-                !autoLoadAll &&
-                !allMessagesLoaded && (
-                  <div ref={loadMoreTriggerRef} className="flex justify-center py-1">
-                  {isLoadingMore && (
-                    <div className="flex items-center gap-2 text-sm text-gray-400">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    Loading older messages...
-                    </div>
-                  )}
-                  </div>
-                )}
-
-              {renderedMessages}
-              {/* <ConversationScrollButton className="h-2" /> */}
-              {/* <div ref={messagesEndRef} /> */}
-            </ConversationContent>
+            <ConversationContent>{renderedMessages}</ConversationContent>
           </Conversation>
           {/* </div> */}
 

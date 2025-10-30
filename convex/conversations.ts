@@ -125,8 +125,14 @@ export const listConversationsPaginate = query({
 })
 
 // Constants for message limits
-const MESSAGES_PER_PAGE = 6; // Number of messages to load per pagination request
-const MAX_MESSAGES_PER_CONVERSATION = 10; // Maximum messages allowed in a single conversation
+const MESSAGES_PER_PAGE = 500; // Number of messages to load per pagination request
+// const MAX_TOKENS_PER_CONVERSATION = 50000; // Maximum tokens allowed in a single conversation (approximate)
+
+// Rough token estimation: ~1 token per 4 characters (approximation)
+// For more accuracy, consider using a tokenizer library
+function estimateTokens(text: string): number {
+    return Math.ceil(text.length / 4);
+}
 
 export const getMessages = query({
     args: {
@@ -230,21 +236,6 @@ export const addMessage = mutation({
     handler: async (ctx, args) => {
         await ensureUserOwnsConvoMutation(ctx, { conversationId: args.conversationId });
 
-        // Check message count limit
-        const messageCount = await ctx.db
-            .query("messages")
-            .withIndex("by_conversationId", (q) =>
-                q.eq("conversationId", args.conversationId)
-            )
-            .collect()
-            .then(msgs => msgs.length);
-
-        if (messageCount >= MAX_MESSAGES_PER_CONVERSATION) {
-            throw new Error(
-                `Conversation has reached the maximum limit of ${MAX_MESSAGES_PER_CONVERSATION} messages. Please start a new conversation.`
-            );
-        }
-
         const now = Date.now();
 
         const messageId = await ctx.db.insert("messages", {
@@ -301,29 +292,6 @@ export const deleteConversation = mutation({
     },
 });
 
-// Get message count for a conversation
-export const getMessageCount = query({
-    args: {
-        conversationId: v.id("conversations"),
-    },
-    handler: async (ctx, { conversationId }) => {
-        await ensureUserOwnsConvoQuery(ctx, { conversationId });
-
-        const count = await ctx.db
-            .query("messages")
-            .withIndex("by_conversationId", (q) =>
-                q.eq("conversationId", conversationId)
-            )
-            .collect()
-            .then(msgs => msgs.length);
-
-        return {
-            count,
-            maxLimit: MAX_MESSAGES_PER_CONVERSATION,
-            isNearLimit: count >= MAX_MESSAGES_PER_CONVERSATION * 0.8, // 80% threshold
-        };
-    },
-});
 
 // Ensure user exists - call this on app initialization
 export const ensureUser = mutation({
