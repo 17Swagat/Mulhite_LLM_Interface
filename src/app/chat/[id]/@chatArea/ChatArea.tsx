@@ -35,7 +35,7 @@ import ChatNotFound from "./ChatNotFound";
 
 import { ToolbarOnTextHighlight } from "@/components/my/Toolbar/ToolbarOnTextSelection";
 import { Highlight } from "@/lib/highlights";
-import { HighlightedResponse } from "@/components/my/Toolbar/highlight/HighlightedResponse";
+import { HighlightedResponse } from "@/components/my/AIResponse/highlight/HighlightedResponse";
 import { PromptInputField } from "@/components/my/PromptInputField";
 
 import { AI_MODELS } from "@/constants/models";
