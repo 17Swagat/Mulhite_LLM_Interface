@@ -33,25 +33,16 @@ import { api } from "@/../convex/_generated/api";
 import { Id } from "@/../convex/_generated/dataModel";
 import ChatNotFound from "./ChatNotFound";
 
-import { ToolbarOnTextHighlight } from "@/components/my/Toolbar/ToolbarOnTextSelection";
+import { ToolbarOnTextSelection } from "@/components/my/Toolbar/ToolbarOnTextSelection";
 import { Highlight } from "@/lib/highlights";
 import { HighlightedResponse } from "@/components/my/AIResponse/highlight/HighlightedResponse";
 import { PromptInputField } from "@/components/my/PromptInputField";
 
 import { AI_MODELS } from "@/constants/models";
 
-// Sheets
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
+// Sidebar Explain Chat
+import { Sheet } from "@/components/ui/sheet";
+import { ExplainSideChat } from "./ExplainSideChat";
 
 export default function ChatArea({ id }: { id: string }) {
   const [input, setInput] = useState("");
@@ -361,12 +352,16 @@ export default function ChatArea({ id }: { id: string }) {
   // [Handling Highlights]:===> [START]
   /////////////////////////////////////////////////////////////////////////////////////////////////
   const highlightsData = useQuery(
-    api.highlights.getHighlightsByConversation,
+    api.highlights_db.getHighlightsByConversation,
     id ? { conversationId } : "skip"
   );
 
-  const createHighlightMutation = useMutation(api.highlights.createHighlight);
-  const deleteHighlightMutation = useMutation(api.highlights.deleteHighlight);
+  const createHighlightMutation = useMutation(
+    api.highlights_db.createHighlight
+  );
+  const deleteHighlightMutation = useMutation(
+    api.highlights_db.deleteHighlight
+  );
 
   // Store highlights by message ID for quick lookup - use state instead of ref to trigger re-renders
   const [highlightsByMessage, setHighlightsByMessage] = useState<
@@ -793,7 +788,7 @@ export default function ChatArea({ id }: { id: string }) {
         <div className="flex flex-col items-center-safe min-h-screen bg-gray-900 text-white">
           <Sheet>
             {/* Toolbar - render once at the top level */}
-            <ToolbarOnTextHighlight
+            <ToolbarOnTextSelection
               _selection={_selection}
               selectedTextRect={selectedTextRect}
               onHighlight={handleHighlight}
@@ -820,20 +815,8 @@ export default function ChatArea({ id }: { id: string }) {
             </div>
 
             {/* <div className="h-0.5" ref={messagesEndRef} /> */}
-
-            <SheetContent className="bg-gray-300">
-              <SheetHeader className="py-1 px-2">
-                <SheetTitle>Explaining</SheetTitle>
-                <SheetDescription>What does this mean?</SheetDescription>
-              </SheetHeader>
-              <div className="w-full h-full bg-amber-300"></div>
-              <SheetFooter>
-                <Button type="submit">Save changes</Button>
-                <SheetClose asChild>
-                  <Button variant="outline">Close</Button>
-                </SheetClose>
-              </SheetFooter>
-            </SheetContent>
+            {/* Explain Sidebar Chat (Sheet)*/}
+            <ExplainSideChat />
           </Sheet>
         </div>
       </Authenticated>

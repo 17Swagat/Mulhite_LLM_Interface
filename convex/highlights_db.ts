@@ -82,8 +82,7 @@ export const getHighlightsByConversation = query({
     conversationId: v.string() //v.id("conversations"),
   },
   handler: async (ctx, args) => {
-    const user = await getCurrentUser(ctx);
-
+    const user = await getCurrentUser(ctx); // From 'Users' table
     const normalizedId = ctx.db.normalizeId("conversations", args.conversationId);
     if (normalizedId === null || user === null) {
       return null;

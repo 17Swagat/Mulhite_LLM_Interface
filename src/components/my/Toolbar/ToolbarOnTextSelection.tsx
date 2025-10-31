@@ -63,7 +63,7 @@ const HIGHLIGHT_COLORS = [
   },
 ];
 
-export function ToolbarOnTextHighlight({
+export function ToolbarOnTextSelection({
   selectedTextRect,
   _selection,
   onHighlight,
@@ -181,19 +181,6 @@ export function ToolbarOnTextHighlight({
             Explain 🔍
           </Button>
         </SheetTrigger>
-        {/* <SheetContent className="bg-gray-300">
-          <SheetHeader className="py-1 px-2">
-            <SheetTitle>Explaining</SheetTitle>
-            <SheetDescription>What does this mean?</SheetDescription>
-          </SheetHeader>
-          <div className="w-full h-full bg-amber-300"></div>
-          <SheetFooter>
-            <Button type="submit">Save changes</Button>
-            <SheetClose asChild>
-              <Button variant="outline">Close</Button>
-            </SheetClose>
-          </SheetFooter>
-        </SheetContent> */}
       </div>
     </div>
   );
