@@ -40,6 +40,19 @@ import { PromptInputField } from "@/components/my/PromptInputField";
 
 import { AI_MODELS } from "@/constants/models";
 
+// Sheets
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+
 export default function ChatArea({ id }: { id: string }) {
   const [input, setInput] = useState("");
   const [hasProcessedPendingMessage, setHasProcessedPendingMessage] =
@@ -778,34 +791,50 @@ export default function ChatArea({ id }: { id: string }) {
     <>
       <Authenticated>
         <div className="flex flex-col items-center-safe min-h-screen bg-gray-900 text-white">
-          {/* Toolbar - render once at the top level */}
-          <ToolbarOnTextHighlight
-            _selection={_selection}
-            selectedTextRect={selectedTextRect}
-            onHighlight={handleHighlight}
-          />
-
-          {/* <div className="flex overflow-y-auto "> */}
-          {/* <Conversation className="max-w-11/12 mx-auto"> */}
-          <Conversation className="max-w-5xl lg:max-w-7xl mx-auto">
-            <ConversationContent>{renderedMessages}</ConversationContent>
-          </Conversation>
-          {/* </div> */}
-
-          <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-2 rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md  ">
-            <PromptInputField
-              // AI_MODESLS={AI_MODELS}
-              selectedModel={selectedModel}
-              setSelectedModelFunc={setSelectedModel}
-              handleSubmit={handleSubmit}
-              input={input}
-              setInput={setInput}
-              chatStatus={chatStatus}
-              inConversation={true}
+          <Sheet>
+            {/* Toolbar - render once at the top level */}
+            <ToolbarOnTextHighlight
+              _selection={_selection}
+              selectedTextRect={selectedTextRect}
+              onHighlight={handleHighlight}
             />
-          </div>
 
-          {/* <div className="h-0.5" ref={messagesEndRef} /> */}
+            {/* <div className="flex overflow-y-auto "> */}
+            {/* <Conversation className="max-w-11/12 mx-auto"> */}
+            <Conversation className="max-w-5xl lg:max-w-7xl mx-auto">
+              <ConversationContent>{renderedMessages}</ConversationContent>
+            </Conversation>
+            {/* </div> */}
+
+            <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-2 rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md  ">
+              <PromptInputField
+                // AI_MODESLS={AI_MODELS}
+                selectedModel={selectedModel}
+                setSelectedModelFunc={setSelectedModel}
+                handleSubmit={handleSubmit}
+                input={input}
+                setInput={setInput}
+                chatStatus={chatStatus}
+                inConversation={true}
+              />
+            </div>
+
+            {/* <div className="h-0.5" ref={messagesEndRef} /> */}
+
+            <SheetContent className="bg-gray-300">
+              <SheetHeader className="py-1 px-2">
+                <SheetTitle>Explaining</SheetTitle>
+                <SheetDescription>What does this mean?</SheetDescription>
+              </SheetHeader>
+              <div className="w-full h-full bg-amber-300"></div>
+              <SheetFooter>
+                <Button type="submit">Save changes</Button>
+                <SheetClose asChild>
+                  <Button variant="outline">Close</Button>
+                </SheetClose>
+              </SheetFooter>
+            </SheetContent>
+          </Sheet>
         </div>
       </Authenticated>
       <AuthLoading>

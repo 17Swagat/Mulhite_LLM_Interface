@@ -1,6 +1,19 @@
 // Toolbar component for highlighting text in assistant messages
 /* eslint-disable @next/next/no-inline-styles -- Positioning requires dynamic styles */
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { HighlighterIcon, ShareIcon, ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
@@ -159,15 +172,28 @@ export function ToolbarOnTextHighlight({
 
       {/* Share Button */}
       <div className="bg-gray-200 rounded-[10px] hover:brightness-95 text-black">
-        <button
-          type="button"
-          className="p-2 rounded-full  transition-colors"
-          aria-label="Share"
-          title="Share selection"
-        >
-          Explain...
-          {/* <ShareIcon size={18} className="text-black" /> */}
-        </button>
+        {/* <div className=""> */}
+        <SheetTrigger asChild>
+          <Button
+            variant="ghost"
+            className="bg-transparent hover:bg-purple-200 "
+          >
+            Explain 🔍
+          </Button>
+        </SheetTrigger>
+        {/* <SheetContent className="bg-gray-300">
+          <SheetHeader className="py-1 px-2">
+            <SheetTitle>Explaining</SheetTitle>
+            <SheetDescription>What does this mean?</SheetDescription>
+          </SheetHeader>
+          <div className="w-full h-full bg-amber-300"></div>
+          <SheetFooter>
+            <Button type="submit">Save changes</Button>
+            <SheetClose asChild>
+              <Button variant="outline">Close</Button>
+            </SheetClose>
+          </SheetFooter>
+        </SheetContent> */}
       </div>
     </div>
   );
