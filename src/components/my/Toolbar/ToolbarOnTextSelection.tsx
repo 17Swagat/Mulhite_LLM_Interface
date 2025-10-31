@@ -77,7 +77,6 @@ export function ToolbarOnTextHighlight({
     }
   }, [isColorPickerOpen]);
 
-
   // Quick highlight with current color
   const handleQuickHighlight = () => {
     if (_selection && !_selection.isCollapsed && onHighlight) {
@@ -159,14 +158,17 @@ export function ToolbarOnTextHighlight({
       </div>
 
       {/* Share Button */}
-      {/* <button
-        type="button"
-        className="p-2 rounded-full hover:bg-purple-100 transition-colors"
-        aria-label="Share"
-        title="Share selection"
-      >
-        <ShareIcon size={18} className="text-white" />
-      </button> */}
+      <div className="bg-gray-200 rounded-[10px] hover:brightness-95 text-black">
+        <button
+          type="button"
+          className="p-2 rounded-full  transition-colors"
+          aria-label="Share"
+          title="Share selection"
+        >
+          Explain...
+          {/* <ShareIcon size={18} className="text-black" /> */}
+        </button>
+      </div>
     </div>
   );
 }

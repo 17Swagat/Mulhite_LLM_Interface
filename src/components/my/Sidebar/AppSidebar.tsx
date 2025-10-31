@@ -12,11 +12,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import SidebarItem from "./SidebarItem";
+// import SidebarItem from "./SidebarItem";
+import SidebarItem from "../SidebarItem";
 import { useChatStore } from "@/stores/chatStore";
 import { useEffect, useRef, useState } from "react";
 import { useMutation, usePaginatedQuery, useConvexAuth } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+// import { api } from "../../../convex/_generated/api";
+import { api } from "@/../convex/_generated/api";
 import cssStyleSidebar from "./AppSidebar.module.css";
 
 export function AppSidebar() {
@@ -78,11 +80,7 @@ export function AppSidebar() {
         if (!entry?.isIntersecting) return;
 
         // Only trigger when we can load more and not already loading
-        if (
-          !isLoading &&
-          conversPagiStatus !== "Exhausted" &&
-          !autoLoading
-        ) {
+        if (!isLoading && conversPagiStatus !== "Exhausted" && !autoLoading) {
           setAutoLoading(true);
           // Trigger loading next page
           loadMore(PAGINATE_LIMIT);
@@ -114,7 +112,7 @@ export function AppSidebar() {
       <Sidebar
         // variant="inset"
         className="dark"
-        style={{ scrollbarWidth: "thin"}}
+        style={{ scrollbarWidth: "thin" }}
       >
         <SidebarHeader>
           <Link href={"/"}>

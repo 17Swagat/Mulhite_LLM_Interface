@@ -33,9 +33,9 @@ import { api } from "@/../convex/_generated/api";
 import { Id } from "@/../convex/_generated/dataModel";
 import ChatNotFound from "./ChatNotFound";
 
-import { ToolbarOnTextHighlight } from "@/components/my/ToolbarOnTextSelection";
+import { ToolbarOnTextHighlight } from "@/components/my/Toolbar/ToolbarOnTextSelection";
 import { Highlight } from "@/lib/highlights";
-import { HighlightedResponse } from "@/components/my/HighlightedResponse";
+import { HighlightedResponse } from "@/components/my/Toolbar/highlight/HighlightedResponse";
 import { PromptInputField } from "@/components/my/PromptInputField";
 
 import { AI_MODELS } from "@/constants/models";

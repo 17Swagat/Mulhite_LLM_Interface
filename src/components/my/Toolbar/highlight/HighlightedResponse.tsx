@@ -9,7 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@radix-ui/react-popover";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import highlightMenuStyles from "./HighlightedResponse.module.css";
 
 interface HighlightedResponseProps {

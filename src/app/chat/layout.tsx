@@ -1,5 +1,5 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/my/AppSidebar";
+import { AppSidebar } from "@/components/my/Sidebar/AppSidebar";
 
 export default async function ChatLayout({
   children,
