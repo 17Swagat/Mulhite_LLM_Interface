@@ -9,6 +9,7 @@
  */
 
 import type * as conversations from "../conversations.js";
+import type * as explainSideChats from "../explainSideChats.js";
 import type * as highlights_db from "../highlights_db.js";
 import type * as testing_messages from "../testing/messages.js";
 
@@ -28,6 +29,7 @@ import type {
  */
 declare const fullApi: ApiFromModules<{
   conversations: typeof conversations;
+  explainSideChats: typeof explainSideChats;
   highlights_db: typeof highlights_db;
   "testing/messages": typeof testing_messages;
 }>;

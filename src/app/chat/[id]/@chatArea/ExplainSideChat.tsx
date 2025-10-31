@@ -1,71 +1,268 @@
+"use client";
+
 import {
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetDescription,
-  SheetFooter,
   SheetClose,
 } from "@/components/ui/sheet";
 
 import { Button } from "@/components/ui/button";
 import { PromptInputField } from "@/components/my/PromptInputField";
 import { AI_MODELS } from "@/constants/models";
-import { useState } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { v7 as uuidv7 } from "uuid";
+import { X, Trash2 } from "lucide-react";
+import { api } from "@/../convex/_generated/api";
+import { useQuery, useMutation } from "convex/react";
+import { Id } from "@/../convex/_generated/dataModel";
+import { Response } from "@/components/ui/shadcn-io/ai/response";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
 
-export function ExplainSideChat({
-  text = "",
-  chatStatus,
-}: {
-  text: string;
+interface ExplainSideChatContentProps {
+  sideChatId: string;
+  onClose: () => void;
+}
 
-  chatStatus: "submitted" | "ready" | "error" | "streaming";
-}) {
-  // Prompt Input Field State
-
-  // Model-Selection (initialize lazily once)
+export function ExplainSideChatContent({ sideChatId, onClose }: ExplainSideChatContentProps) {
   const [selectedModel, setSelectedModel] = useState<string>(() => {
-    let model = AI_MODELS[0].id;
-    // if (typeof window !== "undefined") {
-    //   const pendingMessageModelKey = `pendingMessage_Model_${id}`;
-    //   const pendingMessageModel = sessionStorage.getItem(
-    //     pendingMessageModelKey
-    //   );
-    //   if (pendingMessageModel) {
-    //     model = pendingMessageModel;
-    //     sessionStorage.removeItem(pendingMessageModelKey);
-    //   }
-    // }
-    return model;
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem(`pendingExplainModel_${sideChatId}`) || AI_MODELS[0].id;
+    }
+    return AI_MODELS[0].id;
+  });
+  const [input, setInput] = useState<string>("");
+  const initiatedRef = useRef(false);
+  const prevSideChatIdRef = useRef<string | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Reset initiatedRef when sideChatId changes
+  if (prevSideChatIdRef.current !== sideChatId) {
+    initiatedRef.current = false;
+    prevSideChatIdRef.current = sideChatId;
+  }
+
+  const sideChat = useQuery(
+    api.explainSideChats.getExplainSideChat,
+    { sideChatId: sideChatId as Id<"explainSideChats"> }
+  );
+
+  const convexMessages = useQuery(
+    api.explainSideChats.getExplainSideChatMessages,
+    { explainSideChatId: sideChatId as Id<"explainSideChats"> }
+  );
+
+  const addMessageMutation = useMutation(api.explainSideChats.addExplainSideChatMessage);
+  const deleteSideChatMutation = useMutation(api.explainSideChats.deleteExplainSideChat);
+
+  const transport = useMemo(
+    () =>
+      new DefaultChatTransport({
+        api: "/api/multi-model",
+        body: { chatId: sideChatId },
+      }),
+    [sideChatId]
+  );
+
+  const {
+    messages,
+    status: chatStatus,
+    sendMessage,
+    setMessages,
+    stop,
+  } = useChat({
+    id: sideChatId,
+    transport,
+    onFinish: async ({ messages: allMessages }) => {
+      try {
+        const lastTwo = allMessages.slice(-2);
+        for (const msg of lastTwo) {
+          await addMessageMutation({
+            explainSideChatId: sideChatId as Id<"explainSideChats">,
+            role: msg.role as "user" | "assistant",
+            parts: msg.parts.map((p: any) => ({ type: p.type, text: p.text })),
+          });
+        }
+      } catch (e) {
+        console.error("Failed to save explain side-chat messages:", e);
+      }
+    },
   });
 
-  const [input, setInput] = useState<string>("");
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages?.length, chatStatus]);
+
+  useEffect(() => {
+    if (!convexMessages || convexMessages.length === 0 || messages.length > 0) return;
+    setMessages(
+      convexMessages.map((m) => ({
+        id: (m as any)._id,
+        role: m.role,
+        parts: m.parts as any,
+      }))
+    );
+  }, [convexMessages, setMessages, messages.length]);
+
+  useEffect(() => {
+    if (initiatedRef.current || chatStatus !== "ready" || messages.length > 0) return;
+    
+    const pending = typeof window !== "undefined" 
+      ? sessionStorage.getItem(`pendingExplainMessage_${sideChatId}`)
+      : null;
+
+    if (pending) {
+      initiatedRef.current = true;
+      sendMessage(
+        { text: pending.trim(), metadata: { chatId: sideChatId } },
+        { body: { model: selectedModel } }
+      );
+      sessionStorage.removeItem(`pendingExplainMessage_${sideChatId}`);
+      sessionStorage.removeItem(`pendingExplainModel_${sideChatId}`);
+      return;
+    }
+    
+    if (sideChat?.selectedText) {
+      initiatedRef.current = true;
+      sendMessage(
+        { text: `Explain "${sideChat.selectedText}" based on the current conversation.`, metadata: { chatId: sideChatId } },
+        { body: { model: selectedModel } }
+      );
+    }
+  }, [chatStatus, messages.length, sideChat?.selectedText, selectedModel, sendMessage, sideChatId]);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    const text = input.trim();
+    setInput("");
+    sendMessage(
+      { text, metadata: { chatId: sideChatId } },
+      { body: { model: selectedModel } }
+    );
+  };
+
+  const handleDeleteSideChat = async () => {
+    if (!sideChatId) return;
+    try {
+      await deleteSideChatMutation({ sideChatId: sideChatId as Id<"explainSideChats"> });
+      onClose();
+    } catch (error) {
+      console.error("Failed to delete side-chat:", error);
+    }
+  };
+
+  if (!sideChat) {
+    return (
+      <SheetContent className="bg-gray-900 text-white w-[600px] sm:w-[600px]">
+        <SheetHeader>
+          <SheetTitle className="text-white">Explain Chat</SheetTitle>
+        </SheetHeader>
+        <div className="flex items-center justify-center h-full">
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </SheetContent>
+    );
+  }
 
   return (
-    <SheetContent className="bg-gray-300">
-      <SheetHeader className="py-1 px-2">
-        <SheetTitle>Explaining</SheetTitle>
-        <SheetDescription>{text}</SheetDescription>
+    <SheetContent className="bg-gray-900 text-white w-[600px] sm:w-[600px] flex flex-col">
+      <SheetHeader className="border-b border-gray-700 pb-4">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <SheetTitle className="text-white text-lg">Explain Chat</SheetTitle>
+            <SheetDescription className="text-gray-400 mt-2 text-sm">
+              &ldquo;{sideChat.selectedText}&rdquo;
+            </SheetDescription>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleDeleteSideChat}
+              className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
+            >
+              <Trash2 size={18} />
+            </Button>
+            <SheetClose asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onClose}
+                className="text-gray-400 hover:text-white hover:bg-gray-800"
+              >
+                <X size={20} />
+              </Button>
+            </SheetClose>
+          </div>
+        </div>
       </SheetHeader>
-      <div className="w-full h-full bg-amber-700">Selected Contents Are:</div>
-      <SheetFooter>
-        {/* <Button type="submit">Save changes</Button> */}
-        {/* <SheetClose asChild>
-          <Button variant="outline">Close</Button>
-        </SheetClose> */}
 
+      {/* Messages Area */}
+      <ScrollArea className="flex-1 py-4">
+        <div className="space-y-4 px-4">
+          {messages && messages.length > 0 ? (
+            <>
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`flex ${
+                    msg.role === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                      msg.role === "user"
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-800 text-gray-100"
+                    }`}
+                  >
+                    {msg.role === "assistant" ? (
+                      <Response>
+                        {msg.parts
+                          .filter((p: any) => p.type === "text")
+                          .map((p: any) => p.text)
+                          .join("")}
+                      </Response>
+                    ) : (
+                      <p className="text-sm">
+                        {msg.parts
+                          .filter((p: any) => p.type === "text")
+                          .map((p: any) => p.text)
+                          .join("")}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </>
+          ) : chatStatus === "streaming" ? (
+            <div className="flex items-center justify-center h-full text-gray-500">
+              <p>Generating explanation...</p>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-full text-gray-500">
+              <p>Start a conversation about this text...</p>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+      </ScrollArea>
+
+      {/* Input Area */}
+      <div className="border-t border-gray-700 pt-4">
         <PromptInputField
-          // AI_MODESLS={AI_MODELS}
           selectedModel={selectedModel}
           setSelectedModelFunc={setSelectedModel}
-          handleSubmit={() => {
-            console.log("Explaination Query Submitted");
-          }}
+          handleSubmit={handleSubmit}
           input={input}
           setInput={setInput}
-          chatStatus={chatStatus}
+          chatStatus={chatStatus === "streaming" ? "streaming" : "ready"}
           inConversation={true}
         />
-      </SheetFooter>
+      </div>
     </SheetContent>
   );
 }

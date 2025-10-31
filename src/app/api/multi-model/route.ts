@@ -54,8 +54,38 @@ export async function POST(req: Request) {
 
         console.log('Current Model ID: ' + CURRENT_MODEL.modelId)
 
+        // Normalize to UIMessage with parts[]; convertToModelMessages expects parts-based UI messages
+        let prompt;
+        try {
+            const normalized = (messages as any[]).map((m: any) => {
+                const hasParts = Array.isArray(m.parts);
+                const parts = hasParts
+                    ? m.parts
+                    : Array.isArray(m.content)
+                        ? m.content
+                        : typeof m.content === 'string'
+                            ? [{ type: 'text', text: m.content }]
+                            : [];
+
+                return {
+                    id: m.id ?? uuidv7(),
+                    role: m.role,
+                    parts,
+                    metadata: m.metadata,
+                } satisfies UIMessage;
+            });
+
+            prompt = convertToModelMessages(normalized);
+        } catch (e) {
+            console.error('convertToModelMessages failed. Sample message:',
+                Array.isArray(messages) && messages.length > 0 ? messages[0] : null,
+                e
+            );
+            return new Response("Invalid messages payload", { status: 400 });
+        }
+
         const result = streamText({
-            prompt: convertToModelMessages(messages),
+            prompt,
             // model: google("gemini-2.5-flash-lite-preview-09-2025"),
             model: CURRENT_MODEL,
             // model: ollama('deepseek-r1:1.5b'),

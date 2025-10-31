@@ -94,15 +94,15 @@ export function ToolbarOnTextSelection({
 
   if (!selectedTextRect) return null;
 
+  const toolbarStyle = {
+    top: `${selectedTextRect.top - 50}px`,
+    left: `${selectedTextRect.left + selectedTextRect.width / 2 - 100}px`,
+  };
+
   return (
     <div
       className="fixed z-50 flex items-center gap-1 p-1 rounded-md bg-gray-800  backdrop-blur-sm"
-      style={
-        {
-          top: `${selectedTextRect.top - 50}px`,
-          left: `${selectedTextRect.left + selectedTextRect.width / 2 - 100}px`,
-        } as React.CSSProperties
-      }
+      style={toolbarStyle}
     >
       <div className="flex items-center bg-gray-200 p-1 justify-center rounded-md">
         {/* Quick Highlight Button - Highlights with current color */}

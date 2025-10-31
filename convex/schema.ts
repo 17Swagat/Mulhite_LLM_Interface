@@ -60,4 +60,33 @@ export default defineSchema({
         .index("by_messageId", ["messageId"])  // Get all highlights for a message
         .index("by_conversationId", ["conversationId"])  // Get all highlights in a conversation
         .index("by_userId", ["userId"]),  // Get all user's highlights
+
+    explainSideChats: defineTable({
+        messageId: v.id("messages"),  // Original message where text was selected
+        conversationId: v.id("conversations"),  // Parent conversation
+        userId: v.id("users"),  // Who created this side-chat
+        startOffset: v.number(),  // Character offset where selected text starts
+        endOffset: v.number(),  // Character offset where selected text ends
+        selectedText: v.string(),  // The text that was selected for explanation
+        highlightColor: v.string(),  // Color to highlight the clickable text (e.g., "blue", "purple")
+        createdAt: v.number(),  // Timestamp
+        updatedAt: v.number(),  // Last activity timestamp
+    })
+        .index("by_messageId", ["messageId"])  // Get all side-chats for a message
+        .index("by_conversationId", ["conversationId"])  // Get all side-chats in a conversation
+        .index("by_userId", ["userId"]),  // Get all user's side-chats
+
+    explainSideChatMessages: defineTable({
+        explainSideChatId: v.id("explainSideChats"),  // Which side-chat this message belongs to
+        role: v.union(v.literal("user"), v.literal("assistant")),  // Message sender
+        parts: v.array(  // Message content
+            v.object({
+                type: v.string(),  // "text", "reasoning", etc.
+                text: v.optional(v.string()),  // Text content
+            })
+        ),
+        timestamp: v.number(),  // Unix timestamp for ordering
+    })
+        .index("by_explainSideChatId", ["explainSideChatId"])  // Get all messages in a side-chat
+        .index("by_timestamp", ["timestamp"]),  // Chronological ordering
 });

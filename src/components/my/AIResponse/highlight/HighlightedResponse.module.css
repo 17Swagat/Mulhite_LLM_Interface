@@ -32,3 +32,8 @@
 .highlight_scrollbar::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+/* Ensure default cursor is text inside assistant message blocks so pointer only shows on ::highlight ranges */
+.textCursor {
+  cursor: text;
+}

@@ -42,7 +42,8 @@ import { AI_MODELS } from "@/constants/models";
 
 // Sidebar Explain Chat
 import { Sheet } from "@/components/ui/sheet";
-import { ExplainSideChat } from "./ExplainSideChat";
+import { HighlightedResponseWithExplain, ExplainSideChat as ExplainSideChatType } from "@/components/my/AIResponse/highlight/HighlightedResponseWithExplain";
+import { ExplainSideChatContent } from "./ExplainSideChat";
 
 export default function ChatArea({ id }: { id: string }) {
   const [input, setInput] = useState("");
@@ -402,6 +403,44 @@ export default function ChatArea({ id }: { id: string }) {
     api.highlights_db.deleteHighlight
   );
 
+  // Explain Side Chats
+  const currentExplainSideChats = useQuery(
+    api.explainSideChats.getExplainSideChatsByConversation,
+    id ? { conversationId } : "skip"
+  );
+
+  const createExplainSideChatMutation = useMutation(
+    api.explainSideChats.createExplainSideChat
+  );
+
+  const [explainSideChatsByMessage, setExplainSideChatsByMessage] = useState<
+    Map<string, ExplainSideChatType[]>
+  >(new Map());
+
+  const [activeSideChatId, setActiveSideChatId] = useState<string | null>(null);
+  const prevExplainKeysRef = useRef<string>("");
+
+  useEffect(() => {
+    if (!currentExplainSideChats) return;
+    const newKey = currentExplainSideChats
+      .map((e) => e._id)
+      .sort()
+      .join("|");
+    
+    if (newKey === prevExplainKeysRef.current) return;
+    prevExplainKeysRef.current = newKey;
+
+    const newMap = new Map<string, ExplainSideChatType[]>();
+    for (const sideChat of currentExplainSideChats) {
+      const messageId = sideChat.messageId;
+      if (!newMap.has(messageId)) {
+        newMap.set(messageId, []);
+      }
+      newMap.get(messageId)!.push(sideChat as ExplainSideChatType);
+    }
+    setExplainSideChatsByMessage(newMap);
+  }, [currentExplainSideChats]);
+
   // Store highlights by message ID for quick lookup - use state instead of ref to trigger re-renders
   const [highlightsByMessage, setHighlightsByMessage] = useState<
     Map<string, Highlight[]>
@@ -659,6 +698,13 @@ export default function ChatArea({ id }: { id: string }) {
     }
   };
 
+  // Handle opening an explain side-chat when clicking on highlighted explain text
+  const handleOpenExplainSideChat = (sideChatId: string) => {
+    console.log("Opening explain side-chat:", sideChatId);
+    setActiveSideChatId(sideChatId);
+    setOpenExplainSidebar(true);
+  };
+
   /////////////////////////////////////////////////////////////////////////////////////////////////
   // [Handling Highlights]:===> [END]
   ///////////////////////////////////////////////////////////////////////////////
@@ -718,22 +764,28 @@ export default function ChatArea({ id }: { id: string }) {
                 {message.parts.map((part, index) => {
                   if (part.type !== "text") return null;
 
-                  // Only use <HighlightedResponse> for assistant messages
+                  // Only use <HighlightedResponseWithExplain> for assistant messages
                   if (message.role === "assistant") {
                     // Get highlights for this message - use stable empty array reference
                     const messageHighlights =
                       highlightsByMessage.get(message.id) ||
                       emptyHighlightsArray.current;
 
+                    // Get explain side chats for this message
+                    const messageExplainChats =
+                      explainSideChatsByMessage.get(message.id) || [];
+
                     return (
                       <div key={index + message.id}>
-                        {/* Answer with highlights */}
-                        <HighlightedResponse
+                        {/* Answer with highlights and explain chats */}
+                        <HighlightedResponseWithExplain
                           text={part.text || ""}
                           highlights={messageHighlights}
+                          explainSideChats={messageExplainChats}
                           messageId={message.id}
                           className="text-lg"
                           onDeleteHighlight={handleDeleteHighlight}
+                          onOpenExplainSideChat={handleOpenExplainSideChat}
                         />
                       </div>
                     );
@@ -765,20 +817,85 @@ export default function ChatArea({ id }: { id: string }) {
         <div ref={messagesEndRef} />
       </>
     );
-  }, [messages, chatStatus, highlightsByMessage]);
+  }, [messages, chatStatus, highlightsByMessage, explainSideChatsByMessage]);
 
   // Explain Sheet Sidebar
-  const [explainText, setExplainText] = useState<string>("");
   const [openExplainSidebar, setOpenExplainSidebar] = useState<boolean>(false);
   const handleExplainSelectedText = async () => {
-    if (_selection && selectedMessageId) {
-      const selectedText = _selection.toString().trim();
-      if (selectedText) {
-        setExplainText(selectedText);
-        setOpenExplainSidebar(true);
-        handleHighlight(_selection, "green" /* color */);
+    if (!_selection || !selectedMessageId || !id) return;
+    if (selectedMessageId.length < 20) return;
+
+    const selectedText = _selection.toString().trim();
+    if (!selectedText) return;
+
+    const range = _selection.getRangeAt(0).cloneRange();
+    const messageContainer = range.commonAncestorContainer.parentElement?.closest("[data-message-text]");
+    if (!messageContainer) return;
+
+    const treeWalker = document.createTreeWalker(messageContainer, NodeFilter.SHOW_TEXT);
+    let currentOffset = 0;
+    let startOffset = -1;
+    let endOffset = -1;
+    let node: Node | null;
+
+    while ((node = treeWalker.nextNode())) {
+      const len = (node.textContent || "").length;
+      if (startOffset === -1 && node === range.startContainer) {
+        startOffset = currentOffset + range.startOffset;
       }
+      if (node === range.endContainer) {
+        endOffset = currentOffset + range.endOffset;
+        break;
+      }
+      currentOffset += len;
     }
+
+    if (startOffset === -1 || endOffset === -1) {
+      const text = messageContainer.textContent || "";
+      startOffset = text.indexOf(selectedText);
+      if (startOffset === -1) return;
+      endOffset = startOffset + selectedText.length;
+    }
+
+    _selection.removeAllRanges();
+    setSelection(null);
+    setSelectedTextRect(null);
+
+    const sideChatId = await createExplainSideChatMutation({
+      messageId: selectedMessageId as Id<"messages">,
+      conversationId: conversationId,
+      startOffset,
+      endOffset,
+      selectedText,
+      highlightColor: "blue",
+    });
+
+    const newMap = new Map(explainSideChatsByMessage);
+    newMap.set(selectedMessageId, [
+      ...(newMap.get(selectedMessageId) || []),
+      {
+        _id: sideChatId,
+        messageId: selectedMessageId,
+        conversationId,
+        userId: "" as any,
+        startOffset,
+        endOffset,
+        selectedText,
+        highlightColor: "blue",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      },
+    ]);
+    setExplainSideChatsByMessage(newMap);
+
+    sessionStorage.setItem(
+      `pendingExplainMessage_${sideChatId}`,
+      `Explain "${selectedText}" based on the current conversation.`
+    );
+    sessionStorage.setItem(`pendingExplainModel_${sideChatId}`, selectedModel);
+
+    setActiveSideChatId(sideChatId);
+    setOpenExplainSidebar(true);
   };
 
   // <ChatNotFound>:=>
@@ -798,7 +915,6 @@ export default function ChatArea({ id }: { id: string }) {
       <Authenticated>
         <div className="flex flex-col items-center-safe min-h-screen bg-gray-900 text-white">
           <Sheet open={openExplainSidebar} onOpenChange={setOpenExplainSidebar}>
-          {/* <Sheet> */}
             {/* Toolbar - render once at the top level */}
             <ToolbarOnTextSelection
               _selection={_selection}
@@ -828,8 +944,13 @@ export default function ChatArea({ id }: { id: string }) {
             </div>
 
             {/* <div className="h-0.5" ref={messagesEndRef} /> */}
-            {/* Explain Sidebar Chat (Sheet)*/}
-            <ExplainSideChat text={explainText} chatStatus={chatStatus} />
+            {/* Explain Sidebar Chat (Sheet) */}
+            {activeSideChatId && (
+              <ExplainSideChatContent 
+                sideChatId={activeSideChatId}
+                onClose={() => setOpenExplainSidebar(false)}
+              />
+            )}
           </Sheet>
         </div>
       </Authenticated>
