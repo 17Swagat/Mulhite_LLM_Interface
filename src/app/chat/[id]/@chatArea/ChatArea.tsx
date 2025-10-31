@@ -68,11 +68,6 @@ export default function ChatArea({ id }: { id: string }) {
     id ? { conversationId, cursor: cursor || undefined } : "skip"
   );
 
-  // const messageCount = useQuery(
-  //   api.conversations.getMessageCount,
-  //   id ? { conversationId } : "skip"
-  // );
-
   const addMessageToConvex = useMutation(api.conversations.addMessage);
   const updateConversationMutation = useMutation(
     api.conversations.updateConversation
@@ -284,6 +279,14 @@ export default function ChatArea({ id }: { id: string }) {
     }
   }, [messagesData, setMessages, cursor]);
 
+  // Handle loading more messages
+  const handleLoadMoreMessages = () => {
+    if (messagesData?.nextCursor && !isLoadingMore && !allMessagesLoaded) {
+      setIsLoadingMore(true);
+      setCursor(messagesData.nextCursor);
+    }
+  };
+
   // Auto-load older messages until all are fetched on initial mount
   useEffect(() => {
     if (!autoLoadAll) {
@@ -303,7 +306,7 @@ export default function ChatArea({ id }: { id: string }) {
       return;
     }
 
-    handleLoadMore();
+    handleLoadMoreMessages();
   }, [
     autoLoadAll,
     isInitialLoad,
@@ -348,10 +351,46 @@ export default function ChatArea({ id }: { id: string }) {
     messages.length,
   ]);
 
+  // Intersection observer for auto-loading older messages
+  const loadMoreTriggerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Only set up observer if there are actually more messages to load
+    if (!messagesData?.hasMore || isLoadingMore || allMessagesLoaded) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (
+          entry.isIntersecting &&
+          messagesData?.hasMore &&
+          !isLoadingMore &&
+          !allMessagesLoaded
+        ) {
+          handleLoadMoreMessages();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentTrigger = loadMoreTriggerRef.current;
+    if (currentTrigger) {
+      observer.observe(currentTrigger);
+    }
+
+    return () => {
+      if (currentTrigger) {
+        observer.unobserve(currentTrigger);
+      }
+    };
+  }, [allMessagesLoaded, isLoadingMore, messagesData?.hasMore]);
+
   /////////////////////////////////////////////////////////////////////////////////////////////////
   // [Handling Highlights]:===> [START]
   /////////////////////////////////////////////////////////////////////////////////////////////////
-  const highlightsData = useQuery(
+  const currentConversChatHighlights = useQuery(
     api.highlights_db.getHighlightsByConversation,
     id ? { conversationId } : "skip"
   );
@@ -376,12 +415,14 @@ export default function ChatArea({ id }: { id: string }) {
     new Map()
   );
 
+  // Responsible for updating highlights when currentConversChatHighlights changes
   useEffect(() => {
-    if (highlightsData) {
+    if (currentConversChatHighlights) {
       const newMap = new Map<string, Highlight[]>();
 
       // Group highlights by message ID
-      for (const highlight of highlightsData) {
+      // <messageId, Highlight[]>
+      for (const highlight of currentConversChatHighlights) {
         const messageId = highlight.messageId;
         if (!newMap.has(messageId)) {
           newMap.set(messageId, []);
@@ -427,8 +468,9 @@ export default function ChatArea({ id }: { id: string }) {
         setHighlightsByMessage(newMap);
       }
     }
-  }, [highlightsData]);
+  }, [currentConversChatHighlights]);
 
+  // Text selection handling:
   const [_selection, setSelection] = useState<Selection | null>(null);
   const [selectedTextRect, setSelectedTextRect] = useState<DOMRect | null>(
     null
@@ -436,7 +478,7 @@ export default function ChatArea({ id }: { id: string }) {
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
     null
   );
-
+  // Adding Event Listener for text selection changes
   useEffect(() => {
     const handleSelectionChange = () => {
       const selection = document.getSelection();
@@ -453,7 +495,6 @@ export default function ChatArea({ id }: { id: string }) {
 
         // Check if the selection is within an assistant message
         const messageElement = element?.closest("[data-assistant-message]");
-
         if (messageElement) {
           const messageId = messageElement.getAttribute("data-message-id");
           setSelection(selection);
@@ -525,6 +566,7 @@ export default function ChatArea({ id }: { id: string }) {
     let endOffset = -1;
     let node: Node | null;
 
+    // console.log(treeWalker.nextNode());
     while ((node = treeWalker.nextNode())) {
       const nodeText = node.textContent || "";
       const nodeLength = nodeText.length;
@@ -610,7 +652,6 @@ export default function ChatArea({ id }: { id: string }) {
       await deleteHighlightMutation({
         highlightId: highlightId as Id<"highlights">,
       });
-
       // Remove from local map - update will come from highlightsData reactively
       // No need to manually update state here as the useEffect will handle it
     } catch (error) {
@@ -621,50 +662,6 @@ export default function ChatArea({ id }: { id: string }) {
   /////////////////////////////////////////////////////////////////////////////////////////////////
   // [Handling Highlights]:===> [END]
   ///////////////////////////////////////////////////////////////////////////////
-
-  // Handle loading more messages
-  const handleLoadMore = () => {
-    if (messagesData?.nextCursor && !isLoadingMore && !allMessagesLoaded) {
-      setIsLoadingMore(true);
-      setCursor(messagesData.nextCursor);
-    }
-  };
-
-  // Intersection observer for auto-loading older messages
-  const loadMoreTriggerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Only set up observer if there are actually more messages to load
-    if (!messagesData?.hasMore || isLoadingMore || allMessagesLoaded) {
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (
-          entry.isIntersecting &&
-          messagesData?.hasMore &&
-          !isLoadingMore &&
-          !allMessagesLoaded
-        ) {
-          handleLoadMore();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    const currentTrigger = loadMoreTriggerRef.current;
-    if (currentTrigger) {
-      observer.observe(currentTrigger);
-    }
-
-    return () => {
-      if (currentTrigger) {
-        observer.unobserve(currentTrigger);
-      }
-    };
-  }, [allMessagesLoaded, isLoadingMore, messagesData?.hasMore]);
 
   // Scroll To bottom Behaviour
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -770,6 +767,20 @@ export default function ChatArea({ id }: { id: string }) {
     );
   }, [messages, chatStatus, highlightsByMessage]);
 
+  // Explain Sheet Sidebar
+  const [explainText, setExplainText] = useState<string>("");
+  const [openExplainSidebar, setOpenExplainSidebar] = useState<boolean>(false);
+  const handleExplainSelectedText = async () => {
+    if (_selection && selectedMessageId) {
+      const selectedText = _selection.toString().trim();
+      if (selectedText) {
+        setExplainText(selectedText);
+        setOpenExplainSidebar(true);
+        handleHighlight(_selection, "green" /* color */);
+      }
+    }
+  };
+
   // <ChatNotFound>:=>
   const conversationExists = useQuery(
     api.conversations.isConversationOwnedByUser,
@@ -786,12 +797,14 @@ export default function ChatArea({ id }: { id: string }) {
     <>
       <Authenticated>
         <div className="flex flex-col items-center-safe min-h-screen bg-gray-900 text-white">
-          <Sheet>
+          <Sheet open={openExplainSidebar} onOpenChange={setOpenExplainSidebar}>
+          {/* <Sheet> */}
             {/* Toolbar - render once at the top level */}
             <ToolbarOnTextSelection
               _selection={_selection}
               selectedTextRect={selectedTextRect}
               onHighlight={handleHighlight}
+              onExplain={handleExplainSelectedText}
             />
 
             {/* <div className="flex overflow-y-auto "> */}
@@ -816,7 +829,7 @@ export default function ChatArea({ id }: { id: string }) {
 
             {/* <div className="h-0.5" ref={messagesEndRef} /> */}
             {/* Explain Sidebar Chat (Sheet)*/}
-            <ExplainSideChat />
+            <ExplainSideChat text={explainText} chatStatus={chatStatus} />
           </Sheet>
         </div>
       </Authenticated>

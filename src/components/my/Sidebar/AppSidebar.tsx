@@ -32,7 +32,7 @@ export function AppSidebar() {
   // Fetch conversations from Convex
   // const conversations = useQuery(api.conversations.listConversations); // *** 📌
   const [reset, setReset] = useState(false);
-  const PAGINATE_LIMIT = 20;
+  const PAGINATE_LIMIT = 30;
   const {
     results: conversations,
     status: conversPagiStatus,

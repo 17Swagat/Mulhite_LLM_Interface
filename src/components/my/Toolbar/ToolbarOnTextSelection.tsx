@@ -2,26 +2,9 @@
 /* eslint-disable @next/next/no-inline-styles -- Positioning requires dynamic styles */
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { SheetTrigger } from "@/components/ui/sheet";
 import { HighlighterIcon, ShareIcon, ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-
-interface ToolbarOnTextHighlightProps {
-  selectedTextRect: DOMRect | null;
-  _selection: Selection | null;
-  onHighlight?: (selection: Selection, color: string) => void;
-}
 
 const HIGHLIGHT_COLORS = [
   {
@@ -63,10 +46,18 @@ const HIGHLIGHT_COLORS = [
   },
 ];
 
+interface ToolbarOnTextHighlightProps {
+  selectedTextRect: DOMRect | null;
+  _selection: Selection | null;
+  onHighlight?: (selection: Selection, color: string) => void;
+  onExplain: (selection: Selection) => void;
+}
+
 export function ToolbarOnTextSelection({
   selectedTextRect,
   _selection,
   onHighlight,
+  onExplain,
 }: ToolbarOnTextHighlightProps) {
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState("yellow");
@@ -170,13 +161,18 @@ export function ToolbarOnTextSelection({
         </div>
       </div>
 
-      {/* Share Button */}
+      {/* Explain Button */}
       <div className="bg-gray-200 rounded-[10px] hover:brightness-95 text-black">
         {/* <div className=""> */}
         <SheetTrigger asChild>
           <Button
             variant="ghost"
             className="bg-transparent hover:bg-purple-200 "
+            onClick={() => {
+              // console.log("Explain_Sidebar");
+              // onExplain && _selection && onExplain(_selection);
+               _selection && onExplain(_selection);
+            }}
           >
             Explain 🔍
           </Button>
