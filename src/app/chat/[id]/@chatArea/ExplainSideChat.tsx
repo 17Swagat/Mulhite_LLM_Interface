@@ -29,11 +29,15 @@ import { Message, MessageContent } from "@/components/ui/shadcn-io/ai/message";
 interface ExplainSideChatContentProps {
   sideChatId: string;
   onClose: () => void;
+  parentConversationId: string;
+  parentMessages?: any[]; // Messages from the main conversation for context
 }
 
 export function ExplainSideChatContent({
   sideChatId,
   onClose,
+  parentConversationId,
+  parentMessages = [],
 }: ExplainSideChatContentProps) {
   const [selectedModel, setSelectedModel] = useState<string>(() => {
     if (typeof window !== "undefined") {
@@ -75,9 +79,13 @@ export function ExplainSideChatContent({
     () =>
       new DefaultChatTransport({
         api: "/api/multi-model",
-        body: { chatId: sideChatId },
+        body: { 
+          chatId: sideChatId,
+          parentConversationId,
+          parentMessages: parentMessages, // Pass main conversation context
+        },
       }),
-    [sideChatId]
+    [sideChatId, parentConversationId, parentMessages]
   );
 
   const {

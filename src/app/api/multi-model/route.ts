@@ -22,13 +22,24 @@ export async function POST(req: Request) {
     try {
         const req_ = await req.json();
         // console.log(Object.keys(req_))
-        const { messages, chatId: providedChatId, model: ai_model }: {
+        const { 
+            messages, 
+            chatId: providedChatId, 
+            model: ai_model,
+            parentMessages,
+            parentConversationId 
+        }: {
             messages: ExtendedUIMessage[];
             chatId?: string
             model: string
+            parentMessages?: ExtendedUIMessage[];
+            parentConversationId?: string;
         } = req_;
 
         console.log('AI Model Requested: ' + ai_model)
+        if (parentConversationId) {
+            console.log('ExplainSideChat with parent conversation:', parentConversationId);
+        }
 
         // Use provided chatId or generate a new one
         const chatId = providedChatId ?? messages?.[0]?.metadata?.chatId ?? uuidv7();
@@ -57,7 +68,44 @@ export async function POST(req: Request) {
         // Normalize to UIMessage with parts[]; convertToModelMessages expects parts-based UI messages
         let prompt;
         try {
-            const normalized = (messages as any[]).map((m: any) => {
+            // If this is an ExplainSideChat request with parent context, prepend parent messages
+            let allMessages = messages;
+            
+            if (parentMessages && parentMessages.length > 0) {
+                // Normalize parent messages
+                const normalizedParentMessages = (parentMessages as any[]).map((m: any) => {
+                    const hasParts = Array.isArray(m.parts);
+                    const parts = hasParts
+                        ? m.parts
+                        : Array.isArray(m.content)
+                            ? m.content
+                            : typeof m.content === 'string'
+                                ? [{ type: 'text', text: m.content }]
+                                : [];
+
+                    return {
+                        id: m.id ?? uuidv7(),
+                        role: m.role,
+                        parts,
+                        metadata: m.metadata,
+                    } satisfies UIMessage;
+                });
+
+                // Add a system message to provide context
+                const contextMessage: UIMessage = {
+                    id: uuidv7(),
+                    role: 'system',
+                    parts: [{
+                        type: 'text',
+                        text: 'The following messages are from the parent conversation. Use them as context to answer the user\'s questions about specific text selections.'
+                    }],
+                };
+
+                // Combine: context message + parent messages + current messages
+                allMessages = [contextMessage, ...normalizedParentMessages, ...messages] as ExtendedUIMessage[];
+            }
+
+            const normalized = (allMessages as any[]).map((m: any) => {
                 const hasParts = Array.isArray(m.parts);
                 const parts = hasParts
                     ? m.parts

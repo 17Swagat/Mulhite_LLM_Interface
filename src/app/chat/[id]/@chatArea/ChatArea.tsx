@@ -964,7 +964,8 @@ export default function ChatArea({ id }: { id: string }) {
               <ExplainSideChatContent
                 sideChatId={activeSideChatId}
                 onClose={() => setOpenExplainSidebar(false)}
-                // chatObject={objForExplainSideChats}
+                parentConversationId={id}
+                parentMessages={messages}
               />
             )}
           </Sheet>
