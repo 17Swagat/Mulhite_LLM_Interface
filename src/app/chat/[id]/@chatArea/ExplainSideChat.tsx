@@ -23,6 +23,7 @@ import { DefaultChatTransport } from "ai";
 import {
   Conversation,
   ConversationContent,
+  ConversationScrollButton,
 } from "@/components/ui/shadcn-io/ai/conversation";
 import { Message, MessageContent } from "@/components/ui/shadcn-io/ai/message";
 
@@ -79,7 +80,7 @@ export function ExplainSideChatContent({
     () =>
       new DefaultChatTransport({
         api: "/api/multi-model",
-        body: { 
+        body: {
           chatId: sideChatId,
           parentConversationId,
           parentMessages, // Pass main conversation context
@@ -184,6 +185,7 @@ export function ExplainSideChatContent({
     sendMessage,
     sideChatId,
   ]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
@@ -212,7 +214,9 @@ export function ExplainSideChatContent({
       <SheetContent className="bg-gray-900 text-white w-[600px] sm:w-[600px]">
         <SheetHeader>
           <SheetTitle className="text-white">Explain Chat</SheetTitle>
-          <SheetDescription className="sr-only">Loading explain chat</SheetDescription>
+          <SheetDescription className="sr-only">
+            Loading explain chat
+          </SheetDescription>
         </SheetHeader>
         <div className="flex items-center justify-center h-full">
           <p className="text-gray-400">Loading...</p>
@@ -245,8 +249,8 @@ export function ExplainSideChatContent({
       </SheetHeader>
 
       {/* Messages Area */}
-      <Conversation className="bg-red-500">
-        <ConversationContent>
+      <Conversation className="bg-red-500 w-full h-full overflow-y-hidden">
+        <ConversationContent className="bg-blue-400 ">
           {messages.map((msg, msgIndex) => {
             const messageId = msg.id || uuidv7();
             return (
@@ -256,15 +260,20 @@ export function ExplainSideChatContent({
                     if (part.type !== "text") return null;
                     const partKey = `${messageId}-part-${partIndex}`;
                     if (msg.role === "assistant") {
-                      return <Response key={partKey}>{part.text || ""}</Response>;
+                      return (
+                        <Response key={partKey}>{part.text || ""}</Response>
+                      );
                     } else {
-                      return <Response key={partKey}>{part.text || ""}</Response>;
+                      return (
+                        <Response key={partKey}>{part.text || ""}</Response>
+                      );
                     }
                   })}
                 </MessageContent>
               </Message>
             );
           })}
+          <ConversationScrollButton className="translate-x-[-10%]" />
         </ConversationContent>
       </Conversation>
 
