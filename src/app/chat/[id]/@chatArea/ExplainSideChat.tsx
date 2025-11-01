@@ -21,16 +21,27 @@ import { Response } from "@/components/ui/shadcn-io/ai/response";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
+import {
+  Conversation,
+  ConversationContent,
+} from "@/components/ui/shadcn-io/ai/conversation";
+import { Message, MessageContent } from "@/components/ui/shadcn-io/ai/message";
 
 interface ExplainSideChatContentProps {
   sideChatId: string;
   onClose: () => void;
 }
 
-export function ExplainSideChatContent({ sideChatId, onClose }: ExplainSideChatContentProps) {
+export function ExplainSideChatContent({
+  sideChatId,
+  onClose,
+}: ExplainSideChatContentProps) {
   const [selectedModel, setSelectedModel] = useState<string>(() => {
     if (typeof window !== "undefined") {
-      return sessionStorage.getItem(`pendingExplainModel_${sideChatId}`) || AI_MODELS[0].id;
+      return (
+        sessionStorage.getItem(`pendingExplainModel_${sideChatId}`) ||
+        AI_MODELS[0].id
+      );
     }
     return AI_MODELS[0].id;
   });
@@ -45,18 +56,21 @@ export function ExplainSideChatContent({ sideChatId, onClose }: ExplainSideChatC
     prevSideChatIdRef.current = sideChatId;
   }
 
-  const sideChat = useQuery(
-    api.explainSideChats.getExplainSideChat,
-    { sideChatId: sideChatId as Id<"explainSideChats"> }
-  );
+  const sideChat = useQuery(api.explainSideChats.getExplainSideChat, {
+    sideChatId: sideChatId as Id<"explainSideChats">,
+  });
 
   const convexMessages = useQuery(
     api.explainSideChats.getExplainSideChatMessages,
     { explainSideChatId: sideChatId as Id<"explainSideChats"> }
   );
 
-  const addMessageMutation = useMutation(api.explainSideChats.addExplainSideChatMessage);
-  const deleteSideChatMutation = useMutation(api.explainSideChats.deleteExplainSideChat);
+  const addMessageMutation = useMutation(
+    api.explainSideChats.addExplainSideChatMessage
+  );
+  const deleteSideChatMutation = useMutation(
+    api.explainSideChats.deleteExplainSideChat
+  );
 
   const transport = useMemo(
     () =>
@@ -96,8 +110,10 @@ export function ExplainSideChatContent({ sideChatId, onClose }: ExplainSideChatC
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages?.length, chatStatus]);
 
+  // Load existing messages from Convex
   useEffect(() => {
-    if (!convexMessages || convexMessages.length === 0 || messages.length > 0) return;
+    if (!convexMessages || convexMessages.length === 0 || messages.length > 0)
+      return;
     setMessages(
       convexMessages.map((m) => ({
         id: (m as any)._id,
@@ -107,12 +123,25 @@ export function ExplainSideChatContent({ sideChatId, onClose }: ExplainSideChatC
     );
   }, [convexMessages, setMessages, messages.length]);
 
+  // Send initial explain prompt ONLY if this is a brand new chat (no messages in Convex)
   useEffect(() => {
-    if (initiatedRef.current || chatStatus !== "ready" || messages.length > 0) return;
-    
-    const pending = typeof window !== "undefined" 
-      ? sessionStorage.getItem(`pendingExplainMessage_${sideChatId}`)
-      : null;
+    // Wait for Convex data to load
+    if (convexMessages === undefined) return;
+
+    // If there are already messages in Convex, this is an existing chat - don't send initial prompt
+    if (convexMessages.length > 0) {
+      initiatedRef.current = true;
+      return;
+    }
+
+    // Don't send if we already initiated or not ready or already have messages
+    if (initiatedRef.current || chatStatus !== "ready" || messages.length > 0)
+      return;
+
+    const pending =
+      typeof window !== "undefined"
+        ? sessionStorage.getItem(`pendingExplainMessage_${sideChatId}`)
+        : null;
 
     if (pending) {
       initiatedRef.current = true;
@@ -124,15 +153,27 @@ export function ExplainSideChatContent({ sideChatId, onClose }: ExplainSideChatC
       sessionStorage.removeItem(`pendingExplainModel_${sideChatId}`);
       return;
     }
-    
+
+    // This shouldn't be needed anymore, but keep as fallback
     if (sideChat?.selectedText) {
       initiatedRef.current = true;
       sendMessage(
-        { text: `Explain "${sideChat.selectedText}" based on the current conversation.`, metadata: { chatId: sideChatId } },
+        {
+          text: `Explain "${sideChat.selectedText}" based on the current conversation.`,
+          metadata: { chatId: sideChatId },
+        },
         { body: { model: selectedModel } }
       );
     }
-  }, [chatStatus, messages.length, sideChat?.selectedText, selectedModel, sendMessage, sideChatId]);
+  }, [
+    convexMessages,
+    chatStatus,
+    messages.length,
+    sideChat?.selectedText,
+    selectedModel,
+    sendMessage,
+    sideChatId,
+  ]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
@@ -147,7 +188,9 @@ export function ExplainSideChatContent({ sideChatId, onClose }: ExplainSideChatC
   const handleDeleteSideChat = async () => {
     if (!sideChatId) return;
     try {
-      await deleteSideChatMutation({ sideChatId: sideChatId as Id<"explainSideChats"> });
+      await deleteSideChatMutation({
+        sideChatId: sideChatId as Id<"explainSideChats">,
+      });
       onClose();
     } catch (error) {
       console.error("Failed to delete side-chat:", error);
@@ -168,16 +211,29 @@ export function ExplainSideChatContent({ sideChatId, onClose }: ExplainSideChatC
   }
 
   return (
-    <SheetContent className="bg-gray-900 text-white w-[600px] sm:w-[600px] flex flex-col">
+    // <SheetContent className="bg-gray-900 text-white w-[600px] sm:w-[600px] flex flex-col">
+    <SheetContent className="bg-gray-800 text-white">
       <SheetHeader className="border-b border-gray-700 pb-4">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <SheetTitle className="text-white text-lg">Explain Chat</SheetTitle>
-            <SheetDescription className="text-gray-400 mt-2 text-sm">
-              &ldquo;{sideChat.selectedText}&rdquo;
-            </SheetDescription>
-          </div>
-          <div className="flex items-center gap-2">
+        {/* <div className="flex items-start justify-between">
+          <div className="flex-1"> */}
+        <SheetTitle className="text-white text-lg">Explain Chat</SheetTitle>
+        <div className="flex justify-between">
+          <SheetDescription className="text-gray-400 mt-2 text-sm">
+            &ldquo;{sideChat.selectedText}&rdquo;
+          </SheetDescription>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleDeleteSideChat}
+            className=" text-red-400 hover:text-red-300 hover:bg-red-900/20"
+          >
+            <Trash2 size={18} />
+          </Button>
+        </div>
+
+        {/* </div> */}
+        {/* <div className="flex items-center gap-2">
             <Button
               variant="ghost"
               size="icon"
@@ -197,59 +253,34 @@ export function ExplainSideChatContent({ sideChatId, onClose }: ExplainSideChatC
               </Button>
             </SheetClose>
           </div>
-        </div>
+        </div> */}
       </SheetHeader>
 
       {/* Messages Area */}
-      <ScrollArea className="flex-1 py-4">
-        <div className="space-y-4 px-4">
-          {messages && messages.length > 0 ? (
-            <>
-              {messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`flex ${
-                    msg.role === "user" ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                      msg.role === "user"
-                        ? "bg-blue-600 text-white"
-                        : "bg-gray-800 text-gray-100"
-                    }`}
-                  >
-                    {msg.role === "assistant" ? (
-                      <Response>
-                        {msg.parts
-                          .filter((p: any) => p.type === "text")
-                          .map((p: any) => p.text)
-                          .join("")}
-                      </Response>
-                    ) : (
-                      <p className="text-sm">
-                        {msg.parts
-                          .filter((p: any) => p.type === "text")
-                          .map((p: any) => p.text)
-                          .join("")}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </>
-          ) : chatStatus === "streaming" ? (
-            <div className="flex items-center justify-center h-full text-gray-500">
-              <p>Generating explanation...</p>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center h-full text-gray-500">
-              <p>Start a conversation about this text...</p>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-      </ScrollArea>
+      {/* <ScrollArea className="flex-1 py-4"> */}
+
+      <Conversation className="bg-red-500">
+        <ConversationContent>
+          {messages.map((msg, msgIndex) => {
+            return (
+              <Message key={msg.id || msgIndex} from={msg.role}>
+                <MessageContent key={msg.id || msgIndex}>
+                  {msg.parts.map((part, partIndex) => {
+                    if (part.type !== "text") return null;
+                    if (msg.role === "assistant") {
+                      return <Response>{part.text || ""}</Response>;
+                    } else {
+                      return <Response>{part.text || ""}</Response>;
+                    }
+                  })}
+                </MessageContent>
+              </Message>
+            );
+          })}
+        </ConversationContent>
+      </Conversation>
+
+      {/* </ScrollArea> */}
 
       {/* Input Area */}
       <div className="border-t border-gray-700 pt-4">
