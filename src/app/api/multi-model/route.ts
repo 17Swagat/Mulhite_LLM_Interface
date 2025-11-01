@@ -22,12 +22,12 @@ export async function POST(req: Request) {
     try {
         const req_ = await req.json();
         // console.log(Object.keys(req_))
-        const { 
-            messages, 
-            chatId: providedChatId, 
+        const {
+            messages,
+            chatId: providedChatId,
             model: ai_model,
             parentMessages,
-            parentConversationId 
+            parentConversationId
         }: {
             messages: ExtendedUIMessage[];
             chatId?: string
@@ -89,7 +89,7 @@ export async function POST(req: Request) {
 
             // If this is an ExplainSideChat request with parent context, prepend parent messages
             let allMessages = messages;
-            
+
             if (parentMessages && parentMessages.length > 0) {
                 // Add a system message to provide context
                 const contextMessage: UIMessage = {
@@ -103,8 +103,8 @@ export async function POST(req: Request) {
 
                 // Combine: context message + parent messages + current messages
                 allMessages = [
-                    contextMessage, 
-                    ...parentMessages.map(normalizeMessage), 
+                    contextMessage,
+                    ...parentMessages.map(normalizeMessage),
                     ...messages
                 ] as ExtendedUIMessage[];
             }
@@ -124,15 +124,13 @@ export async function POST(req: Request) {
             // model: google("gemini-2.5-flash-lite-preview-09-2025"),
             model: CURRENT_MODEL,
             // model: ollama('deepseek-r1:1.5b'),
-            // providerOptions: { ollama: { think: true } },
+            // providerOptions: (CURRENT_MODEL.modelId === "deepseek-r1:1.5b") ? { ollama: { think: true } } : undefined
+            providerOptions: { ollama: { think: true } },
         });
 
 
         return result.toUIMessageStreamResponse({
             originalMessages: messages,
-            onFinish: ({ messages }) => {
-                // saveChat({ chatId: chatId, messages })
-            },
             sendReasoning: true
         });
 

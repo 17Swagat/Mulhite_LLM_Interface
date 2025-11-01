@@ -1,0 +1,26 @@
+.highlight_scrollbar::-webkit-scrollbar {
+  width: 16px;
+}
+
+.highlight_scrollbar::-webkit-scrollbar-track {
+  /* background: #f1f1f1; */
+  background: #131212;
+}
+
+.highlight_scrollbar::-webkit-scrollbar-thumb {
+  background: #5803e2;
+  border-radius: 3px;
+}
+
+.highlight_scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Ensure default cursor is text inside assistant message blocks so pointer only shows on ::highlight ranges */
+.textCursor {
+  cursor: text;
+}
+
+.checkColor {
+    background-color: #5803e2;
+}

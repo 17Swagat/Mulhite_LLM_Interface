@@ -166,36 +166,17 @@ export default function ChatArea({ id }: { id: string }) {
     return model;
   });
 
-  // Scroll To bottom Behaviour
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  // Scroll to bottom on initial load and new messages (but not when loading more history)
-  useEffect(() => {
-    if (!isLoadingMore && messagesEndRef.current) {
-      // Use RAF to ensure DOM is fully updated before scrolling
-      requestAnimationFrame(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-      });
-    }
-  }, [messages.length, chatStatus, isLoadingMore]);
+  // StickToBottom handles scrolling; avoid manual auto-scroll that hides the scroll button
 
   // User question submission handler:
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Stop any ongoing generation
     if (chatStatus === "streaming") {
       stop();
       return;
     }
 
     if (input.trim() && chatStatus === "ready" && id) {
-      // Check if near message limit
-      // if (messageCount && messageCount.count >= messageCount.maxTokens) {
-      //   alert(
-      //     `This conversation has reached the maximum limit of ${messageCount.maxTokens} messages. Please start a new conversation.`
-      //   );
-      //   return;
-      // }
-
       const userMessage = input.trim();
 
       // Update chat title with first message if it's the first user message
@@ -231,13 +212,7 @@ export default function ChatArea({ id }: { id: string }) {
       setInput("");
     }
 
-    // Scroll to bottom
-    if (messagesEndRef.current) {
-      // Use RAF to ensure DOM is fully updated before scrolling
-      requestAnimationFrame(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-      });
-    }
+    // Let StickToBottom manage scroll position to enable ConversationScrollButton
   };
 
   // Set this chat as active when component mounts and reset pagination
@@ -819,8 +794,6 @@ export default function ChatArea({ id }: { id: string }) {
                     );
                   }
                 })}
-
-                {/* <ConversationScrollButton className="h-2" /> */}
               </MessageContent>
               <MessageAvatar
                 name={message.role}
@@ -835,6 +808,7 @@ export default function ChatArea({ id }: { id: string }) {
           );
         })}
 
+        <div className="h-[100px]"></div>
         {/* <div ref={messagesEndRef} /> */}
       </>
     );
@@ -955,9 +929,8 @@ export default function ChatArea({ id }: { id: string }) {
   return (
     <>
       <Authenticated>
-        <div className="flex flex-col items-center-safe min-h-screen bg-gray-900 text-white">
+        <div className="flex flex-col h-screen bg-gray-900 text-white overflow-hidden">
           <Sheet open={openExplainSidebar} onOpenChange={setOpenExplainSidebar}>
-            {/* Toolbar - render once at the top level */}
             <ToolbarOnTextSelection
               _selection={_selection}
               selectedTextRect={selectedTextRect}
@@ -965,32 +938,25 @@ export default function ChatArea({ id }: { id: string }) {
               onExplain={handleExplainSelectedText}
             />
 
-            {/* <div className="flex overflow-y-auto "> */}
-            {/* <Conversation className="max-w-11/12 mx-auto"> */}
-            <Conversation className="max-w-5xl lg:max-w-7xl mx-auto h-full">
-              <ConversationContent className="h-full">
-                {renderedMessages}
-                {/* <ConversationScrollButton className="bg-blue-400" /> */}
-              </ConversationContent>
+            <Conversation className="bg-amber-400 overflow-y-hidden">
+              <ConversationContent>{renderedMessages}</ConversationContent>
+              <ConversationScrollButton className="bottom-35 bg-gray-800 border-0 hover:bg-gray-500 hover:text-white z-20" />
+
+              {/* Input Field: */}
+              <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-1 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md">
+                <PromptInputField
+                  selectedModel={selectedModel}
+                  setSelectedModelFunc={setSelectedModel}
+                  handleSubmit={handleSubmit}
+                  input={input}
+                  setInput={setInput}
+                  chatStatus={chatStatus}
+                  inConversation={true}
+                />
+              </div>
             </Conversation>
-            {/* </div> */}
 
-            <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-2 rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md  ">
-              <PromptInputField
-                // AI_MODESLS={AI_MODELS}
-                selectedModel={selectedModel}
-                setSelectedModelFunc={setSelectedModel}
-                handleSubmit={handleSubmit}
-                input={input}
-                setInput={setInput}
-                chatStatus={chatStatus}
-                inConversation={true}
-              />
-            </div>
-
-            <div className="h-1.5" ref={messagesEndRef} />
-
-            {/* Explain Sidebar Chat (Sheet) */}
+            {/* <div className="w-[50%] lg:w-[70%] xl:w-[50%] mx-auto sticky bottom-2 rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md"> */}
             {activeSideChatId && (
               <ExplainSideChatContent
                 sideChatId={activeSideChatId}

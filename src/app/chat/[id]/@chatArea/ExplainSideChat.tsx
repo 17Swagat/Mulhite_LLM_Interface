@@ -1,5 +1,7 @@
 "use client";
 
+import cssStyle from "./ExplainSideChat.module.css";
+
 import {
   SheetContent,
   SheetHeader,
@@ -26,11 +28,6 @@ import {
   ConversationScrollButton,
 } from "@/components/ui/shadcn-io/ai/conversation";
 import { Message, MessageContent } from "@/components/ui/shadcn-io/ai/message";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
 
 interface ExplainSideChatContentProps {
   sideChatId: string;
@@ -216,7 +213,9 @@ export function ExplainSideChatContent({
 
   if (!sideChat) {
     return (
-      <SheetContent className="bg-gray-900 text-white w-[600px] sm:w-[600px]">
+      <SheetContent
+        className={`bg-gray-800 text-white w-full! sm:w-[500px]! lg:w-[600px]! max-w-none!`}
+      >
         <SheetHeader>
           <SheetTitle className="text-white">Explain Chat</SheetTitle>
           <SheetDescription className="sr-only">
@@ -232,7 +231,9 @@ export function ExplainSideChatContent({
 
   return (
     // <SheetContent className="bg-gray-900 text-white w-[600px] sm:w-[600px] flex flex-col">
-    <SheetContent className="bg-gray-800 text-white">
+    <SheetContent
+      className={`bg-gray-800 text-white w-full! sm:w-[500px]! lg:w-[600px]! max-w-none!`}
+    >
       <SheetHeader className="border-b border-gray-700 pb-4">
         {/* <div className="flex items-start justify-between">
           <div className="flex-1"> */}
@@ -254,8 +255,10 @@ export function ExplainSideChatContent({
       </SheetHeader>
 
       {/* Messages Area */}
-      <Conversation className="bg-red-500 w-full h-full overflow-y-hidden">
-        <ConversationContent className="bg-blue-400 ">
+      <Conversation className={`bg-red-500 w-full h-full`}>
+        <ConversationContent
+          className={`bg-purple-700 ${cssStyle.highlight_scrollbar}`}
+        >
           {messages.map((msg, msgIndex) => {
             const messageId = msg.id || uuidv7();
             return (
@@ -278,7 +281,7 @@ export function ExplainSideChatContent({
               </Message>
             );
           })}
-          <ConversationScrollButton className="translate-x-[-10%]" />
+          <ConversationScrollButton className="bg-gray-800 border-0 hover:bg-gray-500 hover:text-white" />
         </ConversationContent>
       </Conversation>
 
