@@ -42,7 +42,10 @@ import { AI_MODELS } from "@/constants/models";
 
 // Sidebar Explain Chat
 import { Sheet } from "@/components/ui/sheet";
-import { HighlightedResponseWithExplain, ExplainSideChat as ExplainSideChatType } from "@/components/my/AIResponse/highlight/HighlightedResponseWithExplain";
+import {
+  HighlightedResponseWithExplain,
+  ExplainSideChat as ExplainSideChatType,
+} from "@/components/my/AIResponse/highlight/HighlightedResponseWithExplain";
 import { ExplainSideChatContent } from "./ExplainSideChat";
 
 export default function ChatArea({ id }: { id: string }) {
@@ -426,7 +429,7 @@ export default function ChatArea({ id }: { id: string }) {
       .map((e) => e._id)
       .sort()
       .join("|");
-    
+
     if (newKey === prevExplainKeysRef.current) return;
     prevExplainKeysRef.current = newKey;
 
@@ -829,10 +832,16 @@ export default function ChatArea({ id }: { id: string }) {
     if (!selectedText) return;
 
     const range = _selection.getRangeAt(0).cloneRange();
-    const messageContainer = range.commonAncestorContainer.parentElement?.closest("[data-message-text]");
+    const messageContainer =
+      range.commonAncestorContainer.parentElement?.closest(
+        "[data-message-text]"
+      );
     if (!messageContainer) return;
 
-    const treeWalker = document.createTreeWalker(messageContainer, NodeFilter.SHOW_TEXT);
+    const treeWalker = document.createTreeWalker(
+      messageContainer,
+      NodeFilter.SHOW_TEXT
+    );
     let currentOffset = 0;
     let startOffset = -1;
     let endOffset = -1;
@@ -910,6 +919,12 @@ export default function ChatArea({ id }: { id: string }) {
     return <ChatNotFound id={id || ""} />;
   }
 
+  // For Trying to link explain side-chat with main chat
+  // const objForExplainSideChats = {
+  //   aiSdk: { messages, sendMessage, chatStatus, stop, setMessages },
+  //   selectedAIModel: selectedModel,
+  // };
+
   return (
     <>
       <Authenticated>
@@ -946,9 +961,10 @@ export default function ChatArea({ id }: { id: string }) {
             {/* <div className="h-0.5" ref={messagesEndRef} /> */}
             {/* Explain Sidebar Chat (Sheet) */}
             {activeSideChatId && (
-              <ExplainSideChatContent 
+              <ExplainSideChatContent
                 sideChatId={activeSideChatId}
                 onClose={() => setOpenExplainSidebar(false)}
+                // chatObject={objForExplainSideChats}
               />
             )}
           </Sheet>

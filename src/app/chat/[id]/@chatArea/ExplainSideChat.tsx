@@ -107,12 +107,16 @@ export function ExplainSideChatContent({
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages?.length, chatStatus]);
+  }, [
+    messages?.length, //messages?.length,
+    chatStatus, // chatStatus
+  ]);
 
   // Load existing messages from Convex
   useEffect(() => {
     if (!convexMessages || convexMessages.length === 0 || messages.length > 0)
       return;
+    // setMessages(
     setMessages(
       convexMessages.map((m) => ({
         id: (m as any)._id,
@@ -236,15 +240,17 @@ export function ExplainSideChatContent({
       <Conversation className="bg-red-500">
         <ConversationContent>
           {messages.map((msg, msgIndex) => {
+            const messageId = msg.id || uuidv7();
             return (
-              <Message key={msg.id || msgIndex} from={msg.role}>
-                <MessageContent key={msg.id || msgIndex}>
+              <Message key={messageId} from={msg.role}>
+                <MessageContent>
                   {msg.parts.map((part, partIndex) => {
                     if (part.type !== "text") return null;
+                    const partKey = `${messageId}-part-${partIndex}`;
                     if (msg.role === "assistant") {
-                      return <Response>{part.text || ""}</Response>;
+                      return <Response key={partKey}>{part.text || ""}</Response>;
                     } else {
-                      return <Response>{part.text || ""}</Response>;
+                      return <Response key={partKey}>{part.text || ""}</Response>;
                     }
                   })}
                 </MessageContent>
