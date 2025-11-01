@@ -3,7 +3,13 @@
 import { Response } from "@/components/ui/shadcn-io/ai/response";
 import type { Highlight } from "@/lib/highlights";
 import { useEffect, useRef, useState, useMemo } from "react";
-import { Trash2, HighlighterIcon, X, ChevronDown, MessageSquare } from "lucide-react";
+import {
+  Trash2,
+  HighlighterIcon,
+  X,
+  ChevronDown,
+  MessageSquare,
+} from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -66,7 +72,9 @@ export function HighlightedResponseWithExplain({
   const explainKey = useMemo(
     () =>
       explainSideChats
-        .map((e) => `${e._id}-${e.startOffset}-${e.endOffset}-${e.highlightColor}`)
+        .map(
+          (e) => `${e._id}-${e.startOffset}-${e.endOffset}-${e.highlightColor}`
+        )
         .sort()
         .join("|"),
     [explainSideChats]
@@ -75,7 +83,7 @@ export function HighlightedResponseWithExplain({
   // Force re-render when explain side chats change
   useEffect(() => {
     if (explainKey) {
-      setForceUpdateKey(prev => prev + 1);
+      setForceUpdateKey((prev) => prev + 1);
     }
   }, [explainKey]);
 
@@ -218,8 +226,15 @@ export function HighlightedResponseWithExplain({
         border-radius: 3px; 
         cursor: pointer;
         text-decoration: underline;
-        text-decoration-color: ${color === 'blue' ? '#3b82f6' : color === 'purple' ? '#a855f7' : '#6366f1'};
-        text-decoration-style: wavy;
+        text-decoration-color: ${
+          color === "blue"
+            ? "#3b82f6"
+            : color === "purple"
+            ? "#a855f7"
+            : "#6366f1"
+        };
+        text-decoration-style: solid;
+        text-decoration-thickness: 5px;
         text-underline-offset: 2px;
       }`;
       if (!style.textContent?.includes(cssRule)) {
@@ -227,9 +242,9 @@ export function HighlightedResponseWithExplain({
       }
     };
 
-  const prevExplainColors = prevExplainColorsRef.current;
-  // Reset ranges map before recomputing
-  explainRangesRef.current = new Map();
+    const prevExplainColors = prevExplainColorsRef.current;
+    // Reset ranges map before recomputing
+    explainRangesRef.current = new Map();
 
     if (!explainSideChats.length) {
       if (typeof CSS !== "undefined" && CSS.highlights) {
@@ -335,7 +350,12 @@ export function HighlightedResponseWithExplain({
           const rects = r.getClientRects();
           for (let i = 0; i < rects.length; i++) {
             const rect = rects[i];
-            if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+            if (
+              x >= rect.left &&
+              x <= rect.right &&
+              y >= rect.top &&
+              y <= rect.bottom
+            ) {
               onOpenExplainSideChat?.(explain._id);
               return;
             }
@@ -417,7 +437,9 @@ export function HighlightedResponseWithExplain({
     return (
       <div
         ref={containerRef}
-        className={[className, highlightMenuStyles.textCursor].filter(Boolean).join(" ")}
+        className={[className, highlightMenuStyles.textCursor]
+          .filter(Boolean)
+          .join(" ")}
         data-message-id={messageId}
         data-message-text="true"
         data-assistant-message="true"
@@ -430,7 +452,9 @@ export function HighlightedResponseWithExplain({
   return (
     <div
       ref={containerRef}
-      className={[className, highlightMenuStyles.textCursor].filter(Boolean).join(" ")}
+      className={[className, highlightMenuStyles.textCursor]
+        .filter(Boolean)
+        .join(" ")}
       data-message-id={messageId}
       data-message-text="true"
       data-assistant-message="true"
@@ -477,80 +501,80 @@ export function HighlightedResponseWithExplain({
                 </div>
 
                 <div
-                  className={`max-h-80 overflow-y-auto ${highlightMenuStyles.highlight_scrollbar}`}
+                  className={`max-h-80 overflow-y-auto  ${highlightMenuStyles.highlight_scrollbar}`}
                 >
-                  {highlights.length > 0 && (
-                    <>
-                      <div className="px-3 py-2 bg-gray-750 text-xs text-gray-400 font-semibold">
-                        HIGHLIGHTS
-                      </div>
-                      {highlights.map((h, idx) => (
-                        <div
-                          key={h._id}
-                          className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
-                          onClick={() => scrollToHighlight(h)}
-                        >
+                    {highlights.length > 0 && (
+                      <>
+                        <div className="px-3 py-2 bg-gray-750 text-xs text-gray-400 font-semibold">
+                          HIGHLIGHTS
+                        </div>
+                        {highlights.map((h, idx) => (
                           <div
-                            className={`w-2 h-2 rounded-full mt-1 shrink-0 ${getColorClass(
-                              h.color || "yellow"
-                            )}`}
-                          />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm text-gray-200 line-clamp-2">
-                              {h.text}
-                            </p>
-                            <p className="text-xs text-gray-500 mt-1">
-                              #{idx + 1}
-                            </p>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onDeleteHighlight?.(h._id);
-                            }}
-                            className="p-1 hover:bg-red-900/40 rounded opacity-0 group-hover:opacity-100"
-                            aria-label="Delete highlight"
+                            key={h._id}
+                            className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
+                            onClick={() => scrollToHighlight(h)}
                           >
-                            <Trash2
-                              size={12}
-                              className="text-gray-400 hover:text-red-400"
+                            <div
+                              className={`w-2 h-2 rounded-full mt-1 shrink-0 ${getColorClass(
+                                h.color || "yellow"
+                              )}`}
                             />
-                          </button>
-                        </div>
-                      ))}
-                    </>
-                  )}
-
-                  {explainSideChats.length > 0 && (
-                    <>
-                      <div className="px-3 py-2 bg-gray-750 text-xs text-gray-400 font-semibold border-t border-gray-700">
-                        EXPLAIN CHATS (Click text to open)
-                      </div>
-                      {explainSideChats.map((e, idx) => (
-                        <div
-                          key={e._id}
-                          className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
-                          onClick={() => onOpenExplainSideChat?.(e._id)}
-                        >
-                          <MessageSquare
-                            size={14}
-                            className={`mt-1 shrink-0 ${getExplainColorClass(
-                              e.highlightColor
-                            )}`}
-                          />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm text-gray-200 line-clamp-2">
-                              {e.selectedText}
-                            </p>
-                            <p className="text-xs text-gray-500 mt-1">
-                              Explain #{idx + 1}
-                            </p>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm text-gray-200 line-clamp-2">
+                                {h.text}
+                              </p>
+                              <p className="text-xs text-gray-500 mt-1">
+                                #{idx + 1}
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onDeleteHighlight?.(h._id);
+                              }}
+                              className="p-1 hover:bg-red-900/40 rounded opacity-0 group-hover:opacity-100"
+                              aria-label="Delete highlight"
+                            >
+                              <Trash2
+                                size={12}
+                                className="text-gray-400 hover:text-red-400"
+                              />
+                            </button>
                           </div>
+                        ))}
+                      </>
+                    )}
+
+                    {explainSideChats.length > 0 && (
+                      <>
+                        <div className="px-3 py-2 bg-gray-750 text-xs text-gray-400 font-semibold border-t border-gray-700">
+                          EXPLAIN CHATS (Click text to open)
                         </div>
-                      ))}
-                    </>
-                  )}
+                        {explainSideChats.map((e, idx) => (
+                          <div
+                            key={e._id}
+                            className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
+                            onClick={() => onOpenExplainSideChat?.(e._id)}
+                          >
+                            <MessageSquare
+                              size={14}
+                              className={`mt-1 shrink-0 ${getExplainColorClass(
+                                e.highlightColor
+                              )}`}
+                            />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm text-gray-200 line-clamp-2">
+                                {e.selectedText}
+                              </p>
+                              <p className="text-xs text-gray-500 mt-1">
+                                Explain #{idx + 1}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </>
+                    )}
                 </div>
               </div>
             </PopoverContent>

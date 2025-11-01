@@ -943,7 +943,7 @@ export default function ChatArea({ id }: { id: string }) {
               <ConversationContent className="flex flex-col items-center place-content-center w-[70%] mx-auto overflow-y-auto  py-6 relative">
                 {renderedMessages}
               </ConversationContent>
-              <ConversationScrollButton className="bottom-35 bg-gray-800 border-0 hover:bg-gray-500 hover:text-white z-20" />
+              <ConversationScrollButton className="bottom-35 bg-gray-800/55 border-0 hover:bg-gray-500 hover:text-white z-20" />
 
               {/* Input Field: */}
               <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-1 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md">
