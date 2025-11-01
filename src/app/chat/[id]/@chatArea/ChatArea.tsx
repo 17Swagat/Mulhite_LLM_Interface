@@ -2,7 +2,7 @@
 
 import { UIMessage, useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { Response } from "@/components/ui/shadcn-io/ai/response";
 import { v7 as uuidv7 } from "uuid";
 import {
@@ -284,12 +284,12 @@ export default function ChatArea({ id }: { id: string }) {
   }, [messagesData, setMessages, cursor]);
 
   // Handle loading more messages
-  const handleLoadMoreMessages = () => {
+  const handleLoadMoreMessages = useCallback(() => {
     if (messagesData?.nextCursor && !isLoadingMore && !allMessagesLoaded) {
       setIsLoadingMore(true);
       setCursor(messagesData.nextCursor);
     }
-  };
+  }, [messagesData?.nextCursor, isLoadingMore, allMessagesLoaded]);
 
   // Auto-load older messages until all are fetched on initial mount
   useEffect(() => {
@@ -364,6 +364,9 @@ export default function ChatArea({ id }: { id: string }) {
       return;
     }
 
+    const currentTrigger = loadMoreTriggerRef.current;
+    if (!currentTrigger) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
@@ -379,17 +382,12 @@ export default function ChatArea({ id }: { id: string }) {
       { threshold: 0.1 }
     );
 
-    const currentTrigger = loadMoreTriggerRef.current;
-    if (currentTrigger) {
-      observer.observe(currentTrigger);
-    }
+    observer.observe(currentTrigger);
 
     return () => {
-      if (currentTrigger) {
-        observer.unobserve(currentTrigger);
-      }
+      observer.unobserve(currentTrigger);
     };
-  }, [allMessagesLoaded, isLoadingMore, messagesData?.hasMore]);
+  }, [allMessagesLoaded, isLoadingMore, messagesData?.hasMore, handleLoadMoreMessages]);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   // [Handling Highlights]:===> [START]
@@ -552,7 +550,7 @@ export default function ChatArea({ id }: { id: string }) {
       setSelectedMessageId(null);
     };
 
-    document.addEventListener("selectionchange", handleSelectionChange);
+    document.addEventListener("selectionchange", handleSelectionChange, { passive: true });
 
     return () => {
       document.removeEventListener("selectionchange", handleSelectionChange);
@@ -560,7 +558,7 @@ export default function ChatArea({ id }: { id: string }) {
   }, []);
 
   // Handle highlight creation
-  const handleHighlight = async (
+  const handleHighlight = useCallback(async (
     selection: Selection,
     color: string = "yellow"
   ) => {
@@ -638,8 +636,6 @@ export default function ChatArea({ id }: { id: string }) {
 
       if (startOffset === -1) {
         console.error("Could not find selected text in rendered content");
-        console.log("Selected:", selectedText);
-        console.log("Rendered:", renderedText.substring(0, 200));
         return;
       }
 
@@ -687,9 +683,9 @@ export default function ChatArea({ id }: { id: string }) {
       rollbackMap.set(selectedMessageId, currentHighlights);
       setHighlightsByMessage(rollbackMap);
     }
-  };
+  }, [selectedMessageId, id, conversationId, highlightsByMessage, createHighlightMutation]);
 
-  const handleDeleteHighlight = async (highlightId: string) => {
+  const handleDeleteHighlight = useCallback(async (highlightId: string) => {
     try {
       await deleteHighlightMutation({
         highlightId: highlightId as Id<"highlights">,
@@ -699,14 +695,13 @@ export default function ChatArea({ id }: { id: string }) {
     } catch (error) {
       console.error("Failed to delete highlight:", error);
     }
-  };
+  }, [deleteHighlightMutation]);
 
   // Handle opening an explain side-chat when clicking on highlighted explain text
-  const handleOpenExplainSideChat = (sideChatId: string) => {
-    console.log("Opening explain side-chat:", sideChatId);
+  const handleOpenExplainSideChat = useCallback((sideChatId: string) => {
     setActiveSideChatId(sideChatId);
     setOpenExplainSidebar(true);
-  };
+  }, []);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   // [Handling Highlights]:===> [END]
@@ -714,16 +709,13 @@ export default function ChatArea({ id }: { id: string }) {
 
   // Scroll To bottom Behaviour
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
   // Scroll to bottom on initial load and new messages (but not when loading more history)
   useEffect(() => {
-    if (messagesEndRef.current && !isLoadingMore) {
+    if (!isLoadingMore && messagesEndRef.current) {
       // Use RAF to ensure DOM is fully updated before scrolling
       requestAnimationFrame(() => {
-        scrollToBottom();
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
       });
     }
   }, [messages.length, chatStatus, isLoadingMore]);
@@ -820,11 +812,11 @@ export default function ChatArea({ id }: { id: string }) {
         <div ref={messagesEndRef} />
       </>
     );
-  }, [messages, chatStatus, highlightsByMessage, explainSideChatsByMessage]);
+  }, [messages, chatStatus, highlightsByMessage, explainSideChatsByMessage, handleDeleteHighlight, handleOpenExplainSideChat]);
 
   // Explain Sheet Sidebar
   const [openExplainSidebar, setOpenExplainSidebar] = useState<boolean>(false);
-  const handleExplainSelectedText = async () => {
+  const handleExplainSelectedText = useCallback(async () => {
     if (!_selection || !selectedMessageId || !id) return;
     if (selectedMessageId.length < 20) return;
 
@@ -905,7 +897,7 @@ export default function ChatArea({ id }: { id: string }) {
 
     setActiveSideChatId(sideChatId);
     setOpenExplainSidebar(true);
-  };
+  }, [_selection, selectedMessageId, id, conversationId, explainSideChatsByMessage, selectedModel, createExplainSideChatMutation]);
 
   // <ChatNotFound>:=>
   const conversationExists = useQuery(

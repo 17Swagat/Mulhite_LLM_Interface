@@ -75,7 +75,6 @@ export function HighlightedResponseWithExplain({
   // Force re-render when explain side chats change
   useEffect(() => {
     if (explainKey) {
-      console.log("Explain side chats updated:", explainSideChats.length);
       setForceUpdateKey(prev => prev + 1);
     }
   }, [explainKey]);

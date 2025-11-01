@@ -82,10 +82,10 @@ export function ExplainSideChatContent({
         body: { 
           chatId: sideChatId,
           parentConversationId,
-          parentMessages: parentMessages, // Pass main conversation context
+          parentMessages, // Pass main conversation context
         },
       }),
-    [sideChatId, parentConversationId, parentMessages]
+    [sideChatId, parentConversationId]
   );
 
   const {
@@ -114,11 +114,10 @@ export function ExplainSideChatContent({
   });
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [
-    messages?.length, //messages?.length,
-    chatStatus, // chatStatus
-  ]);
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages?.length, chatStatus]);
 
   // Load existing messages from Convex
   useEffect(() => {
@@ -213,6 +212,7 @@ export function ExplainSideChatContent({
       <SheetContent className="bg-gray-900 text-white w-[600px] sm:w-[600px]">
         <SheetHeader>
           <SheetTitle className="text-white">Explain Chat</SheetTitle>
+          <SheetDescription className="sr-only">Loading explain chat</SheetDescription>
         </SheetHeader>
         <div className="flex items-center justify-center h-full">
           <p className="text-gray-400">Loading...</p>

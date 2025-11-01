@@ -16,13 +16,13 @@ import type { ChatStatus } from "ai";
 import scrollbarStyle from "./PromptInputField.module.css";
 
 // Hooks:=>
-import { useState } from "react";
+import { memo } from "react";
 
 // constants:
 // import { AI_MODELS } from "@/constants/models";
 import { AI_MODELS } from "@/constants/models";
 
-export function PromptInputField({
+export const PromptInputField = memo(function PromptInputField({
   handleSubmit,
   input,
   setInput,
@@ -99,4 +99,4 @@ export function PromptInputField({
       </PromptInputToolbar>
     </PromptInput>
   );
-}
+});

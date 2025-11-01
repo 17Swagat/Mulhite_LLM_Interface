@@ -95,7 +95,6 @@ export function AppSidebar() {
 
     observer.observe(node);
     return () => {
-      observer.unobserve(node);
       observer.disconnect();
     };
   }, [conversPagiStatus, isLoading, autoLoading, loadMore]);

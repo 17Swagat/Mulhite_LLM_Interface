@@ -68,44 +68,8 @@ export async function POST(req: Request) {
         // Normalize to UIMessage with parts[]; convertToModelMessages expects parts-based UI messages
         let prompt;
         try {
-            // If this is an ExplainSideChat request with parent context, prepend parent messages
-            let allMessages = messages;
-            
-            if (parentMessages && parentMessages.length > 0) {
-                // Normalize parent messages
-                const normalizedParentMessages = (parentMessages as any[]).map((m: any) => {
-                    const hasParts = Array.isArray(m.parts);
-                    const parts = hasParts
-                        ? m.parts
-                        : Array.isArray(m.content)
-                            ? m.content
-                            : typeof m.content === 'string'
-                                ? [{ type: 'text', text: m.content }]
-                                : [];
-
-                    return {
-                        id: m.id ?? uuidv7(),
-                        role: m.role,
-                        parts,
-                        metadata: m.metadata,
-                    } satisfies UIMessage;
-                });
-
-                // Add a system message to provide context
-                const contextMessage: UIMessage = {
-                    id: uuidv7(),
-                    role: 'system',
-                    parts: [{
-                        type: 'text',
-                        text: 'The following messages are from the parent conversation. Use them as context to answer the user\'s questions about specific text selections.'
-                    }],
-                };
-
-                // Combine: context message + parent messages + current messages
-                allMessages = [contextMessage, ...normalizedParentMessages, ...messages] as ExtendedUIMessage[];
-            }
-
-            const normalized = (allMessages as any[]).map((m: any) => {
+            // Helper function to normalize a message
+            const normalizeMessage = (m: any): UIMessage => {
                 const hasParts = Array.isArray(m.parts);
                 const parts = hasParts
                     ? m.parts
@@ -121,8 +85,31 @@ export async function POST(req: Request) {
                     parts,
                     metadata: m.metadata,
                 } satisfies UIMessage;
-            });
+            };
 
+            // If this is an ExplainSideChat request with parent context, prepend parent messages
+            let allMessages = messages;
+            
+            if (parentMessages && parentMessages.length > 0) {
+                // Add a system message to provide context
+                const contextMessage: UIMessage = {
+                    id: uuidv7(),
+                    role: 'system',
+                    parts: [{
+                        type: 'text',
+                        text: 'The following messages are from the parent conversation. Use them as context to answer the user\'s questions about specific text selections.'
+                    }],
+                };
+
+                // Combine: context message + parent messages + current messages
+                allMessages = [
+                    contextMessage, 
+                    ...parentMessages.map(normalizeMessage), 
+                    ...messages
+                ] as ExtendedUIMessage[];
+            }
+
+            const normalized = (allMessages as any[]).map(normalizeMessage);
             prompt = convertToModelMessages(normalized);
         } catch (e) {
             console.error('convertToModelMessages failed. Sample message:',
