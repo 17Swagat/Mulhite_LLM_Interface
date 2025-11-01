@@ -30,6 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="stylesheet" href="./highlightStuff.css" />
+        <link rel="icon" href="/Nody3.svg" sizes="any" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

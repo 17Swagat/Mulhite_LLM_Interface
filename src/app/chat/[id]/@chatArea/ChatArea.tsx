@@ -938,8 +938,11 @@ export default function ChatArea({ id }: { id: string }) {
               onExplain={handleExplainSelectedText}
             />
 
-            <Conversation className="bg-amber-400 overflow-y-hidden">
-              <ConversationContent>{renderedMessages}</ConversationContent>
+            <Conversation className="bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c] overflow-y-hidden">
+              {/* <ConversationContent className="w-[50%] lg:w-[70%] xl:w-[70%] mx-auto overflow-y-auto px-4 py-6 relative"> */}
+              <ConversationContent className="flex flex-col items-center place-content-center w-[70%] mx-auto overflow-y-auto  py-6 relative">
+                {renderedMessages}
+              </ConversationContent>
               <ConversationScrollButton className="bottom-35 bg-gray-800 border-0 hover:bg-gray-500 hover:text-white z-20" />
 
               {/* Input Field: */}

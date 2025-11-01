@@ -110,7 +110,7 @@ export function AppSidebar() {
     <>
       <Sidebar
         // variant="inset"
-        className="dark"
+        className="dark "
         style={{ scrollbarWidth: "thin" }}
       >
         <SidebarHeader>
