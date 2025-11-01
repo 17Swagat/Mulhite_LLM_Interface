@@ -47,6 +47,8 @@ import {
   ExplainSideChat as ExplainSideChatType,
 } from "@/components/my/AIResponse/highlight/HighlightedResponseWithExplain";
 import { ExplainSideChatContent } from "./ExplainSideChat";
+import { ArrowDownIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function ChatArea({ id }: { id: string }) {
   const [input, setInput] = useState("");
@@ -164,6 +166,18 @@ export default function ChatArea({ id }: { id: string }) {
     return model;
   });
 
+  // Scroll To bottom Behaviour
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  // Scroll to bottom on initial load and new messages (but not when loading more history)
+  useEffect(() => {
+    if (!isLoadingMore && messagesEndRef.current) {
+      // Use RAF to ensure DOM is fully updated before scrolling
+      requestAnimationFrame(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      });
+    }
+  }, [messages.length, chatStatus, isLoadingMore]);
+
   // User question submission handler:
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -215,6 +229,14 @@ export default function ChatArea({ id }: { id: string }) {
       );
 
       setInput("");
+    }
+
+    // Scroll to bottom
+    if (messagesEndRef.current) {
+      // Use RAF to ensure DOM is fully updated before scrolling
+      requestAnimationFrame(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      });
     }
   };
 
@@ -387,7 +409,12 @@ export default function ChatArea({ id }: { id: string }) {
     return () => {
       observer.unobserve(currentTrigger);
     };
-  }, [allMessagesLoaded, isLoadingMore, messagesData?.hasMore, handleLoadMoreMessages]);
+  }, [
+    allMessagesLoaded,
+    isLoadingMore,
+    messagesData?.hasMore,
+    handleLoadMoreMessages,
+  ]);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   // [Handling Highlights]:===> [START]
@@ -550,7 +577,9 @@ export default function ChatArea({ id }: { id: string }) {
       setSelectedMessageId(null);
     };
 
-    document.addEventListener("selectionchange", handleSelectionChange, { passive: true });
+    document.addEventListener("selectionchange", handleSelectionChange, {
+      passive: true,
+    });
 
     return () => {
       document.removeEventListener("selectionchange", handleSelectionChange);
@@ -558,144 +587,154 @@ export default function ChatArea({ id }: { id: string }) {
   }, []);
 
   // Handle highlight creation
-  const handleHighlight = useCallback(async (
-    selection: Selection,
-    color: string = "yellow"
-  ) => {
-    if (!selectedMessageId || !id) return;
+  const handleHighlight = useCallback(
+    async (selection: Selection, color: string = "yellow") => {
+      if (!selectedMessageId || !id) return;
 
-    // Check if the message ID is a valid Convex ID (not AI SDK ID)
-    // Convex IDs are longer (typically 24+ chars) and contain specific patterns
-    // AI SDK IDs are shorter (typically 16 chars)
-    if (selectedMessageId.length < 20) {
-      console.warn(
-        "Cannot highlight: Message not yet saved to database. Please wait a moment and try again."
-      );
-      // Clear selection
-      selection.removeAllRanges();
-      setSelection(null);
-      setSelectedTextRect(null);
-      setSelectedMessageId(null);
-      return;
-    }
-
-    const selectedText = selection.toString().trim();
-    if (!selectedText) return;
-
-    const range = selection.getRangeAt(0);
-
-    // Get the message container
-    const messageContainer =
-      range.commonAncestorContainer.parentElement?.closest(
-        "[data-message-text]"
-      );
-
-    if (!messageContainer) {
-      console.error("Could not find message container");
-      return;
-    }
-
-    // Calculate offset by traversing text nodes from the container
-    const treeWalker = document.createTreeWalker(
-      messageContainer,
-      NodeFilter.SHOW_TEXT
-    );
-
-    let currentOffset = 0;
-    let startOffset = -1;
-    let endOffset = -1;
-    let node: Node | null;
-
-    // console.log(treeWalker.nextNode());
-    while ((node = treeWalker.nextNode())) {
-      const nodeText = node.textContent || "";
-      const nodeLength = nodeText.length;
-
-      // Check if this text node contains the range start
-      if (startOffset === -1 && node === range.startContainer) {
-        startOffset = currentOffset + range.startOffset;
-      }
-
-      // Check if this text node contains the range end
-      if (node === range.endContainer) {
-        endOffset = currentOffset + range.endOffset;
-        break;
-      }
-
-      currentOffset += nodeLength;
-    }
-
-    // If we couldn't find offsets, try fallback method
-    if (startOffset === -1 || endOffset === -1) {
-      // Fallback: use indexOf with normalized text
-      const renderedText = messageContainer.textContent || "";
-      const normalizedSelected = selectedText.replace(/\s+/g, " ");
-      const normalizedRendered = renderedText.replace(/\s+/g, " ");
-
-      startOffset = normalizedRendered.indexOf(normalizedSelected);
-
-      if (startOffset === -1) {
-        console.error("Could not find selected text in rendered content");
+      // Check if the message ID is a valid Convex ID (not AI SDK ID)
+      // Convex IDs are longer (typically 24+ chars) and contain specific patterns
+      // AI SDK IDs are shorter (typically 16 chars)
+      if (selectedMessageId.length < 20) {
+        console.warn(
+          "Cannot highlight: Message not yet saved to database. Please wait a moment and try again."
+        );
+        // Clear selection
+        selection.removeAllRanges();
+        setSelection(null);
+        setSelectedTextRect(null);
+        setSelectedMessageId(null);
         return;
       }
 
-      endOffset = startOffset + normalizedSelected.length;
-    }
+      const selectedText = selection.toString().trim();
+      if (!selectedText) return;
 
-    // Clear selection immediately for better UX
-    selection.removeAllRanges();
-    setSelection(null);
-    setSelectedTextRect(null);
+      const range = selection.getRangeAt(0);
 
-    // Optimistically update local state before database save
-    const tempHighlight: Highlight = {
-      _id: `temp-${Date.now()}` as any,
-      messageId: selectedMessageId as Id<"messages">,
-      conversationId: conversationId,
-      userId: "" as any,
-      startOffset: startOffset,
-      endOffset: endOffset,
-      text: selectedText,
-      color: color,
-      createdAt: Date.now(),
-    };
+      // Get the message container
+      const messageContainer =
+        range.commonAncestorContainer.parentElement?.closest(
+          "[data-message-text]"
+        );
 
-    // Update local highlights map immediately for optimistic UI
-    const currentHighlights = highlightsByMessage.get(selectedMessageId) || [];
-    const newMap = new Map(highlightsByMessage);
-    newMap.set(selectedMessageId, [...currentHighlights, tempHighlight]);
-    setHighlightsByMessage(newMap);
+      if (!messageContainer) {
+        console.error("Could not find message container");
+        return;
+      }
 
-    try {
-      // Save to database in background
-      await createHighlightMutation({
+      // Calculate offset by traversing text nodes from the container
+      const treeWalker = document.createTreeWalker(
+        messageContainer,
+        NodeFilter.SHOW_TEXT
+      );
+
+      let currentOffset = 0;
+      let startOffset = -1;
+      let endOffset = -1;
+      let node: Node | null;
+
+      // console.log(treeWalker.nextNode());
+      while ((node = treeWalker.nextNode())) {
+        const nodeText = node.textContent || "";
+        const nodeLength = nodeText.length;
+
+        // Check if this text node contains the range start
+        if (startOffset === -1 && node === range.startContainer) {
+          startOffset = currentOffset + range.startOffset;
+        }
+
+        // Check if this text node contains the range end
+        if (node === range.endContainer) {
+          endOffset = currentOffset + range.endOffset;
+          break;
+        }
+
+        currentOffset += nodeLength;
+      }
+
+      // If we couldn't find offsets, try fallback method
+      if (startOffset === -1 || endOffset === -1) {
+        // Fallback: use indexOf with normalized text
+        const renderedText = messageContainer.textContent || "";
+        const normalizedSelected = selectedText.replace(/\s+/g, " ");
+        const normalizedRendered = renderedText.replace(/\s+/g, " ");
+
+        startOffset = normalizedRendered.indexOf(normalizedSelected);
+
+        if (startOffset === -1) {
+          console.error("Could not find selected text in rendered content");
+          return;
+        }
+
+        endOffset = startOffset + normalizedSelected.length;
+      }
+
+      // Clear selection immediately for better UX
+      selection.removeAllRanges();
+      setSelection(null);
+      setSelectedTextRect(null);
+
+      // Optimistically update local state before database save
+      const tempHighlight: Highlight = {
+        _id: `temp-${Date.now()}` as any,
         messageId: selectedMessageId as Id<"messages">,
         conversationId: conversationId,
+        userId: "" as any,
         startOffset: startOffset,
         endOffset: endOffset,
         text: selectedText,
         color: color,
-      });
-    } catch (error) {
-      console.error("Failed to create highlight:", error);
-      // Rollback on error
-      const rollbackMap = new Map(highlightsByMessage);
-      rollbackMap.set(selectedMessageId, currentHighlights);
-      setHighlightsByMessage(rollbackMap);
-    }
-  }, [selectedMessageId, id, conversationId, highlightsByMessage, createHighlightMutation]);
+        createdAt: Date.now(),
+      };
 
-  const handleDeleteHighlight = useCallback(async (highlightId: string) => {
-    try {
-      await deleteHighlightMutation({
-        highlightId: highlightId as Id<"highlights">,
-      });
-      // Remove from local map - update will come from highlightsData reactively
-      // No need to manually update state here as the useEffect will handle it
-    } catch (error) {
-      console.error("Failed to delete highlight:", error);
-    }
-  }, [deleteHighlightMutation]);
+      // Update local highlights map immediately for optimistic UI
+      const currentHighlights =
+        highlightsByMessage.get(selectedMessageId) || [];
+      const newMap = new Map(highlightsByMessage);
+      newMap.set(selectedMessageId, [...currentHighlights, tempHighlight]);
+      setHighlightsByMessage(newMap);
+
+      try {
+        // Save to database in background
+        await createHighlightMutation({
+          messageId: selectedMessageId as Id<"messages">,
+          conversationId: conversationId,
+          startOffset: startOffset,
+          endOffset: endOffset,
+          text: selectedText,
+          color: color,
+        });
+      } catch (error) {
+        console.error("Failed to create highlight:", error);
+        // Rollback on error
+        const rollbackMap = new Map(highlightsByMessage);
+        rollbackMap.set(selectedMessageId, currentHighlights);
+        setHighlightsByMessage(rollbackMap);
+      }
+    },
+    [
+      selectedMessageId,
+      id,
+      conversationId,
+      highlightsByMessage,
+      createHighlightMutation,
+    ]
+  );
+
+  const handleDeleteHighlight = useCallback(
+    async (highlightId: string) => {
+      try {
+        await deleteHighlightMutation({
+          highlightId: highlightId as Id<"highlights">,
+        });
+        // Remove from local map - update will come from highlightsData reactively
+        // No need to manually update state here as the useEffect will handle it
+      } catch (error) {
+        console.error("Failed to delete highlight:", error);
+      }
+    },
+    [deleteHighlightMutation]
+  );
 
   // Handle opening an explain side-chat when clicking on highlighted explain text
   const handleOpenExplainSideChat = useCallback((sideChatId: string) => {
@@ -706,19 +745,6 @@ export default function ChatArea({ id }: { id: string }) {
   /////////////////////////////////////////////////////////////////////////////////////////////////
   // [Handling Highlights]:===> [END]
   ///////////////////////////////////////////////////////////////////////////////
-
-  // Scroll To bottom Behaviour
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // Scroll to bottom on initial load and new messages (but not when loading more history)
-  useEffect(() => {
-    if (!isLoadingMore && messagesEndRef.current) {
-      // Use RAF to ensure DOM is fully updated before scrolling
-      requestAnimationFrame(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-      });
-    }
-  }, [messages.length, chatStatus, isLoadingMore]);
 
   // Memoize rendered message list to avoid recomputing on unrelated state changes
   const renderedMessages = useMemo(() => {
@@ -809,10 +835,17 @@ export default function ChatArea({ id }: { id: string }) {
           );
         })}
 
-        <div ref={messagesEndRef} />
+        {/* <div ref={messagesEndRef} /> */}
       </>
     );
-  }, [messages, chatStatus, highlightsByMessage, explainSideChatsByMessage, handleDeleteHighlight, handleOpenExplainSideChat]);
+  }, [
+    messages,
+    chatStatus,
+    highlightsByMessage,
+    explainSideChatsByMessage,
+    handleDeleteHighlight,
+    handleOpenExplainSideChat,
+  ]);
 
   // Explain Sheet Sidebar
   const [openExplainSidebar, setOpenExplainSidebar] = useState<boolean>(false);
@@ -897,7 +930,15 @@ export default function ChatArea({ id }: { id: string }) {
 
     setActiveSideChatId(sideChatId);
     setOpenExplainSidebar(true);
-  }, [_selection, selectedMessageId, id, conversationId, explainSideChatsByMessage, selectedModel, createExplainSideChatMutation]);
+  }, [
+    _selection,
+    selectedMessageId,
+    id,
+    conversationId,
+    explainSideChatsByMessage,
+    selectedModel,
+    createExplainSideChatMutation,
+  ]);
 
   // <ChatNotFound>:=>
   const conversationExists = useQuery(
@@ -910,12 +951,6 @@ export default function ChatArea({ id }: { id: string }) {
     // Conversation does not exist or not owned by user
     return <ChatNotFound id={id || ""} />;
   }
-
-  // For Trying to link explain side-chat with main chat
-  // const objForExplainSideChats = {
-  //   aiSdk: { messages, sendMessage, chatStatus, stop, setMessages },
-  //   selectedAIModel: selectedModel,
-  // };
 
   return (
     <>
@@ -932,8 +967,11 @@ export default function ChatArea({ id }: { id: string }) {
 
             {/* <div className="flex overflow-y-auto "> */}
             {/* <Conversation className="max-w-11/12 mx-auto"> */}
-            <Conversation className="max-w-5xl lg:max-w-7xl mx-auto">
-              <ConversationContent>{renderedMessages}</ConversationContent>
+            <Conversation className="max-w-5xl lg:max-w-7xl mx-auto h-full">
+              <ConversationContent className="h-full">
+                {renderedMessages}
+                {/* <ConversationScrollButton className="bg-blue-400" /> */}
+              </ConversationContent>
             </Conversation>
             {/* </div> */}
 
@@ -950,7 +988,8 @@ export default function ChatArea({ id }: { id: string }) {
               />
             </div>
 
-            {/* <div className="h-0.5" ref={messagesEndRef} /> */}
+            <div className="h-1.5" ref={messagesEndRef} />
+
             {/* Explain Sidebar Chat (Sheet) */}
             {activeSideChatId && (
               <ExplainSideChatContent

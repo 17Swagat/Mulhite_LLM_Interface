@@ -26,6 +26,11 @@ import {
   ConversationScrollButton,
 } from "@/components/ui/shadcn-io/ai/conversation";
 import { Message, MessageContent } from "@/components/ui/shadcn-io/ai/message";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 
 interface ExplainSideChatContentProps {
   sideChatId: string;
