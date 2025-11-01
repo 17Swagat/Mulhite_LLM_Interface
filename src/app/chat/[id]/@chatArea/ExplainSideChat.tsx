@@ -13,12 +13,11 @@ import { PromptInputField } from "@/components/my/PromptInputField";
 import { AI_MODELS } from "@/constants/models";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { v7 as uuidv7 } from "uuid";
-import { X, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { api } from "@/../convex/_generated/api";
 import { useQuery, useMutation } from "convex/react";
 import { Id } from "@/../convex/_generated/dataModel";
 import { Response } from "@/components/ui/shadcn-io/ai/response";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import {
@@ -231,34 +230,9 @@ export function ExplainSideChatContent({
             <Trash2 size={18} />
           </Button>
         </div>
-
-        {/* </div> */}
-        {/* <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleDeleteSideChat}
-              className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
-            >
-              <Trash2 size={18} />
-            </Button>
-            <SheetClose asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="text-gray-400 hover:text-white hover:bg-gray-800"
-              >
-                <X size={20} />
-              </Button>
-            </SheetClose>
-          </div>
-        </div> */}
       </SheetHeader>
 
       {/* Messages Area */}
-      {/* <ScrollArea className="flex-1 py-4"> */}
-
       <Conversation className="bg-red-500">
         <ConversationContent>
           {messages.map((msg, msgIndex) => {
@@ -279,8 +253,6 @@ export function ExplainSideChatContent({
           })}
         </ConversationContent>
       </Conversation>
-
-      {/* </ScrollArea> */}
 
       {/* Input Area */}
       <div className="border-t border-gray-700 pt-4">
