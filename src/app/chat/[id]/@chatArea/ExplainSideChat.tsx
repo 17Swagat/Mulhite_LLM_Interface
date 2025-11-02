@@ -255,7 +255,7 @@ export function ExplainSideChatContent({
       </SheetHeader>
 
       {/* Messages Area */}
-      <Conversation className={`bg-red-500 w-full h-full`}>
+      <Conversation className={`bg-red-500 w-full h-full overflow-y-hidden ${cssStyle.highlight_scrollbar}`}>
         <ConversationContent
           className={`bg-purple-700 ${cssStyle.highlight_scrollbar}`}
         >
