@@ -47,7 +47,7 @@ export const createHighlight = mutation({
       endOffset: args.endOffset,
       text: args.text,
       color: args.color || "yellow",
-      createdAt: Date.now(),
+      // createdAt: Date.now(),
     });
 
     return { _id: highlightId };

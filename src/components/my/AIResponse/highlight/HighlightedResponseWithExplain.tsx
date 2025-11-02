@@ -28,7 +28,7 @@ export interface ExplainSideChat {
   endOffset: number;
   selectedText: string;
   highlightColor: string;
-  createdAt: number;
+  // createdAt: number;
   updatedAt: number;
 }
 

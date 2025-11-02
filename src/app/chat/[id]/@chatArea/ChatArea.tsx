@@ -244,7 +244,8 @@ export default function ChatArea({ id }: { id: string }) {
         addChat({
           _id: conversationId,
           title: `Chat ${conversationId.slice(0, 8)}`, // Will be updated with first message
-          createdAt: Date.now(),
+          // createdAt: Date.now(),
+          // _creationTime: Date.now(),
           updatedAt: Date.now(),
           userId: "" as any,
         });
@@ -670,7 +671,7 @@ export default function ChatArea({ id }: { id: string }) {
         endOffset: endOffset,
         text: selectedText,
         color: color,
-        createdAt: Date.now(),
+        // createdAt: Date.now(),
       };
 
       // Update local highlights map immediately for optimistic UI
@@ -741,8 +742,7 @@ export default function ChatArea({ id }: { id: string }) {
             message.id = uuidv7();
           }
 
-
-          let avatar_logo: string = '/ai-models/claude.svg';
+          let avatar_logo: string = "/ai-models/claude.svg";
           // if (message.metadata.model === AI_MODELS[0].id) {
           //   avatar_logo = "/ai-models/grok.svg";
           // } else if (message.metadata.model === AI_MODELS[1].id) {
@@ -917,7 +917,7 @@ export default function ChatArea({ id }: { id: string }) {
         endOffset,
         selectedText,
         highlightColor: "blue",
-        createdAt: Date.now(),
+        // createdAt: Date.now(),
         updatedAt: Date.now(),
       },
     ]);

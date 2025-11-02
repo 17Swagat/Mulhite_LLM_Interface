@@ -23,7 +23,7 @@ export default defineSchema({
     conversations: defineTable({
         userId: v.id("users"),    // Foreign key to owner
         title: v.optional(v.string()),  // Auto-gen from first message? (e.g., "Chat about Calculus")
-        createdAt: v.number(),    // Timestamp for sorting user's convos
+        // createdAt: v.number(),    // Timestamp for sorting user's convos
         updatedAt: v.number(),    // Bump on new messages for "last active"
         // Metadata: v.optional(v.object({}))  // e.g., { llmUsed: "openai" }
     })
@@ -55,7 +55,7 @@ export default defineSchema({
         endOffset: v.number(),  // Character offset where highlight ends
         text: v.string(),  // The highlighted text (for display/search)
         color: v.optional(v.string()),  // Highlight color (default: yellow)
-        createdAt: v.number(),  // Timestamp
+        // createdAt: v.number(),  // Timestamp
     })
         .index("by_messageId", ["messageId"])  // Get all highlights for a message
         .index("by_conversationId", ["conversationId"])  // Get all highlights in a conversation
@@ -69,7 +69,7 @@ export default defineSchema({
         endOffset: v.number(),  // Character offset where selected text ends
         selectedText: v.string(),  // The text that was selected for explanation
         highlightColor: v.string(),  // Color to highlight the clickable text (e.g., "blue", "purple")
-        createdAt: v.number(),  // Timestamp
+        // createdAt: v.number(),  // Timestamp
         updatedAt: v.number(),  // Last activity timestamp
     })
         .index("by_messageId", ["messageId"])  // Get all side-chats for a message

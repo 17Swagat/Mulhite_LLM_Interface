@@ -53,7 +53,7 @@ export default function ChatPage() {
         addChat({
           _id: conversationId,
           title,
-          createdAt: now,
+          // createdAt: now,
           updatedAt: now,
           userId: "" as Id<"users">,
         });

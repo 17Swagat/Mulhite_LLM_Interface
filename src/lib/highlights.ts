@@ -9,7 +9,7 @@ export interface Highlight {
   endOffset: number;
   text: string;
   color?: string;
-  createdAt: number;
+  // createdAt: number;
 }
 
 interface TextSegment {

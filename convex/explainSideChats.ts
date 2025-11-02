@@ -36,7 +36,7 @@ export const createExplainSideChat = mutation({
       endOffset: args.endOffset,
       selectedText: args.selectedText,
       highlightColor: args.highlightColor,
-      createdAt: Date.now(),
+      // createdAt: Date.now(),
       updatedAt: Date.now(),
     });
 

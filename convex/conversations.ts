@@ -124,14 +124,6 @@ export const listConversationsPaginate = query({
     }
 })
 
-// Constants for message limits
-// const MAX_TOKENS_PER_CONVERSATION = 50000; // Maximum tokens allowed in a single conversation (approximate)
-
-// Rough token estimation: ~1 token per 4 characters (approximation)
-// For more accuracy, consider using a tokenizer library
-// function estimateTokens(text: string): number {
-//     return Math.ceil(text.length / 4);
-// }
 
 const MESSAGES_PER_PAGE = 500; // Number of messages to load per pagination request
 export const getMessages = query({
@@ -178,7 +170,6 @@ export const getMessages = query({
 });
 
 
-
 export const isConversationOwnedByUser = query({
     args: {
         conversationId: v.optional(v.string()),
@@ -214,13 +205,12 @@ export const createConversation = mutation({
         const convoId = await ctx.db.insert("conversations", {
             userId: user._id,
             title,
-            createdAt: now,
+            // createdAt: now,
             updatedAt: now,
         });
         return { _id: convoId };
     },
 });
-
 
 export const addMessage = mutation({
     args: {

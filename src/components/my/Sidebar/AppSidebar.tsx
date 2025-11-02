@@ -65,6 +65,9 @@ export function AppSidebar() {
   // Sync Convex data with store
   useEffect(() => {
     if (conversations) {
+      // for (const convo of conversations) {
+      //   convo._creationTime
+      // }
       setChats(conversations);
     }
   }, [conversations, setChats]);

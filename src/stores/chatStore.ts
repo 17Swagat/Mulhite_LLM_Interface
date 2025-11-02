@@ -4,8 +4,9 @@ import { Id } from '@/../convex/_generated/dataModel';
 
 export interface ChatItem {
   _id: Id<"conversations">;
+  _creationTime?: number;
   title?: string;
-  createdAt: number;
+  // createdAt: number;
   updatedAt: number;
   userId: Id<"users">;
 }
@@ -31,7 +32,7 @@ export const useChatStore = create<ChatStore>()(
       activeChat: null,
 
       setChats: (chats: ChatItem[]) =>
-        set({ chats: chats.sort((a, b) => (b.createdAt - a.createdAt)) }),
+        set({ chats: chats.sort((a, b) => (b._creationTime! - a._creationTime!)) }),
 
       addChat: (chat: ChatItem) =>
         set((state) => {
