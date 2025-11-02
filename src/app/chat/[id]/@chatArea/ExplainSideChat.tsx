@@ -53,14 +53,6 @@ export function ExplainSideChatContent({
   });
 
   const [input, setInput] = useState<string>("");
-  // const initiatedRef = useRef(false);
-  // const prevSideChatIdRef = useRef<string | null>(null);
-
-  // Reset initiatedRef when sideChatId changes
-  // if (prevSideChatIdRef.current !== sideChatId) {
-  // initiatedRef.current = false;
-  // prevSideChatIdRef.current = sideChatId;
-  // }
 
   const sideChat = useQuery(api.explainSideChats.getExplainSideChat, {
     sideChatId: sideChatId as Id<"explainSideChats">,
@@ -287,8 +279,8 @@ export function ExplainSideChatContent({
       {/* Input Area */}
       <div className="border-t border-gray-700 pt-4">
         <PromptInputField
-          selectedModel={selectedModel}
-          setSelectedModelFunc={setSelectedModel}
+          // selectedModel={selectedModel}
+          // setSelectedModelFunc={setSelectedModel}
           handleSubmit={handleSubmit}
           input={input}
           setInput={setInput}

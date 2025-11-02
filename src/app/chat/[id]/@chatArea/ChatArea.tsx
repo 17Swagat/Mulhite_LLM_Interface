@@ -711,15 +711,15 @@ export default function ChatArea({ id }: { id: string }) {
     [deleteHighlightMutation]
   );
 
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  // [Handling Highlights]:===> [END]
+  ///////////////////////////////////////////////////////////////////////////////
+
   // Handle opening an explain side-chat when clicking on highlighted explain text
   const handleOpenExplainSideChat = useCallback((sideChatId: string) => {
     setActiveSideChatId(sideChatId);
     setOpenExplainSidebar(true);
   }, []);
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  // [Handling Highlights]:===> [END]
-  ///////////////////////////////////////////////////////////////////////////////
 
   // Memoize rendered message list to avoid recomputing on unrelated state changes
   const renderedMessages = useMemo(() => {
@@ -947,8 +947,8 @@ export default function ChatArea({ id }: { id: string }) {
               {/* Input Field: */}
               <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-1 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md">
                 <PromptInputField
-                  selectedModel={selectedModel}
-                  setSelectedModelFunc={setSelectedModel}
+                  // selectedModel={selectedModel}
+                  // setSelectedModelFunc={setSelectedModel}
                   handleSubmit={handleSubmit}
                   input={input}
                   setInput={setInput}

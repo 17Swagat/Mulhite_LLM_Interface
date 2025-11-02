@@ -21,6 +21,7 @@ import {
 import { MicIcon, PaperclipIcon } from "lucide-react";
 import { PromptInputField } from "@/components/my/PromptInputField";
 import { AI_MODELS } from "@/constants/models";
+import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 
 export default function ChatPage() {
   const router = useRouter();
@@ -62,7 +63,8 @@ export default function ChatPage() {
 
         sessionStorage.setItem(
           `pendingMessage_Model_${conversationId}`,
-          selectedModel
+          // selectedModel
+          parentChatModel
         );
 
         // Navigate to the chat page with the new ID
@@ -78,7 +80,11 @@ export default function ChatPage() {
     }
   };
 
-  const [selectedModel, setSelectedModel] = useState(AI_MODELS[0].id);
+  // const [selectedModel, setSelectedModel] = useState(AI_MODELS[0].id);
+  const {
+    parentChatModel,
+    // setParentChatModel,
+  } = useSelectedAIModelStore();
 
   return (
     <div className="w-full h-screen bg-purple-700/80 text-white flex justify-center items-center">
@@ -131,8 +137,9 @@ export default function ChatPage() {
           <PromptInputField
             // AI_MODESLS={AI_MODELS}
             handleSubmit={handleSubmit}
-            selectedModel={selectedModel}
-            setSelectedModelFunc={setSelectedModel}
+            // selectedModel={selectedModel}
+            // selectedModel={parentChatModel}
+            // setSelectedModelFunc={setSelectedModel}
             input={input}
             setInput={setInput}
             chatStatus={"ready"}

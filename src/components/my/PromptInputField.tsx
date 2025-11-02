@@ -21,6 +21,7 @@ import { memo } from "react";
 // constants:
 // import { AI_MODELS } from "@/constants/models";
 import { AI_MODELS } from "@/constants/models";
+import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 
 export const PromptInputField = memo(function PromptInputField({
   handleSubmit,
@@ -28,21 +29,25 @@ export const PromptInputField = memo(function PromptInputField({
   setInput,
   chatStatus,
   inConversation = false,
-  // AI-Models:
-  // AI_MODESLS,
-  selectedModel,
-  setSelectedModelFunc,
-}: {
+}: // AI-Models:
+// AI_MODESLS,
+// selectedModel,
+// setSelectedModelFunc,
+{
   handleSubmit: (e: React.FormEvent) => void;
   input: string;
   setInput: (value: string) => void;
   chatStatus: ChatStatus;
   inConversation?: boolean;
   // AI_MODESLS: typeof AI_MODELS;
-  selectedModel?: string;
-  setSelectedModelFunc?: (modelId: string) => void;
+  // selectedModel?: string;
+  // setSelectedModelFunc?: (modelId: string) => void;
 }) {
   // const [selectedModel, setSelectedModel] = useState(MODELS[0].id);
+
+  const { parentChatModel, setParentChatModel } = useSelectedAIModelStore();
+
+  const setSelectedModelFunc = (modelId: string) => setParentChatModel(modelId);
 
   return (
     <PromptInput onSubmit={handleSubmit}>
@@ -66,27 +71,25 @@ export const PromptInputField = memo(function PromptInputField({
             <span>Voice</span>
           </PromptInputButton> */}
           <PromptInputModelSelect
-            value={selectedModel}
+            // value={selectedModel}
+            // onValueChange={setSelectedModelFunc}
+            value={parentChatModel}
+            defaultValue={AI_MODELS[0].id}
             onValueChange={setSelectedModelFunc}
           >
             <PromptInputModelSelectTrigger>
-              <PromptInputModelSelectValue />
+              <PromptInputModelSelectValue defaultValue={parentChatModel} />
             </PromptInputModelSelectTrigger>
             <PromptInputModelSelectContent>
               {AI_MODELS.map((model) => (
-                <PromptInputModelSelectItem
-                  key={model.id}
-                  value={model.id}
-                  // onClick={() => {
-                  //   // setSelectedModel
-                  // }}
-                >
+                <PromptInputModelSelectItem key={model.id} value={model.id}>
                   {model.name}
                 </PromptInputModelSelectItem>
               ))}
             </PromptInputModelSelectContent>
           </PromptInputModelSelect>
         </PromptInputTools>
+
         <PromptInputSubmit
           className="transition duration-300 ease-in hover:brightness-105 bg-purple-700 hover:bg-purple-400 active:bg-purple-900"
           disabled={
