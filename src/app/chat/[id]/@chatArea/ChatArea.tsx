@@ -50,6 +50,7 @@ import { ExplainSideChatContent } from "./ExplainSideChat";
 import { ArrowDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LoadingScreen } from "@/components/my/LoadingScreen";
+import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 
 export default function ChatArea({ id }: { id: string }) {
   const [input, setInput] = useState("");
@@ -152,22 +153,29 @@ export default function ChatArea({ id }: { id: string }) {
   });
 
   // Model-Selection (initialize lazily once)
-  const [selectedModel, setSelectedModel] = useState<string>(() => {
-    let model = AI_MODELS[0].id;
-    if (typeof window !== "undefined") {
-      const pendingMessageModelKey = `pendingMessage_Model_${id}`;
-      const pendingMessageModel = sessionStorage.getItem(
-        pendingMessageModelKey
-      );
-      if (pendingMessageModel) {
-        model = pendingMessageModel;
-        sessionStorage.removeItem(pendingMessageModelKey);
-      }
-    }
-    return model;
-  });
+  // const [
+  //   selectedModelX,
+  //   setSelectedModel] = useState<string>(() => {
+  //   let model = AI_MODELS[0].id;
+  //   if (typeof window !== "undefined") {
+  //     const pendingMessageModelKey = `pendingMessage_Model_${id}`;
+  //     const pendingMessageModel = sessionStorage.getItem(
+  //       pendingMessageModelKey
+  //     );
+  //     if (pendingMessageModel) {
+  //       model = pendingMessageModel;
+  //       sessionStorage.removeItem(pendingMessageModelKey);
+  //     }
+  //   }
+  //   return model;
+  // });
 
-  // StickToBottom handles scrolling; avoid manual auto-scroll that hides the scroll button
+  const {
+    parentChatModel,
+    setParentChatModel,
+    explainSideChatModel,
+    setExplainSideChatModel,
+  } = useSelectedAIModelStore();
 
   // User question submission handler:
   const handleSubmit = async (e: React.FormEvent) => {
@@ -205,7 +213,8 @@ export default function ChatArea({ id }: { id: string }) {
         },
         {
           body: {
-            model: selectedModel,
+            // model: selectedModel,
+            model: parentChatModel,
           },
         }
       );
@@ -337,7 +346,8 @@ export default function ChatArea({ id }: { id: string }) {
           },
           {
             body: {
-              model: selectedModel,
+              // model: selectedModel,
+              model: parentChatModel,
             },
           }
         );
@@ -796,11 +806,15 @@ export default function ChatArea({ id }: { id: string }) {
                   }
                 })}
               </MessageContent>
+
+              {/* FIX: The avatars getting changed when we change the model in the prompt field & hit submit, As we comparing the values with the `parentChatModel`, which is a Zustand Store value. Need to send the META regarding which model is OUTPUTING the value. */}
               <MessageAvatar
                 name={message.role}
                 src={
                   message.role == "assistant"
-                    ? "/ai-models/grok.svg"
+                    ? parentChatModel == AI_MODELS[0].id
+                      ? "/ai-models/grok.svg"
+                      : "/ai-models/claude.svg"
                     : "/user.png"
                 }
                 className="bg-white"
@@ -901,7 +915,7 @@ export default function ChatArea({ id }: { id: string }) {
       `pendingExplainMessage_${sideChatId}`,
       `Explain "${selectedText}" based on the current conversation.`
     );
-    sessionStorage.setItem(`pendingExplainModel_${sideChatId}`, selectedModel);
+    // sessionStorage.setItem(`pendingExplainModel_${sideChatId}`, selectedModel);
 
     setActiveSideChatId(sideChatId);
     setOpenExplainSidebar(true);
@@ -911,7 +925,7 @@ export default function ChatArea({ id }: { id: string }) {
     id,
     conversationId,
     explainSideChatsByMessage,
-    selectedModel,
+    // selectedModel,
     createExplainSideChatMutation,
   ]);
 

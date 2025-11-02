@@ -28,6 +28,7 @@ import {
   ConversationScrollButton,
 } from "@/components/ui/shadcn-io/ai/conversation";
 import { Message, MessageContent } from "@/components/ui/shadcn-io/ai/message";
+import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 
 interface ExplainSideChatContentProps {
   sideChatId: string;
@@ -42,17 +43,19 @@ export function ExplainSideChatContent({
   parentConversationId,
   parentMessages = [],
 }: ExplainSideChatContentProps) {
-  const [selectedModel, setSelectedModel] = useState<string>(() => {
-    if (typeof window !== "undefined") {
-      return (
-        sessionStorage.getItem(`pendingExplainModel_${sideChatId}`) ||
-        AI_MODELS[0].id
-      );
-    }
-    return AI_MODELS[0].id;
-  });
+  // const [selectedModel, setSelectedModel] = useState<string>(() => {
+  //   if (typeof window !== "undefined") {
+  //     return (
+  //       sessionStorage.getItem(`pendingExplainModel_${sideChatId}`) ||
+  //       AI_MODELS[0].id
+  //     );
+  //   }
+  //   return AI_MODELS[0].id;
+  // });
 
   const [input, setInput] = useState<string>("");
+  const { explainSideChatModel, setExplainSideChatModel } =
+    useSelectedAIModelStore();
 
   const sideChat = useQuery(api.explainSideChats.getExplainSideChat, {
     sideChatId: sideChatId as Id<"explainSideChats">,
@@ -151,10 +154,11 @@ export function ExplainSideChatContent({
       // initiatedRef.current = true;
       sendMessage(
         { text: pending.trim(), metadata: { chatId: sideChatId } },
-        { body: { model: selectedModel } }
+        // { body: { model: selectedModel } }
+        { body: { model: explainSideChatModel } }
       );
       sessionStorage.removeItem(`pendingExplainMessage_${sideChatId}`);
-      sessionStorage.removeItem(`pendingExplainModel_${sideChatId}`);
+      // sessionStorage.removeItem(`pendingExplainModel_${sideChatId}`);
       return;
     }
 
@@ -166,7 +170,8 @@ export function ExplainSideChatContent({
           text: `Explain "${sideChat.selectedText}" based on the current conversation.`,
           metadata: { chatId: sideChatId },
         },
-        { body: { model: selectedModel } }
+        // { body: { model: selectedModel } }
+        { body: { model: explainSideChatModel } }
       );
     }
   }, [
@@ -174,7 +179,7 @@ export function ExplainSideChatContent({
     chatStatus,
     messages.length,
     sideChat?.selectedText,
-    selectedModel,
+    explainSideChatModel,
     sendMessage,
     sideChatId,
   ]);
@@ -186,7 +191,8 @@ export function ExplainSideChatContent({
     setInput("");
     sendMessage(
       { text, metadata: { chatId: sideChatId } },
-      { body: { model: selectedModel } }
+      // { body: { model: selectedModel } }
+      { body: { model: explainSideChatModel } }
     );
   };
 

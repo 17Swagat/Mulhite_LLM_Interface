@@ -62,11 +62,11 @@ export default function ChatPage() {
         // Store the initial message in sessionStorage with the conversation ID as key
         sessionStorage.setItem(`pendingMessage_${conversationId}`, input);
 
-        sessionStorage.setItem(
-          `pendingMessage_Model_${conversationId}`,
-          // selectedModel
-          parentChatModel
-        );
+        // sessionStorage.setItem(
+        //   `pendingMessage_Model_${conversationId}`,
+        //   // selectedModel
+        //   parentChatModel
+        // );
 
         // Navigate to the chat page with the new ID
         router.push(`/chat/${conversationId}`);
