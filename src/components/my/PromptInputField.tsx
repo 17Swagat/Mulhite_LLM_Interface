@@ -16,11 +16,12 @@ import type { ChatStatus } from "ai";
 import scrollbarStyle from "./PromptInputField.module.css";
 
 // Hooks:=>
-import { memo } from "react";
+import { memo, useState } from "react";
 
 // constants:
-// import { AI_MODELS } from "@/constants/models";
 import { AI_MODELS } from "@/constants/models";
+
+// Store
 import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 
 export const PromptInputField = memo(function PromptInputField({
@@ -29,31 +30,19 @@ export const PromptInputField = memo(function PromptInputField({
   setInput,
   chatStatus,
   inConversation = false,
-}: // AI-Models:
-// AI_MODESLS,
-// selectedModel,
-// setSelectedModelFunc,
-{
+}: {
   handleSubmit: (e: React.FormEvent) => void;
   input: string;
   setInput: (value: string) => void;
   chatStatus: ChatStatus;
   inConversation?: boolean;
-  // AI_MODESLS: typeof AI_MODELS;
-  // selectedModel?: string;
-  // setSelectedModelFunc?: (modelId: string) => void;
 }) {
-  // const [selectedModel, setSelectedModel] = useState(MODELS[0].id);
-
   const { parentChatModel, setParentChatModel } = useSelectedAIModelStore();
-
-  const setSelectedModelFunc = (modelId: string) => setParentChatModel(modelId);
 
   return (
     <PromptInput onSubmit={handleSubmit}>
       <PromptInputTextarea
         className={`max-h-[16lh] ${scrollbarStyle.promptInput_Scrollbar}`}
-        // style={{}}
         value={input}
         onChange={(e) => setInput(e.currentTarget.value)}
         disabled={chatStatus === "streaming"}
@@ -61,25 +50,14 @@ export const PromptInputField = memo(function PromptInputField({
       />
       <PromptInputToolbar>
         <PromptInputTools>
-          {/* #1 */}
-          {/* <PromptInputButton>
-            <PaperclipIcon size={16} />
-          </PromptInputButton> */}
-          {/* #2 */}
-          {/* <PromptInputButton>
-            <MicIcon size={16} />
-            <span>Voice</span>
-          </PromptInputButton> */}
           <PromptInputModelSelect
-            // value={selectedModel}
-            // onValueChange={setSelectedModelFunc}
             value={parentChatModel}
-            defaultValue={AI_MODELS[0].id}
-            onValueChange={setSelectedModelFunc}
+            onValueChange={setParentChatModel}
           >
             <PromptInputModelSelectTrigger>
-              <PromptInputModelSelectValue defaultValue={parentChatModel} />
+              <PromptInputModelSelectValue />
             </PromptInputModelSelectTrigger>
+
             <PromptInputModelSelectContent>
               {AI_MODELS.map((model) => (
                 <PromptInputModelSelectItem key={model.id} value={model.id}>

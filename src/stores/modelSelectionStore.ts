@@ -14,6 +14,7 @@ export const useSelectedAIModelStore = create<{
         (set) => ({
             parentChatModel: AI_MODELS[0].id,
             setParentChatModel: (model) => set({ parentChatModel: model }),
+
             explainSideChatModel: AI_MODELS[0].id,
             setExplainSideChatModel: (model) => set({ explainSideChatModel: model }),
         }),

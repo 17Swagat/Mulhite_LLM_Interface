@@ -22,6 +22,7 @@ import { MicIcon, PaperclipIcon } from "lucide-react";
 import { PromptInputField } from "@/components/my/PromptInputField";
 import { AI_MODELS } from "@/constants/models";
 import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
+import { LoadingScreen } from "@/components/my/LoadingScreen";
 
 export default function ChatPage() {
   const router = useRouter();
@@ -80,72 +81,37 @@ export default function ChatPage() {
     }
   };
 
-  // const [selectedModel, setSelectedModel] = useState(AI_MODELS[0].id);
-  const {
-    parentChatModel,
-    // setParentChatModel,
-  } = useSelectedAIModelStore();
+  const { parentChatModel } = useSelectedAIModelStore();
+
+  // Component Mount Check [Otherwise Zustand store has hydration issues]
+  const [haveMounted, setHaveMounted] = useState(false);
+  useEffect(() => {
+    setHaveMounted(true);
+  }, []);
+
+  if (!haveMounted) {
+    return <LoadingScreen />;
+  }
 
   return (
-    <div className="w-full h-screen bg-purple-700/80 text-white flex justify-center items-center">
-      <div className="flex flex-col items-center">
-        <h1 className="text-3xl mb-2 font-semibold">Let's Start Learning 😊</h1>
+    haveMounted && (
+      <div className="w-full h-screen bg-purple-700/80 text-white flex justify-center items-center">
+        <div className="flex flex-col items-center">
+          <h1 className="text-3xl mb-2 font-semibold">
+            Let's Start Learning 😊
+          </h1>
 
-        <div className="md:w-2xl max-w-3xl mx-auto py-2 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md rounded-2xl ">
-          {/* <PromptInput onSubmit={handleSubmit}>
-            <PromptInputTextarea
-              value={input}
-              onChange={(e) => setInput(e.currentTarget.value)}
-              disabled={isSubmitting}
-              placeholder="What do you want to learn about?"
+          <div className="md:w-2xl max-w-3xl mx-auto py-2 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md rounded-2xl ">
+            <PromptInputField
+              // AI_MODESLS={AI_MODELS}
+              handleSubmit={handleSubmit}
+              input={input}
+              setInput={setInput}
+              chatStatus={"ready"}
             />
-            <PromptInputToolbar>
-              <PromptInputTools>
-                <PromptInputButton>
-                  <PaperclipIcon size={16} />
-                </PromptInputButton>
-                <PromptInputButton>
-                  <MicIcon size={16} />
-                  <span>Voice</span>
-                </PromptInputButton>
-                <PromptInputModelSelect
-                  value={selectedModel}
-                  onValueChange={setSelectedModel}
-                >
-                  <PromptInputModelSelectTrigger>
-                    <PromptInputModelSelectValue />
-                  </PromptInputModelSelectTrigger>
-                  <PromptInputModelSelectContent>
-                    {models.map((model) => (
-                      <PromptInputModelSelectItem
-                        key={model.id}
-                        value={model.id}
-                      >
-                        {model.name}
-                      </PromptInputModelSelectItem>
-                    ))}
-                  </PromptInputModelSelectContent>
-                </PromptInputModelSelect>
-              </PromptInputTools>
-              <PromptInputSubmit
-                disabled={isSubmitting || !input.trim()}
-                status={isSubmitting ? "streaming" : "ready"}
-              />
-            </PromptInputToolbar>
-          </PromptInput> */}
-
-          <PromptInputField
-            // AI_MODESLS={AI_MODELS}
-            handleSubmit={handleSubmit}
-            // selectedModel={selectedModel}
-            // selectedModel={parentChatModel}
-            // setSelectedModelFunc={setSelectedModel}
-            input={input}
-            setInput={setInput}
-            chatStatus={"ready"}
-          />
+          </div>
         </div>
       </div>
-    </div>
+    )
   );
 }

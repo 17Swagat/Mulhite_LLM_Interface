@@ -49,6 +49,7 @@ import {
 import { ExplainSideChatContent } from "./ExplainSideChat";
 import { ArrowDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LoadingScreen } from "@/components/my/LoadingScreen";
 
 export default function ChatArea({ id }: { id: string }) {
   const [input, setInput] = useState("");
@@ -970,9 +971,7 @@ export default function ChatArea({ id }: { id: string }) {
         </div>
       </Authenticated>
       <AuthLoading>
-        <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-purple-700/40 via-pink-600/80 to-red-800/90">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-white ml-4"></div>
-        </div>
+        <LoadingScreen />
       </AuthLoading>
     </>
   );
