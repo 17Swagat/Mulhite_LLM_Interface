@@ -959,7 +959,6 @@ export default function ChatArea({ id }: { id: string }) {
               </div>
             </Conversation>
 
-            {/* <div className="w-[50%] lg:w-[70%] xl:w-[50%] mx-auto sticky bottom-2 rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md"> */}
             {activeSideChatId && (
               <ExplainSideChatContent
                 sideChatId={activeSideChatId}

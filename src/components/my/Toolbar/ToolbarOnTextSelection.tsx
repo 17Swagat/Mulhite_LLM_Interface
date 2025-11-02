@@ -114,7 +114,6 @@ export function ToolbarOnTextSelection({
           title={`Highlight with ${currentColorObj?.name}`}
         >
           <HighlighterIcon size={15} className="text-gray-700" />
-          {/* <span className="text-gray-700">{currentColorObj?.name}</span> */}
         </button>
 
         {/* Color Picker Dropdown */}
@@ -169,8 +168,6 @@ export function ToolbarOnTextSelection({
             variant="ghost"
             className="bg-transparent hover:bg-purple-200 "
             onClick={() => {
-              // console.log("Explain_Sidebar");
-              // onExplain && _selection && onExplain(_selection);
                _selection && onExplain(_selection);
             }}
           >

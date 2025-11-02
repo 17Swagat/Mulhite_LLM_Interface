@@ -51,6 +51,7 @@ export function ExplainSideChatContent({
     }
     return AI_MODELS[0].id;
   });
+
   const [input, setInput] = useState<string>("");
   const initiatedRef = useRef(false);
   const prevSideChatIdRef = useRef<string | null>(null);
@@ -235,8 +236,6 @@ export function ExplainSideChatContent({
       className={`bg-gray-800 text-white w-full! sm:w-[500px]! lg:w-[600px]! max-w-none!`}
     >
       <SheetHeader className="border-b border-gray-700 pb-4">
-        {/* <div className="flex items-start justify-between">
-          <div className="flex-1"> */}
         <SheetTitle className="text-white text-lg">Explain Chat</SheetTitle>
         <div className="flex justify-between">
           <SheetDescription className="text-gray-400 mt-2 text-sm">
@@ -255,7 +254,9 @@ export function ExplainSideChatContent({
       </SheetHeader>
 
       {/* Messages Area */}
-      <Conversation className={`bg-red-500 w-full h-full overflow-y-hidden ${cssStyle.highlight_scrollbar}`}>
+      <Conversation
+        className={`bg-red-500 w-full h-full overflow-y-hidden ${cssStyle.highlight_scrollbar}`}
+      >
         <ConversationContent
           className={`bg-purple-700 ${cssStyle.highlight_scrollbar}`}
         >
