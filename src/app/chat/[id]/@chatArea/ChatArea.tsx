@@ -922,7 +922,6 @@ export default function ChatArea({ id }: { id: string }) {
     }
   );
   if (conversationExists === false) {
-    // Conversation does not exist or not owned by user
     return <ChatNotFound id={id || ""} />;
   }
 

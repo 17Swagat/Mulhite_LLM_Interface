@@ -53,15 +53,14 @@ export function ExplainSideChatContent({
   });
 
   const [input, setInput] = useState<string>("");
-  const initiatedRef = useRef(false);
-  const prevSideChatIdRef = useRef<string | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  // const initiatedRef = useRef(false);
+  // const prevSideChatIdRef = useRef<string | null>(null);
 
   // Reset initiatedRef when sideChatId changes
-  if (prevSideChatIdRef.current !== sideChatId) {
-    initiatedRef.current = false;
-    prevSideChatIdRef.current = sideChatId;
-  }
+  // if (prevSideChatIdRef.current !== sideChatId) {
+  // initiatedRef.current = false;
+  // prevSideChatIdRef.current = sideChatId;
+  // }
 
   const sideChat = useQuery(api.explainSideChats.getExplainSideChat, {
     sideChatId: sideChatId as Id<"explainSideChats">,
@@ -75,6 +74,7 @@ export function ExplainSideChatContent({
   const addMessageMutation = useMutation(
     api.explainSideChats.addExplainSideChatMessage
   );
+
   const deleteSideChatMutation = useMutation(
     api.explainSideChats.deleteExplainSideChat
   );
@@ -117,12 +117,6 @@ export function ExplainSideChatContent({
     },
   });
 
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages?.length, chatStatus]);
-
   // Load existing messages from Convex
   useEffect(() => {
     if (!convexMessages || convexMessages.length === 0 || messages.length > 0)
@@ -144,12 +138,16 @@ export function ExplainSideChatContent({
 
     // If there are already messages in Convex, this is an existing chat - don't send initial prompt
     if (convexMessages.length > 0) {
-      initiatedRef.current = true;
+      // initiatedRef.current = true;
       return;
     }
 
     // Don't send if we already initiated or not ready or already have messages
-    if (initiatedRef.current || chatStatus !== "ready" || messages.length > 0)
+    if (
+      // initiatedRef.current ||
+      chatStatus !== "ready" ||
+      messages.length > 0
+    )
       return;
 
     const pending =
@@ -158,7 +156,7 @@ export function ExplainSideChatContent({
         : null;
 
     if (pending) {
-      initiatedRef.current = true;
+      // initiatedRef.current = true;
       sendMessage(
         { text: pending.trim(), metadata: { chatId: sideChatId } },
         { body: { model: selectedModel } }
@@ -170,7 +168,7 @@ export function ExplainSideChatContent({
 
     // This shouldn't be needed anymore, but keep as fallback
     if (sideChat?.selectedText) {
-      initiatedRef.current = true;
+      // initiatedRef.current = true;
       sendMessage(
         {
           text: `Explain "${sideChat.selectedText}" based on the current conversation.`,
