@@ -5,10 +5,10 @@ export default defineSchema({
 
     ////////////////////////////////////////////////////////////////
     // Learning Convex with experimentation
-    test_table: defineTable({
-        message: v.string(),
-        user: v.string(),
-    }).index('by_user', ['user']).searchIndex('search_message', { searchField: 'message', staged: false }),
+    // test_table: defineTable({
+    //     message: v.string(),
+    //     user: v.string(),
+    // }).index('by_user', ['user']).searchIndex('search_message', { searchField: 'message', staged: false }),
     ////////////////////////////////////////////////////////////////
 
     users: defineTable({

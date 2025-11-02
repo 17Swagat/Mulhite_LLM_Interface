@@ -172,9 +172,9 @@ export default function ChatArea({ id }: { id: string }) {
 
   const {
     parentChatModel,
-    setParentChatModel,
-    explainSideChatModel,
-    setExplainSideChatModel,
+    // setParentChatModel,
+    // explainSideChatModel,
+    // setExplainSideChatModel,
   } = useSelectedAIModelStore();
 
   // User question submission handler:
@@ -740,6 +740,17 @@ export default function ChatArea({ id }: { id: string }) {
           if (message.id.trim() === "") {
             message.id = uuidv7();
           }
+
+
+          let avatar_logo: string = '/ai-models/claude.svg';
+          // if (message.metadata.model === AI_MODELS[0].id) {
+          //   avatar_logo = "/ai-models/grok.svg";
+          // } else if (message.metadata.model === AI_MODELS[1].id) {
+          //   avatar_logo = "/ai-models/claude.svg";
+          // } else {
+          //   avatar_logo = "/ai-models/default.svg";
+          // }
+
           // Only consider streaming if it's the last message
           const isLastMessage = messageIndex === messages.length - 1;
           const isCurrentlyStreaming =
@@ -812,10 +823,11 @@ export default function ChatArea({ id }: { id: string }) {
                 name={message.role}
                 src={
                   message.role == "assistant"
-                    ? parentChatModel == AI_MODELS[0].id
-                      ? "/ai-models/grok.svg"
-                      : "/ai-models/claude.svg"
-                    : "/user.png"
+                    ? avatar_logo
+                    : // parentChatModel == AI_MODELS[0].id
+                      //   ? "/ai-models/grok.svg"
+                      //   : "/ai-models/claude.svg"
+                      "/user.png"
                 }
                 className="bg-white"
               />
