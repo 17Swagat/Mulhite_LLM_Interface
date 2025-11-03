@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import {
   PromptInput,
   PromptInputButton,
@@ -39,10 +39,6 @@ export const PromptInputField = memo(function PromptInputField({
   inConversation?: boolean;
 }) {
   const { parentChatModel, setParentChatModel } = useSelectedAIModelStore();
-
-  useEffect(() => {
-    console.log("ParentChatModel: ", parentChatModel);
-  }, [parentChatModel]);
 
   return (
     <PromptInput onSubmit={handleSubmit}>
