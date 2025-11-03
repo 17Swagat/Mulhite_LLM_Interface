@@ -135,8 +135,14 @@ export async function POST(req: Request) {
 
         return result.toUIMessageStreamResponse({
             originalMessages: messages,
-            // ***
-            // sendReasoning: true,
+            // sendReasoning: true, // REVIEW:
+
+            // Sending metadata when streaming starts:
+            messageMetadata: ({ part }) => {
+                if (part.type === 'finish') {
+                    return { model: CURRENT_MODEL.modelId }
+                }
+            }
         });
 
     } catch (error) {

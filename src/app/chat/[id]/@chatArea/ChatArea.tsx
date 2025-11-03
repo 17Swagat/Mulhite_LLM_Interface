@@ -120,11 +120,9 @@ export default function ChatArea({ id }: { id: string }) {
         for (const msg of lastTwoMessages) {
           // Check if message is already in Convex to avoid duplicates
 
-          console.log(currentModelRef.current);
-
           const result = await addMessageToConvex({
             conversationId: conversationId,
-            ai_model: msg.role === "user" ? undefined : currentModelRef.current, //parentChatModel,
+            ai_model: msg.role === "user" ? undefined : msg.metadata.model, //parentChatModel,
             role: msg.role as "user" | "assistant",
             parts: msg.parts.map((part: any) => ({
               type: part.type,
