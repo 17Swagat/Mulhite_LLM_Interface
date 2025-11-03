@@ -12,7 +12,7 @@ import {
   PromptInputToolbar,
   PromptInputTools,
 } from "@/components/ui/shadcn-io/ai/prompt-input";
-import { MicIcon, PaperclipIcon } from "lucide-react";
+import { MicIcon, PaperclipIcon, BrainIcon } from "lucide-react";
 import type { ChatStatus } from "ai";
 import scrollbarStyle from "./PromptInputField.module.css";
 
@@ -38,7 +38,8 @@ export const PromptInputField = memo(function PromptInputField({
   chatStatus: ChatStatus;
   inConversation?: boolean;
 }) {
-  const { parentChatModel, setParentChatModel } = useSelectedAIModelStore();
+  const { parentChatModel, setParentChatModel, reasoningOn, setReasoningOn } =
+    useSelectedAIModelStore();
 
   return (
     <PromptInput onSubmit={handleSubmit}>
@@ -50,7 +51,7 @@ export const PromptInputField = memo(function PromptInputField({
         placeholder="What do you want to learn about?"
       />
       <PromptInputToolbar>
-        <PromptInputTools>
+        <PromptInputTools className="flex justify-between w-full">
           <PromptInputModelSelect
             value={parentChatModel}
             onValueChange={setParentChatModel}
@@ -67,6 +68,18 @@ export const PromptInputField = memo(function PromptInputField({
               ))}
             </PromptInputModelSelectContent>
           </PromptInputModelSelect>
+
+          <PromptInputButton
+            onClick={() => {
+              setReasoningOn(!reasoningOn);
+              // console.log("Reasoning toggled:", !reasoningOn);
+            }}
+            className={`mr-2 ${
+              reasoningOn ? "bg-green-400" : "bg-gray-400"
+            } active:bg-pink-500 transition-colors duration-100 ease-in hover:bg-purple-300`}
+          >
+            <BrainIcon size={16} />
+          </PromptInputButton>
         </PromptInputTools>
 
         <PromptInputSubmit

@@ -27,16 +27,18 @@ export async function POST(req: Request) {
             chatId: providedChatId,
             model: ai_model,
             parentMessages,
-            parentConversationId
+            parentConversationId,
+            reasoning
         }: {
             messages: ExtendedUIMessage[];
             chatId?: string
             model: string
             parentMessages?: ExtendedUIMessage[];
             parentConversationId?: string;
+            reasoning?: boolean;
         } = req_;
 
-        console.log('AI Model Requested: ' + ai_model)
+        // console.log('AI Model Requested: ' + ai_model)
         if (parentConversationId) {
             console.log('ExplainSideChat with parent conversation:', parentConversationId);
         }
@@ -63,7 +65,7 @@ export async function POST(req: Request) {
             CURRENT_MODEL = ollama('deepseek-r1:1.5b'); // default
         }
 
-        console.log('Current Model ID: ' + CURRENT_MODEL.modelId)
+        // console.log('Current Model ID: ' + CURRENT_MODEL.modelId)
 
         // Normalize to UIMessage with parts[]; convertToModelMessages expects parts-based UI messages
         let prompt;
@@ -119,12 +121,21 @@ export async function POST(req: Request) {
             return new Response("Invalid messages payload", { status: 400 });
         }
 
+        console.log('REASONING - VALUE: ' + reasoning)
         const result = streamText({
             prompt,
             // model: google("gemini-2.5-flash-lite-preview-09-2025"),
             model: CURRENT_MODEL,
             // model: ollama('deepseek-r1:1.5b'),
-            // providerOptions: (CURRENT_MODEL.modelId === "deepseek-r1:1.5b") ? { ollama: { think: true } } : undefined
+            providerOptions:
+                ((reasoning)
+                    // && (CURRENT_MODEL.modelId === "deepseek-r1:1.5b")
+                ) ? {
+                    ollama: {
+                        think: true
+
+                    }
+                } : undefined
 
             // ***
             // providerOptions: {
@@ -135,7 +146,7 @@ export async function POST(req: Request) {
 
         return result.toUIMessageStreamResponse({
             originalMessages: messages,
-            // sendReasoning: true, // REVIEW:
+            sendReasoning: reasoning, // REVIEW:
 
             // Sending metadata when streaming starts:
             // NOTE: "TYPE-ERROR"

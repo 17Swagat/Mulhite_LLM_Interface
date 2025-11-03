@@ -93,8 +93,7 @@ export default function ChatArea({ id }: { id: string }) {
     [id]
   );
 
-  const { parentChatModel } = useSelectedAIModelStore();
-  const currentModelRef = useRef<string>(parentChatModel);
+  const { parentChatModel, reasoningOn } = useSelectedAIModelStore();
 
   // AI SDK chat hook
   const {
@@ -122,6 +121,7 @@ export default function ChatArea({ id }: { id: string }) {
 
           const result = await addMessageToConvex({
             conversationId: conversationId,
+            // REVISIT: seems like TYPE-ERROR
             ai_model: msg.role === "user" ? undefined : msg.metadata.model, //parentChatModel,
             role: msg.role as "user" | "assistant",
             parts: msg.parts.map((part: any) => ({
@@ -157,24 +157,6 @@ export default function ChatArea({ id }: { id: string }) {
       }
     },
   });
-
-  // Model-Selection (initialize lazily once)
-  // const [
-  //   selectedModelX,
-  //   setSelectedModel] = useState<string>(() => {
-  //   let model = AI_MODELS[0].id;
-  //   if (typeof window !== "undefined") {
-  //     const pendingMessageModelKey = `pendingMessage_Model_${id}`;
-  //     const pendingMessageModel = sessionStorage.getItem(
-  //       pendingMessageModelKey
-  //     );
-  //     if (pendingMessageModel) {
-  //       model = pendingMessageModel;
-  //       sessionStorage.removeItem(pendingMessageModelKey);
-  //     }
-  //   }
-  //   return model;
-  // });
 
   // User question submission handler:
   const handleSubmit = async (e: React.FormEvent) => {
@@ -213,6 +195,7 @@ export default function ChatArea({ id }: { id: string }) {
         {
           body: {
             model: parentChatModel,
+            reasoning: reasoningOn,
           },
         }
       );
@@ -347,8 +330,8 @@ export default function ChatArea({ id }: { id: string }) {
           },
           {
             body: {
-              // model: selectedModel,
               model: parentChatModel,
+              reasoningOn: reasoningOn,
             },
           }
         );
