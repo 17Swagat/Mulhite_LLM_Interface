@@ -33,6 +33,8 @@ export default defineSchema({
     messages: defineTable({
         conversationId: v.id("conversations"),  // Foreign key to conversation
         role: v.union(v.literal("user"), v.literal("assistant")),  // Message sender
+        // ai_model: v.optional(v.string()), // e.g., "deepseek-r1:1.5b" (store which model generated assistant messages)
+        ai_model: v.optional(v.string()), // e.g., "deepseek-r1:1.5b" (store which model generated assistant messages)
         parts: v.array(  // Message content (supports text, reasoning, etc.)
             v.object({
                 type: v.string(),  // "text", "reasoning", "image", etc.
@@ -40,7 +42,10 @@ export default defineSchema({
                 // Future: Add image_url, file_url, etc.
             })
         ),
+
+        // TODO: "Must find a way to <DELETE> it & configure based on the PreSaved-Time (By Convex)"
         timestamp: v.number(),  // Unix timestamp for ordering messages
+
         // Removed: id (Convex auto-generates _id)
         // Removed: metadata (not currently used)
     })

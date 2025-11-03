@@ -26,8 +26,9 @@ import {
   useMutation,
   Authenticated,
   AuthLoading,
-  useConvexAuth,
-  useConvexConnectionState,
+  // useConvexAuth,
+  // useConvexConnectionState,
+  // useConvex,
 } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { Id } from "@/../convex/_generated/dataModel";
@@ -117,6 +118,7 @@ export default function ChatArea({ id }: { id: string }) {
           // Check if message is already in Convex to avoid duplicates
           const result = await addMessageToConvex({
             conversationId: conversationId,
+            ai_model: msg.role === "user" ? undefined : parentChatModel,
             role: msg.role as "user" | "assistant",
             parts: msg.parts.map((part: any) => ({
               type: part.type,
@@ -244,6 +246,7 @@ export default function ChatArea({ id }: { id: string }) {
         addChat({
           _id: conversationId,
           title: `Chat ${conversationId.slice(0, 8)}`, // Will be updated with first message
+          // ai_model:
           // createdAt: Date.now(),
           // _creationTime: Date.now(),
           updatedAt: Date.now(),
@@ -260,6 +263,8 @@ export default function ChatArea({ id }: { id: string }) {
       if (messagesData.notFound) {
         return;
       }
+
+      // console.log(messagesData.messages)
 
       // Valid conversation, load messages
       if (messagesData.messages !== undefined) {
@@ -414,6 +419,7 @@ export default function ChatArea({ id }: { id: string }) {
   const createHighlightMutation = useMutation(
     api.highlights_db.createHighlight
   );
+
   const deleteHighlightMutation = useMutation(
     api.highlights_db.deleteHighlight
   );
@@ -742,14 +748,9 @@ export default function ChatArea({ id }: { id: string }) {
             message.id = uuidv7();
           }
 
+          // console.log(message.metadata.ai_model);
           let avatar_logo: string = "/ai-models/claude.svg";
-          // if (message.metadata.model === AI_MODELS[0].id) {
-          //   avatar_logo = "/ai-models/grok.svg";
-          // } else if (message.metadata.model === AI_MODELS[1].id) {
-          //   avatar_logo = "/ai-models/claude.svg";
-          // } else {
-          //   avatar_logo = "/ai-models/default.svg";
-          // }
+          // console.log(avatar_logo);
 
           // Only consider streaming if it's the last message
           const isLastMessage = messageIndex === messages.length - 1;
@@ -821,14 +822,7 @@ export default function ChatArea({ id }: { id: string }) {
               {/* FIX: The avatars getting changed when we change the model in the prompt field & hit submit, As we comparing the values with the `parentChatModel`, which is a Zustand Store value. Need to send the META regarding which model is OUTPUTING the value. */}
               <MessageAvatar
                 name={message.role}
-                src={
-                  message.role == "assistant"
-                    ? avatar_logo
-                    : // parentChatModel == AI_MODELS[0].id
-                      //   ? "/ai-models/grok.svg"
-                      //   : "/ai-models/claude.svg"
-                      "/user.png"
-                }
+                src={message.role == "assistant" ? avatar_logo : "/user.png"}
                 className="bg-white"
               />
             </Message>
@@ -965,17 +959,13 @@ export default function ChatArea({ id }: { id: string }) {
             />
 
             <Conversation className="bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c] overflow-y-hidden">
-              {/* <ConversationContent className="w-[50%] lg:w-[70%] xl:w-[70%] mx-auto overflow-y-auto px-4 py-6 relative"> */}
               <ConversationContent className="flex flex-col items-center place-content-center w-[70%] mx-auto overflow-y-auto  py-6 relative">
                 {renderedMessages}
               </ConversationContent>
               <ConversationScrollButton className="bottom-35 bg-gray-800/55 border-0 hover:bg-gray-500 hover:text-white z-20" />
 
-              {/* Input Field: */}
               <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-1 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md">
                 <PromptInputField
-                  // selectedModel={selectedModel}
-                  // setSelectedModelFunc={setSelectedModel}
                   handleSubmit={handleSubmit}
                   input={input}
                   setInput={setInput}

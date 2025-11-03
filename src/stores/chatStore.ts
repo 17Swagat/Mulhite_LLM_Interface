@@ -7,6 +7,7 @@ export interface ChatItem {
   _creationTime?: number;
   title?: string;
   // createdAt: number;
+  ai_model?: string;
   updatedAt: number;
   userId: Id<"users">;
 }

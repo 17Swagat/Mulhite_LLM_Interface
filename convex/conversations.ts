@@ -26,6 +26,7 @@ async function getCurrentUserQuery(ctx: QueryCtx) {
     return user;
 }
 
+
 async function getCurrentUserMutation(ctx: MutationCtx) {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
@@ -100,6 +101,34 @@ export const listConversations = query({
     },
 });
 
+
+// export const getAIReplyModelName = query({
+//     args: {
+//         conversationId: v.string(),
+//         messageId: v.string()
+//     }, handler: async (ctx, args) => {
+//         const user = await getCurrentUserQuery(ctx);
+//         if (!user) {
+//             return null;
+//         }
+//         try {
+//             const conversationId = args.conversationId as Id<"conversations">;
+//             const result = await ctx.db.query('messages').withIndex("by_conversationId", (q) => q.eq("conversationId", conversationId))
+//                 .filter((q) => q.eq(q.field('_id'), args.messageId)).first()
+//             return result?.ai_model ?? null;
+//             // .then((msg) => {
+//             //     let modelName: string = msg?.ai_model ?? '';
+//             //     if (!modelName) {
+//             //         return null;
+//             //     }
+//             //     return modelName;
+//             // });
+
+//         } catch (error) {
+//             return null;
+//         }
+//     }
+// })
 
 export const listConversationsPaginate = query({
     args: {
@@ -216,6 +245,7 @@ export const addMessage = mutation({
     args: {
         conversationId: v.id("conversations"),
         role: v.union(v.literal("user"), v.literal("assistant")),
+        ai_model: v.optional(v.string()),
         parts: v.array(
             v.object({
                 type: v.string(),
@@ -230,9 +260,10 @@ export const addMessage = mutation({
 
         const messageId = await ctx.db.insert("messages", {
             conversationId: args.conversationId,
+            ai_model: args.ai_model,
             role: args.role,
             parts: args.parts,
-            timestamp: now,
+            timestamp: now, // TODO: "Must find a way to <DELETE> it & configure based on the PreSaved-Time (By Convex)"
         });
 
         await ctx.db.patch(args.conversationId, { updatedAt: now });
