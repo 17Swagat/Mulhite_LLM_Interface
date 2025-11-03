@@ -125,20 +125,18 @@ export async function POST(req: Request) {
             model: CURRENT_MODEL,
             // model: ollama('deepseek-r1:1.5b'),
             // providerOptions: (CURRENT_MODEL.modelId === "deepseek-r1:1.5b") ? { ollama: { think: true } } : undefined
-            providerOptions: {
-                ollama: { think: true },
-            },
+
+            // ***
+            // providerOptions: {
+            //     ollama: { think: true },
+            // },
         });
 
 
         return result.toUIMessageStreamResponse({
             originalMessages: messages,
-            sendReasoning: true,
-            // messageMetadata: ({ part }) => {
-            //     if (part.type === 'start') {
-            //         return { model: CURRENT_MODEL.modelId.toString() };
-            //     }
-            // },
+            // ***
+            // sendReasoning: true,
         });
 
     } catch (error) {

@@ -93,6 +93,9 @@ export default function ChatArea({ id }: { id: string }) {
     [id]
   );
 
+  const { parentChatModel } = useSelectedAIModelStore();
+  const currentModelRef = useRef<string>(parentChatModel);
+
   // AI SDK chat hook
   const {
     sendMessage,
@@ -116,9 +119,12 @@ export default function ChatArea({ id }: { id: string }) {
 
         for (const msg of lastTwoMessages) {
           // Check if message is already in Convex to avoid duplicates
+
+          console.log(currentModelRef.current);
+
           const result = await addMessageToConvex({
             conversationId: conversationId,
-            ai_model: msg.role === "user" ? undefined : parentChatModel,
+            ai_model: msg.role === "user" ? undefined : currentModelRef.current, //parentChatModel,
             role: msg.role as "user" | "assistant",
             parts: msg.parts.map((part: any) => ({
               type: part.type,
@@ -172,13 +178,6 @@ export default function ChatArea({ id }: { id: string }) {
   //   return model;
   // });
 
-  const {
-    parentChatModel,
-    // setParentChatModel,
-    // explainSideChatModel,
-    // setExplainSideChatModel,
-  } = useSelectedAIModelStore();
-
   // User question submission handler:
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -215,7 +214,6 @@ export default function ChatArea({ id }: { id: string }) {
         },
         {
           body: {
-            // model: selectedModel,
             model: parentChatModel,
           },
         }
@@ -223,8 +221,6 @@ export default function ChatArea({ id }: { id: string }) {
 
       setInput("");
     }
-
-    // Let StickToBottom manage scroll position to enable ConversationScrollButton
   };
 
   // Set this chat as active when component mounts and reset pagination
@@ -744,13 +740,28 @@ export default function ChatArea({ id }: { id: string }) {
     return (
       <>
         {messages.map((message, messageIndex) => {
-          if (message.id.trim() === "") {
-            message.id = uuidv7();
-          }
+          // if (message.id.trim() === "") {
+          //   message.id = uuidv7();
+          // }
+          // console.log(message.id)
 
           // console.log(message.metadata.ai_model);
           let avatar_logo: string = "/ai-models/claude.svg";
-          // console.log(avatar_logo);
+          if (message.role === "assistant") {
+            const ai_model = messagesData?.messages.find(
+              (m) => m._id === message.id
+            )?.ai_model;
+
+            // console.log(ai_model);
+
+            if (ai_model) {
+              if (ai_model === AI_MODELS[0].id) {
+                avatar_logo = "/ai-models/deepseek.svg";
+              } else if (ai_model === AI_MODELS[1].id) {
+                avatar_logo = "/ai-models/gemini.svg";
+              }
+            }
+          }
 
           // Only consider streaming if it's the last message
           const isLastMessage = messageIndex === messages.length - 1;
