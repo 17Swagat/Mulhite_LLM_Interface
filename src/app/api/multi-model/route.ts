@@ -65,7 +65,6 @@ export async function POST(req: Request) {
             CURRENT_MODEL = ollama('deepseek-r1:1.5b'); // default
         }
 
-        // console.log('Current Model ID: ' + CURRENT_MODEL.modelId)
 
         // Normalize to UIMessage with parts[]; convertToModelMessages expects parts-based UI messages
         let prompt;
@@ -125,22 +124,16 @@ export async function POST(req: Request) {
         const result = streamText({
             prompt,
             // model: google("gemini-2.5-flash-lite-preview-09-2025"),
-            model: CURRENT_MODEL,
             // model: ollama('deepseek-r1:1.5b'),
+            model: CURRENT_MODEL,
             providerOptions:
                 ((reasoning)
-                    // && (CURRENT_MODEL.modelId === "deepseek-r1:1.5b")
                 ) ? {
                     ollama: {
                         think: true
 
-                    }
+                    },
                 } : undefined
-
-            // ***
-            // providerOptions: {
-            //     ollama: { think: true },
-            // },
         });
 
 
@@ -150,11 +143,10 @@ export async function POST(req: Request) {
 
             // Sending metadata when streaming starts:
             // NOTE: "TYPE-ERROR"
-            messageMetadata: ({ part }) => {
+            messageMetadata: ({ part }): Record<string, string> | undefined => {
                 if (part.type === 'start' || part.type === 'finish') {
                     return { model: CURRENT_MODEL.modelId }
                 }
-
             }
         });
 

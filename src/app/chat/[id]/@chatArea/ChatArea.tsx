@@ -122,7 +122,7 @@ export default function ChatArea({ id }: { id: string }) {
           const result = await addMessageToConvex({
             conversationId: conversationId,
             // REVISIT: seems like TYPE-ERROR
-            ai_model: msg.role === "user" ? undefined : msg.metadata.model, //parentChatModel,
+            ai_model: msg.role === "user" ? undefined : ((msg.metadata as any)?.model as string | undefined), //parentChatModel,
             role: msg.role as "user" | "assistant",
             parts: msg.parts.map((part: any) => ({
               type: part.type,
@@ -722,14 +722,9 @@ export default function ChatArea({ id }: { id: string }) {
     return (
       <>
         {messages.map((message, messageIndex) => {
-          // if (message.id.trim() === "") {
-          //   message.id = uuidv7();
-          // }
-          // console.log(message.id)
-
           let avatar_logo: string = "/ai-models/claude.svg";
           if (message.role === "assistant" && message.metadata) {
-            const model = message.metadata.model; // NOTE: TYPE-Error
+            const model = (message.metadata as any).model; // NOTE: TYPE-Error
             if (model) {
               if (model === AI_MODELS[0].id) {
                 avatar_logo = "/ai-models/deepseek.svg";
