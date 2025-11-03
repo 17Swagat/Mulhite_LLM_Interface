@@ -121,7 +121,7 @@ export async function POST(req: Request) {
             return new Response("Invalid messages payload", { status: 400 });
         }
 
-        console.log('REASONING - VALUE: ' + reasoning)
+        // console.log('REASONING - VALUE-DEP: ' + reasoning)
         const result = streamText({
             prompt,
             // model: google("gemini-2.5-flash-lite-preview-09-2025"),

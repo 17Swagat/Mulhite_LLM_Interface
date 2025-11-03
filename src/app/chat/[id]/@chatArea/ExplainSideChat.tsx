@@ -29,6 +29,11 @@ import {
 } from "@/components/ui/shadcn-io/ai/conversation";
 import { Message, MessageContent } from "@/components/ui/shadcn-io/ai/message";
 import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
+import {
+  Reasoning,
+  ReasoningContent,
+  ReasoningTrigger,
+} from "@/components/ui/shadcn-io/ai/reasoning";
 
 interface ExplainSideChatContentProps {
   sideChatId: string;
@@ -43,18 +48,8 @@ export function ExplainSideChatContent({
   parentConversationId,
   parentMessages = [],
 }: ExplainSideChatContentProps) {
-  // const [selectedModel, setSelectedModel] = useState<string>(() => {
-  //   if (typeof window !== "undefined") {
-  //     return (
-  //       sessionStorage.getItem(`pendingExplainModel_${sideChatId}`) ||
-  //       AI_MODELS[0].id
-  //     );
-  //   }
-  //   return AI_MODELS[0].id;
-  // });
-
   const [input, setInput] = useState<string>("");
-  const { explainSideChatModel, setExplainSideChatModel } =
+  const { explainSideChatModel, setExplainSideChatModel, reasoningOn } =
     useSelectedAIModelStore();
 
   const sideChat = useQuery(api.explainSideChats.getExplainSideChat, {
@@ -154,8 +149,12 @@ export function ExplainSideChatContent({
       // initiatedRef.current = true;
       sendMessage(
         { text: pending.trim(), metadata: { chatId: sideChatId } },
-        // { body: { model: selectedModel } }
-        { body: { model: explainSideChatModel } }
+        {
+          body: {
+            model: explainSideChatModel,
+            reasoning: reasoningOn,
+          },
+        }
       );
       sessionStorage.removeItem(`pendingExplainMessage_${sideChatId}`);
       // sessionStorage.removeItem(`pendingExplainModel_${sideChatId}`);
@@ -163,6 +162,7 @@ export function ExplainSideChatContent({
     }
 
     // This shouldn't be needed anymore, but keep as fallback
+    // REVIEW: "Will have to check if its important for not."
     if (sideChat?.selectedText) {
       // initiatedRef.current = true;
       sendMessage(
@@ -170,8 +170,12 @@ export function ExplainSideChatContent({
           text: `Explain "${sideChat.selectedText}" based on the current conversation.`,
           metadata: { chatId: sideChatId },
         },
-        // { body: { model: selectedModel } }
-        { body: { model: explainSideChatModel } }
+        {
+          body: {
+            model: explainSideChatModel,
+            reasoning: reasoningOn,
+          },
+        }
       );
     }
   }, [
@@ -191,8 +195,12 @@ export function ExplainSideChatContent({
     setInput("");
     sendMessage(
       { text, metadata: { chatId: sideChatId } },
-      // { body: { model: selectedModel } }
-      { body: { model: explainSideChatModel } }
+      {
+        body: {
+          model: explainSideChatModel,
+          reasoning: reasoningOn,
+        },
+      }
     );
   };
 
@@ -258,9 +266,35 @@ export function ExplainSideChatContent({
         >
           {messages.map((msg, msgIndex) => {
             const messageId = msg.id || uuidv7();
+
+            // Only consider streaming if it's the last message
+            const isLastMessage = msgIndex === messages.length - 1;
+            const isCurrentlyStreaming =
+              chatStatus === "streaming" && isLastMessage;
+
             return (
               <Message key={messageId} from={msg.role}>
                 <MessageContent>
+                  {/* Reasoning Block: */}
+                  {msg.parts.map((part, index) =>
+                    part.type === "reasoning" ? (
+                      <div key={index} className="mb-2">
+                        <Reasoning
+                          className="w-full"
+                          isStreaming={isCurrentlyStreaming}
+                          duration={0}
+                          defaultOpen={false}
+                        >
+                          <ReasoningTrigger />
+                          <ReasoningContent className="bg-yellow-600 text-white p-2 rounded">
+                            {part.text}
+                          </ReasoningContent>
+                        </Reasoning>
+                      </div>
+                    ) : null
+                  )}
+
+                  {/* Answer-Part: */}
                   {msg.parts.map((part, partIndex) => {
                     if (part.type !== "text") return null;
                     const partKey = `${messageId}-part-${partIndex}`;
@@ -285,8 +319,6 @@ export function ExplainSideChatContent({
       {/* Input Area */}
       <div className="border-t border-gray-700 pt-4">
         <PromptInputField
-          // selectedModel={selectedModel}
-          // setSelectedModelFunc={setSelectedModel}
           handleSubmit={handleSubmit}
           input={input}
           setInput={setInput}
