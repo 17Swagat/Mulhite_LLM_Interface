@@ -746,7 +746,7 @@ export default function ChatArea({ id }: { id: string }) {
 
           let avatar_logo: string = "/ai-models/claude.svg";
           if (message.role === "assistant" && message.metadata) {
-            const model = message.metadata.model;
+            const model = message.metadata.model; // NOTE: TYPE-Error
             if (model) {
               if (model === AI_MODELS[0].id) {
                 avatar_logo = "/ai-models/deepseek.svg";
@@ -823,11 +823,7 @@ export default function ChatArea({ id }: { id: string }) {
                 })}
               </MessageContent>
 
-              {/* FIX: The avatars getting changed when we change the model in the prompt field & hit submit, As we comparing the values with the `parentChatModel`, which is a Zustand Store value. Need to send the META regarding which model is OUTPUTING the value. */}
-              {/* <div className="bg-blue-500 w-10 h-10">
-                {message.metadata && message.metadata.model}
-              </div> */}
-
+              {/* Avatar */}
               <MessageAvatar
                 name={message.role}
                 src={message.role == "assistant" ? avatar_logo : "/user.png"}

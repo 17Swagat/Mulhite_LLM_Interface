@@ -138,6 +138,7 @@ export async function POST(req: Request) {
             // sendReasoning: true, // REVIEW:
 
             // Sending metadata when streaming starts:
+            // NOTE: "TYPE-ERROR"
             messageMetadata: ({ part }) => {
                 if (part.type === 'start') {
                     return { model: CURRENT_MODEL.modelId }
@@ -145,6 +146,7 @@ export async function POST(req: Request) {
                 if (part.type === 'finish') {
                     return { model: CURRENT_MODEL.modelId }
                 }
+
             }
         });
 
