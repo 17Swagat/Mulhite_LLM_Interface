@@ -140,10 +140,7 @@ export async function POST(req: Request) {
             // Sending metadata when streaming starts:
             // NOTE: "TYPE-ERROR"
             messageMetadata: ({ part }) => {
-                if (part.type === 'start') {
-                    return { model: CURRENT_MODEL.modelId }
-                }
-                if (part.type === 'finish') {
+                if (part.type === 'start' || part.type === 'finish') {
                     return { model: CURRENT_MODEL.modelId }
                 }
 
