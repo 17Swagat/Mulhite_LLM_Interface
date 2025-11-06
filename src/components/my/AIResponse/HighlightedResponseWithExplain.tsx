@@ -553,59 +553,61 @@ export function HighlightedResponseWithExplain({
           </Popover>
 
           {/* Explain Popup Menu */}
-          <Popover open={openExplainMenu} onOpenChange={setOpenExplainMenu}>
-            <PopoverTrigger className="bg-black" asChild>
-              <Button
-                variant="outline"
-                style={{
-                  backgroundColor: openExplainMenu ? "#cce60aff" : "white",
-                }}
-                onClick={() => {
-                  setOpenExplainMenu((prev) => !prev);
-                }}
-              >
-                <MessageSquare size={14} />
-                <span>{explainSideChats.length} Explains</span>
-                <ChevronDown
-                  size={12}
-                  className={`transition-transform ${
-                    openExplainMenu ? "rotate-180" : ""
-                  }`}
-                />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80 bg-gray-900 text-white z-50 rounded-[10px]">
-              {explainSideChats.length > 0 && (
-                <>
-                  <div className="px-3 py-2 bg-gray-750 text-xs text-gray-400 font-semibold border-t border-gray-700">
-                    EXPLAIN CHATS (Click text to open)
-                  </div>
-                  {explainSideChats.map((e, idx) => (
-                    <div
-                      key={e._id}
-                      className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
-                      onClick={() => onOpenExplainSideChat?.(e._id)}
-                    >
-                      <MessageSquare
-                        size={14}
-                        className={`mt-1 shrink-0 ${getExplainColorClass(
-                          e.highlightColor
-                        )}`}
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-gray-200 line-clamp-2">
-                          {e.selectedText}
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          Explain #{idx + 1}
-                        </p>
-                      </div>
+          {explainSideChats.length > 0 && (
+            <Popover open={openExplainMenu} onOpenChange={setOpenExplainMenu}>
+              <PopoverTrigger className="bg-black" asChild>
+                <Button
+                  variant="outline"
+                  style={{
+                    backgroundColor: openExplainMenu ? "#cce60aff" : "white",
+                  }}
+                  onClick={() => {
+                    setOpenExplainMenu((prev) => !prev);
+                  }}
+                >
+                  <MessageSquare size={14} />
+                  <span>{explainSideChats.length} Explains</span>
+                  <ChevronDown
+                    size={12}
+                    className={`transition-transform ${
+                      openExplainMenu ? "rotate-180" : ""
+                    }`}
+                  />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 bg-gray-900 text-white z-50 rounded-[10px]">
+                {explainSideChats.length > 0 && (
+                  <>
+                    <div className="px-3 py-2 bg-gray-750 text-xs text-gray-400 font-semibold border-t border-gray-700">
+                      EXPLAIN CHATS (Click text to open)
                     </div>
-                  ))}
-                </>
-              )}
-            </PopoverContent>
-          </Popover>
+                    {explainSideChats.map((e, idx) => (
+                      <div
+                        key={e._id}
+                        className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
+                        onClick={() => onOpenExplainSideChat?.(e._id)}
+                      >
+                        <MessageSquare
+                          size={14}
+                          className={`mt-1 shrink-0 ${getExplainColorClass(
+                            e.highlightColor
+                          )}`}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-gray-200 line-clamp-2">
+                            {e.selectedText}
+                          </p>
+                          <p className="text-xs text-gray-500 mt-1">
+                            Explain #{idx + 1}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </PopoverContent>
+            </Popover>
+          )}
         </div>
       )}
     </div>

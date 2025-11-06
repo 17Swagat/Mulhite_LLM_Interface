@@ -49,7 +49,7 @@ import { Sheet } from "@/components/ui/sheet";
 import {
   HighlightedResponseWithExplain,
   ExplainSideChat as ExplainSideChatType,
-} from "@/components/my/AIResponse/highlight/HighlightedResponseWithExplain";
+} from "@/components/my/AIResponse/HighlightedResponseWithExplain";
 import { ExplainSideChatContent } from "./ExplainSideChat";
 import { ArrowDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
