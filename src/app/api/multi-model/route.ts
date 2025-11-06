@@ -53,14 +53,19 @@ export async function POST(req: Request) {
             });
         }
 
-        let CURRENT_MODEL: LanguageModel;
+        let CURRENT_MODEL: LanguageModel | string;
         if (ai_model == AI_MODELS[0].id) {
-            CURRENT_MODEL = ollama('deepseek-r1:1.5b');
+            CURRENT_MODEL = 'deepseek/deepseek-v3.1-terminus'//ollama('deepseek-r1:1.5b');
         } else if (ai_model == AI_MODELS[1].id) {
             CURRENT_MODEL = google("gemini-2.5-flash-lite-preview-09-2025");
         } else if (ai_model == AI_MODELS[2].id) {
             CURRENT_MODEL = google("gemini-2.5-flash");
-        } else {
+        }
+        else if (ai_model == AI_MODELS[3].id) {
+            CURRENT_MODEL = "minimax/minimax-m2"
+        }
+
+        else {
             // This Condition Won't Happen Normally (99.9%) - but just in case:
             CURRENT_MODEL = ollama('deepseek-r1:1.5b'); // default
         }
@@ -121,6 +126,7 @@ export async function POST(req: Request) {
         }
 
         // console.log('REASONING - VALUE-DEP: ' + reasoning)
+        console.log(reasoning)
         const result = streamText({
             prompt,
             // model: google("gemini-2.5-flash-lite-preview-09-2025"),
@@ -136,19 +142,29 @@ export async function POST(req: Request) {
 
                     google: {
                         includeThoughts: true
-                    }
-
+                    },
                 } : undefined
-        });
+        }
+        );
 
 
         return result.toUIMessageStreamResponse({
             originalMessages: messages,
             sendReasoning: reasoning, // REVIEW:
+
             // Sending metadata when streaming starts:
             messageMetadata: ({ part }): Record<string, string> | undefined => {
                 if (part.type === 'start' || part.type === 'finish') {
-                    return { model: CURRENT_MODEL.modelId }
+                    if (typeof CURRENT_MODEL === 'string'
+                        // && CURRENT_MODEL.startsWith('minimax/')
+                    ) {
+                        return { model: CURRENT_MODEL }
+                    }
+
+                    else if (typeof CURRENT_MODEL !== 'string') {
+                        return { model: CURRENT_MODEL.modelId }
+
+                    }
                 }
             },
         });
