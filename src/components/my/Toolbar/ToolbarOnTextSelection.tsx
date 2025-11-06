@@ -2,56 +2,53 @@
 /* eslint-disable @next/next/no-inline-styles -- Positioning requires dynamic styles */
 
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-} from "@/components/ui/select";
 import { SheetTrigger } from "@/components/ui/sheet";
 import { AI_MODELS } from "@/constants/models";
 import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
-import { SelectContent, SelectValue } from "@radix-ui/react-select";
 import { HighlighterIcon, ShareIcon, ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
 const HIGHLIGHT_COLORS = [
   {
+    name: "Red",
+    value: "red",
+    bg: "bg-red-400",
+    hover: "hover:bg-red-300",
+  },
+  {
     name: "Yellow",
     value: "yellow",
-    bg: "bg-yellow-200",
+    bg: "bg-yellow-400",
     hover: "hover:bg-yellow-300",
   },
-  { name: "Red", value: "red", bg: "bg-red-200", hover: "hover:bg-red-300" },
   {
     name: "Blue",
     value: "blue",
-    bg: "bg-blue-200",
+    bg: "bg-blue-400",
     hover: "hover:bg-blue-300",
   },
   {
     name: "Purple",
     value: "purple",
-    bg: "bg-purple-200",
+    bg: "bg-purple-400",
     hover: "hover:bg-purple-300",
   },
   {
     name: "Pink",
     value: "pink",
-    bg: "bg-pink-200",
+    bg: "bg-pink-400",
     hover: "hover:bg-pink-300",
   },
   {
     name: "Green",
     value: "green",
-    bg: "bg-green-200",
+    bg: "bg-green-400",
     hover: "hover:bg-green-300",
   },
   {
     name: "Orange",
     value: "orange",
-    bg: "bg-orange-200",
+    bg: "bg-orange-400",
     hover: "hover:bg-orange-300",
   },
 ];
@@ -95,14 +92,9 @@ export function ToolbarOnTextSelection({
   // Explain Side-Chat (Model Selection)
   const [isModelPickerOpen, setIsModelPickerOpen] = useState(false);
   const dropdownModelRef = useRef<HTMLDivElement>(null);
-  // const [selectedModel, setSelectedModel] = useState(AI_MODELS[0].id);
 
-  const {
-    // parentChatModel,
-    // setParentChatModel,
-    explainSideChatModel,
-    setExplainSideChatModel,
-  } = useSelectedAIModelStore();
+  const { explainSideChatModel, setExplainSideChatModel } =
+    useSelectedAIModelStore();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -155,7 +147,7 @@ export function ToolbarOnTextSelection({
           onClick={handleQuickHighlight}
           // title={`Highlight with ${currentColorObj?.name}`}
         >
-          <HighlighterIcon size={15} className="text-gray-700" />
+          <HighlighterIcon size={15} className="text-gray-800" />
         </button>
 
         {/* Color Picker Dropdown */}

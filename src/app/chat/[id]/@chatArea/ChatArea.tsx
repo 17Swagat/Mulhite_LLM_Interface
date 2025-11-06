@@ -1,11 +1,9 @@
 "use client";
 
-import style from "./ChatArea.module.css";
 import { UIMessage, useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { Response } from "@/components/ui/shadcn-io/ai/response";
-import { v7 as uuidv7 } from "uuid";
 import {
   Reasoning,
   ReasoningContent,
@@ -27,32 +25,24 @@ import {
   useMutation,
   Authenticated,
   AuthLoading,
-  // useConvexAuth,
-  // useConvexConnectionState,
-  // useConvex,
 } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { Id } from "@/../convex/_generated/dataModel";
 import ChatNotFound from "./ChatNotFound";
 
 import { ToolbarOnTextSelection } from "@/components/my/Toolbar/ToolbarOnTextSelection";
-// import { Highlight } from "@/lib/highlights";
 import { Highlight } from "@/ctypes/highlights";
 
-// import { HighlightedResponse } from "@/components/my/AIResponse/highlight/HighlightedResponse";
 import { PromptInputField } from "@/components/my/PromptInputField";
 
 import { AI_MODELS } from "@/constants/models";
 
-// Sidebar Explain Chat
 import { Sheet } from "@/components/ui/sheet";
 import {
   HighlightedResponseWithExplain,
   ExplainSideChat as ExplainSideChatType,
 } from "@/components/my/AIResponse/HighlightedResponseWithExplain";
 import { ExplainSideChatContent } from "./ExplainSideChat";
-import { ArrowDownIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { LoadingScreen } from "@/components/my/LoadingScreen";
 import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 
@@ -89,7 +79,6 @@ export default function ChatArea({ id }: { id: string }) {
   const transport = useMemo(
     () =>
       new DefaultChatTransport({
-        // api: "/api/persist-chat",
         api: "/api/multi-model",
         body: { chatId: id },
       }),
@@ -127,7 +116,7 @@ export default function ChatArea({ id }: { id: string }) {
             ai_model:
               msg.role === "user"
                 ? undefined
-                : ((msg.metadata as any)?.model as string | undefined), //parentChatModel,
+                : ((msg.metadata as any)?.model as string | undefined),
             role: msg.role as "user" | "assistant",
             parts: msg.parts.map((part: any) => ({
               type: part.type,
@@ -228,9 +217,6 @@ export default function ChatArea({ id }: { id: string }) {
         addChat({
           _id: conversationId,
           title: `Chat ${conversationId.slice(0, 8)}`, // Will be updated with first message
-          // ai_model:
-          // createdAt: Date.now(),
-          // _creationTime: Date.now(),
           updatedAt: Date.now(),
           userId: "" as any,
         });
