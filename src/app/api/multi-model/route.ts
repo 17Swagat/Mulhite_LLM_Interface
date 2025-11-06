@@ -17,6 +17,7 @@ type ExtendedUIMessage = UIMessage & {
     };
 };
 
+
 export async function POST(req: Request) {
     try {
         const req_ = await req.json();
