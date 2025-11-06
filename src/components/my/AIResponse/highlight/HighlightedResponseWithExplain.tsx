@@ -1,7 +1,7 @@
 "use client";
 
 import { Response } from "@/components/ui/shadcn-io/ai/response";
-import type { Highlight } from "@/lib/highlights";
+import type { Highlight } from "@/ctypes/highlights";
 import { useEffect, useRef, useState, useMemo } from "react";
 import {
   Trash2,

@@ -39,7 +39,7 @@ import { ToolbarOnTextSelection } from "@/components/my/Toolbar/ToolbarOnTextSel
 // import { Highlight } from "@/lib/highlights";
 import { Highlight } from "@/ctypes/highlights";
 
-import { HighlightedResponse } from "@/components/my/AIResponse/highlight/HighlightedResponse";
+// import { HighlightedResponse } from "@/components/my/AIResponse/highlight/HighlightedResponse";
 import { PromptInputField } from "@/components/my/PromptInputField";
 
 import { AI_MODELS } from "@/constants/models";
