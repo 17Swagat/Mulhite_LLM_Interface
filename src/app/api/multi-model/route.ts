@@ -6,7 +6,6 @@ import { createOllama } from 'ollama-ai-provider-v2';
 import { v7 as uuidv7 } from 'uuid';
 
 // export const maxDuration = 30;
-
 const ollama = createOllama({
     baseURL: 'http://localhost:11434/api',
     compatibility: 'strict',
@@ -38,7 +37,6 @@ export async function POST(req: Request) {
             reasoning?: boolean;
         } = req_;
 
-        // console.log('AI Model Requested: ' + ai_model)
         if (parentConversationId) {
             console.log('ExplainSideChat with parent conversation:', parentConversationId);
         }
@@ -60,6 +58,8 @@ export async function POST(req: Request) {
             CURRENT_MODEL = ollama('deepseek-r1:1.5b');
         } else if (ai_model == AI_MODELS[1].id) {
             CURRENT_MODEL = google("gemini-2.5-flash-lite-preview-09-2025");
+        } else if (ai_model == AI_MODELS[2].id) {
+            CURRENT_MODEL = google("gemini-2.5-flash");
         } else {
             // This Condition Won't Happen Normally (99.9%) - but just in case:
             CURRENT_MODEL = ollama('deepseek-r1:1.5b'); // default
@@ -133,6 +133,11 @@ export async function POST(req: Request) {
                         think: true
 
                     },
+
+                    google: {
+                        includeThoughts: true
+                    }
+
                 } : undefined
         });
 
@@ -140,14 +145,12 @@ export async function POST(req: Request) {
         return result.toUIMessageStreamResponse({
             originalMessages: messages,
             sendReasoning: reasoning, // REVIEW:
-
             // Sending metadata when streaming starts:
-            // NOTE: "TYPE-ERROR"
             messageMetadata: ({ part }): Record<string, string> | undefined => {
                 if (part.type === 'start' || part.type === 'finish') {
                     return { model: CURRENT_MODEL.modelId }
                 }
-            }
+            },
         });
 
     } catch (error) {

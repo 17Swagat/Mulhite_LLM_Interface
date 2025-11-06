@@ -219,16 +219,14 @@ export function ExplainSideChatContent({
   if (!sideChat) {
     return (
       <SheetContent
-        className={`bg-gray-800 text-white w-full! sm:w-[500px]! lg:w-[600px]! max-w-none!`}
+        className={`border-0 bg-linear-to-r from-[#0f55c5] via-[#f43f5e] to-[#fb923c] text-white w-full! sm:w-[500px]! lg:w-[600px]! max-w-none!`}
       >
         <SheetHeader>
           <SheetTitle className="text-white">Explain Chat</SheetTitle>
-          <SheetDescription className="sr-only">
-            Loading explain chat
-          </SheetDescription>
+          <SheetDescription className="sr-only">Loading...</SheetDescription>
         </SheetHeader>
-        <div className="flex items-center justify-center h-full">
-          <p className="text-gray-400">Loading...</p>
+        <div className="flex items-center justify-center h-full w-full">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-white ml-4" />
         </div>
       </SheetContent>
     );
@@ -237,12 +235,14 @@ export function ExplainSideChatContent({
   return (
     // <SheetContent className="bg-gray-900 text-white w-[600px] sm:w-[600px] flex flex-col">
     <SheetContent
-      className={`bg-gray-800 text-white w-full! sm:w-[500px]! lg:w-[600px]! max-w-none!`}
+      className={` border-0 
+      bg-linear-60 from-purple-600 via-cyan-600 to-green-400 
+        text-white w-full! sm:w-[500px]! lg:w-[600px]! max-w-none!`}
     >
       <SheetHeader className="border-b border-gray-700 pb-4">
         <SheetTitle className="text-white text-lg">Explain Chat</SheetTitle>
         <div className="flex justify-between">
-          <SheetDescription className="text-gray-400 mt-2 text-sm">
+          <SheetDescription className="text-gray-200 mt-2 text-sm">
             &ldquo;{sideChat.selectedText}&rdquo;
           </SheetDescription>
 
@@ -259,10 +259,10 @@ export function ExplainSideChatContent({
 
       {/* Messages Area */}
       <Conversation
-        className={`bg-red-500 w-full h-full overflow-y-hidden ${cssStyle.highlight_scrollbar}`}
+        className={` w-full h-full overflow-y-hidden ${cssStyle.highlight_scrollbar}`}
       >
         <ConversationContent
-          className={`bg-purple-700 ${cssStyle.highlight_scrollbar}`}
+          className={`bg-transparent ${cssStyle.highlight_scrollbar}`}
         >
           {messages.map((msg, msgIndex) => {
             const messageId = msg.id || uuidv7();
@@ -317,7 +317,7 @@ export function ExplainSideChatContent({
       </Conversation>
 
       {/* Input Area */}
-      <div className="border-t border-gray-700 pt-4">
+      <div className="border-0 flex items-center justify-center  mx-2.5">
         <PromptInputField
           handleSubmit={handleSubmit}
           input={input}

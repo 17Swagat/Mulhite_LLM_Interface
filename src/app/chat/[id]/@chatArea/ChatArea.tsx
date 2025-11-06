@@ -1,5 +1,6 @@
 "use client";
 
+import style from "./ChatArea.module.css";
 import { UIMessage, useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useEffect, useState, useRef, useMemo, useCallback } from "react";
@@ -121,8 +122,10 @@ export default function ChatArea({ id }: { id: string }) {
 
           const result = await addMessageToConvex({
             conversationId: conversationId,
-            // REVISIT: seems like TYPE-ERROR
-            ai_model: msg.role === "user" ? undefined : ((msg.metadata as any)?.model as string | undefined), //parentChatModel,
+            ai_model:
+              msg.role === "user"
+                ? undefined
+                : ((msg.metadata as any)?.model as string | undefined), //parentChatModel,
             role: msg.role as "user" | "assistant",
             parts: msg.parts.map((part: any) => ({
               type: part.type,
@@ -940,8 +943,14 @@ export default function ChatArea({ id }: { id: string }) {
               onExplain={handleExplainSelectedText}
             />
 
-            <Conversation className="bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c] overflow-y-hidden">
-              <ConversationContent className="flex flex-col items-center place-content-center w-[70%] mx-auto overflow-y-auto  py-6 relative">
+            <Conversation
+              className={`bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c] overflow-y-hidden`}
+            >
+
+              {/* TODO: "Not sure why but the scroll-bar design is not taking place." */}
+              <ConversationContent
+                className={`flex flex-col items-center place-content-center w-[70%] mx-auto overflow-y-auto  py-6 relative`}
+              >
                 {renderedMessages}
               </ConversationContent>
               <ConversationScrollButton className="bottom-35 bg-gray-800/55 border-0 hover:bg-gray-500 hover:text-white z-20" />
