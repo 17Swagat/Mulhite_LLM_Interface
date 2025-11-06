@@ -36,7 +36,9 @@ import { Id } from "@/../convex/_generated/dataModel";
 import ChatNotFound from "./ChatNotFound";
 
 import { ToolbarOnTextSelection } from "@/components/my/Toolbar/ToolbarOnTextSelection";
-import { Highlight } from "@/lib/highlights";
+// import { Highlight } from "@/lib/highlights";
+import { Highlight } from "@/ctypes/highlights";
+
 import { HighlightedResponse } from "@/components/my/AIResponse/highlight/HighlightedResponse";
 import { PromptInputField } from "@/components/my/PromptInputField";
 
@@ -946,7 +948,6 @@ export default function ChatArea({ id }: { id: string }) {
             <Conversation
               className={`bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c] overflow-y-hidden`}
             >
-
               {/* TODO: "Not sure why but the scroll-bar design is not taking place." */}
               <ConversationContent
                 className={`flex flex-col items-center place-content-center w-[70%] mx-auto overflow-y-auto  py-6 relative`}
