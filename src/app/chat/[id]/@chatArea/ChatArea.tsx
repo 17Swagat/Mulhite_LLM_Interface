@@ -46,7 +46,13 @@ import { ExplainSideChatContent } from "./ExplainSideChat";
 import { LoadingScreen } from "@/components/my/LoadingScreen";
 import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 
-export default function ChatArea({ id }: { id: string }) {
+export default function ChatArea({
+  id,
+  availableModels,
+}: {
+  id: string;
+  availableModels: any[];
+}) {
   const [input, setInput] = useState("");
   const [hasProcessedPendingMessage, setHasProcessedPendingMessage] =
     useState(false);
@@ -944,6 +950,7 @@ export default function ChatArea({ id }: { id: string }) {
 
               <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-1 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md">
                 <PromptInputField
+                  availableModels={availableModels}
                   handleSubmit={handleSubmit}
                   input={input}
                   setInput={setInput}

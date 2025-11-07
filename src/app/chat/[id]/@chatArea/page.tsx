@@ -1,3 +1,4 @@
+import { getVercelAvailableModels } from "@/utils/getVercelAvailableModels";
 import ChatArea from "./ChatArea";
 export default async function ChatPage_ID({
   params,
@@ -5,5 +6,6 @@ export default async function ChatPage_ID({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  return <ChatArea id={id} />;
+  const filteredModels = await getVercelAvailableModels();
+  return <ChatArea id={id} availableModels={filteredModels} />;
 }

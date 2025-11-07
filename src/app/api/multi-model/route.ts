@@ -21,7 +21,6 @@ type ExtendedUIMessage = UIMessage & {
 export async function POST(req: Request) {
     try {
         const req_ = await req.json();
-        // console.log(Object.keys(req_))
         const {
             messages,
             chatId: providedChatId,
@@ -37,6 +36,11 @@ export async function POST(req: Request) {
             parentConversationId?: string;
             reasoning?: boolean;
         } = req_;
+
+        // Ai Model
+        /////////////////////////////
+        console.log(ai_model)
+        /////////////////////////////
 
         if (parentConversationId) {
             console.log('ExplainSideChat with parent conversation:', parentConversationId);
@@ -54,22 +58,22 @@ export async function POST(req: Request) {
             });
         }
 
-        let CURRENT_MODEL: LanguageModel | string;
-        if (ai_model == AI_MODELS[0].id) {
-            CURRENT_MODEL = 'deepseek/deepseek-v3.1-terminus'//ollama('deepseek-r1:1.5b');
-        } else if (ai_model == AI_MODELS[1].id) {
-            CURRENT_MODEL = google("gemini-2.5-flash-lite-preview-09-2025");
-        } else if (ai_model == AI_MODELS[2].id) {
-            CURRENT_MODEL = google("gemini-2.5-flash");
-        }
-        else if (ai_model == AI_MODELS[3].id) {
-            CURRENT_MODEL = "minimax/minimax-m2"
-        }
+        // let CURRENT_MODEL: LanguageModel | string;
+        // if (ai_model == AI_MODELS[0].id) {
+        //     CURRENT_MODEL = 'deepseek/deepseek-v3.1-terminus'//ollama('deepseek-r1:1.5b');
+        // } else if (ai_model == AI_MODELS[1].id) {
+        //     CURRENT_MODEL = google("gemini-2.5-flash-lite-preview-09-2025");
+        // } else if (ai_model == AI_MODELS[2].id) {
+        //     CURRENT_MODEL = google("gemini-2.5-flash");
+        // }
+        // else if (ai_model == AI_MODELS[3].id) {
+        //     CURRENT_MODEL = "minimax/minimax-m2"
+        // }
 
-        else {
-            // This Condition Won't Happen Normally (99.9%) - but just in case:
-            CURRENT_MODEL = ollama('deepseek-r1:1.5b'); // default
-        }
+        // else {
+        //     // This Condition Won't Happen Normally (99.9%) - but just in case:
+        //     CURRENT_MODEL = ollama('deepseek-r1:1.5b'); // default
+        // }
 
 
         // Normalize to UIMessage with parts[]; convertToModelMessages expects parts-based UI messages
@@ -127,12 +131,11 @@ export async function POST(req: Request) {
         }
 
         // console.log('REASONING - VALUE-DEP: ' + reasoning)
-        console.log(reasoning)
         const result = streamText({
             prompt,
             // model: google("gemini-2.5-flash-lite-preview-09-2025"),
             // model: ollama('deepseek-r1:1.5b'),
-            model: CURRENT_MODEL,
+            model: ai_model, //CURRENT_MODEL,
             providerOptions:
                 ((reasoning)
                 ) ? {
@@ -156,16 +159,17 @@ export async function POST(req: Request) {
             // Sending metadata when streaming starts:
             messageMetadata: ({ part }): Record<string, string> | undefined => {
                 if (part.type === 'start' || part.type === 'finish') {
-                    if (typeof CURRENT_MODEL === 'string'
-                        // && CURRENT_MODEL.startsWith('minimax/')
-                    ) {
-                        return { model: CURRENT_MODEL }
-                    }
+                    return { model: ai_model }
+                    // if (typeof CURRENT_MODEL === 'string'
+                    //     // && CURRENT_MODEL.startsWith('minimax/')
+                    // ) {
+                    //     return { model: CURRENT_MODEL }
+                    // }
 
-                    else if (typeof CURRENT_MODEL !== 'string') {
-                        return { model: CURRENT_MODEL.modelId }
+                    // else if (typeof CURRENT_MODEL !== 'string') {
+                    //     return { model: CURRENT_MODEL.modelId }
 
-                    }
+                    // }
                 }
             },
         });
