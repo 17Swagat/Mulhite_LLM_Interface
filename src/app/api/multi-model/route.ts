@@ -1,15 +1,19 @@
 import { AI_MODELS } from '@/constants/models';
 import { google } from '@ai-sdk/google'
+import { deepseek } from '@ai-sdk/deepseek'
+import { mistral } from '@ai-sdk/mistral'
 // import { saveChat } from '@/utils/chat-store';
 import { streamText, UIMessage, convertToModelMessages, uiMessageChunkSchema, LanguageModel } from 'ai';
 import { createOllama } from 'ollama-ai-provider-v2';
 import { v7 as uuidv7 } from 'uuid';
 
+import { gateway } from 'ai';
+
 // export const maxDuration = 30;
-const ollama = createOllama({
-    baseURL: 'http://localhost:11434/api',
-    compatibility: 'strict',
-});
+// const ollama = createOllama({
+//     baseURL: 'http://localhost:11434/api',
+//     compatibility: 'strict',
+// });
 
 type ExtendedUIMessage = UIMessage & {
     metadata?: {
@@ -37,10 +41,6 @@ export async function POST(req: Request) {
             reasoning?: boolean;
         } = req_;
 
-        // Ai Model
-        /////////////////////////////
-        console.log(ai_model)
-        /////////////////////////////
 
         if (parentConversationId) {
             console.log('ExplainSideChat with parent conversation:', parentConversationId);
@@ -57,23 +57,6 @@ export async function POST(req: Request) {
                 headers: { 'Content-Type': 'application/json' },
             });
         }
-
-        // let CURRENT_MODEL: LanguageModel | string;
-        // if (ai_model == AI_MODELS[0].id) {
-        //     CURRENT_MODEL = 'deepseek/deepseek-v3.1-terminus'//ollama('deepseek-r1:1.5b');
-        // } else if (ai_model == AI_MODELS[1].id) {
-        //     CURRENT_MODEL = google("gemini-2.5-flash-lite-preview-09-2025");
-        // } else if (ai_model == AI_MODELS[2].id) {
-        //     CURRENT_MODEL = google("gemini-2.5-flash");
-        // }
-        // else if (ai_model == AI_MODELS[3].id) {
-        //     CURRENT_MODEL = "minimax/minimax-m2"
-        // }
-
-        // else {
-        //     // This Condition Won't Happen Normally (99.9%) - but just in case:
-        //     CURRENT_MODEL = ollama('deepseek-r1:1.5b'); // default
-        // }
 
 
         // Normalize to UIMessage with parts[]; convertToModelMessages expects parts-based UI messages
@@ -130,27 +113,43 @@ export async function POST(req: Request) {
             return new Response("Invalid messages payload", { status: 400 });
         }
 
-        // console.log('REASONING - VALUE-DEP: ' + reasoning)
+        console.log('REASONING - VALUE-DEP: ' + reasoning)
         const result = streamText({
             prompt,
             // model: google("gemini-2.5-flash-lite-preview-09-2025"),
             // model: ollama('deepseek-r1:1.5b'),
-            model: ai_model, //CURRENT_MODEL,
+            model: gateway(ai_model),//ai_model, //CURRENT_MODEL,
             providerOptions:
                 ((reasoning)
                 ) ? {
-                    ollama: {
-                        think: true
+                    // ollama: {
+                    //     think: true
+                    // },
 
+                    gateway: {
+                        // what are the different parameters that we could give in here?
                     },
+
 
                     google: {
-                        includeThoughts: true
+                        includeThoughts: reasoning,
                     },
+
+                    deepseek: {
+                        reasoning: reasoning,
+                    },
+
+                    mistral: {
+
+                    }
+
                 } : undefined
         }
         );
 
+        // Getting [Answer-cost] from provider metadata:
+        const data = await result.providerMetadata;
+        const answerCost = (data!.gateway as any).cost
 
         return result.toUIMessageStreamResponse({
             originalMessages: messages,
@@ -158,18 +157,11 @@ export async function POST(req: Request) {
 
             // Sending metadata when streaming starts:
             messageMetadata: ({ part }): Record<string, string> | undefined => {
-                if (part.type === 'start' || part.type === 'finish') {
+                if (part.type === 'start') {
                     return { model: ai_model }
-                    // if (typeof CURRENT_MODEL === 'string'
-                    //     // && CURRENT_MODEL.startsWith('minimax/')
-                    // ) {
-                    //     return { model: CURRENT_MODEL }
-                    // }
-
-                    // else if (typeof CURRENT_MODEL !== 'string') {
-                    //     return { model: CURRENT_MODEL.modelId }
-
-                    // }
+                }
+                if (part.type === 'finish') {
+                    return { model: ai_model, cost: answerCost }
                 }
             },
         });

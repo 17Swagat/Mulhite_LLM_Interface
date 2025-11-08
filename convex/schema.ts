@@ -46,6 +46,9 @@ export default defineSchema({
         // TODO: "Must find a way to <DELETE> it & configure based on the PreSaved-Time (By Convex)"
         timestamp: v.number(),  // Unix timestamp for ordering messages
 
+        // NEW-Field: $COST
+        cost: v.optional(v.string()),
+
         // Removed: id (Convex auto-generates _id)
         // Removed: metadata (not currently used)
     })

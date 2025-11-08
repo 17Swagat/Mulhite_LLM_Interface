@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  HoverCard,
+  HoverCardTrigger,
+  HoverCardContent,
+} from "@radix-ui/react-hover-card";
+
 import { UIMessage, useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useEffect, useState, useRef, useMemo, useCallback } from "react";
@@ -45,6 +51,8 @@ import {
 import { ExplainSideChatContent } from "./ExplainSideChat";
 import { LoadingScreen } from "@/components/my/LoadingScreen";
 import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
+import { useUserQuestionStore } from "@/stores/userQuestionStore";
+import { CircleDollarSignIcon, MessageCircle } from "lucide-react";
 
 export default function ChatArea({
   id,
@@ -53,13 +61,15 @@ export default function ChatArea({
   id: string;
   availableModels: any[];
 }) {
-  const [input, setInput] = useState("");
+  // const [input, setInput] = useState("");
   const [hasProcessedPendingMessage, setHasProcessedPendingMessage] =
     useState(false);
 
   // zustand store:
   const { setActiveChat, addChat, getChatById, updateChatTitle, chats } =
     useChatStore();
+
+  const { question, setQuestion } = useUserQuestionStore();
 
   // Convex queries and mutations
   const conversationId = id as Id<"conversations">;
@@ -128,6 +138,7 @@ export default function ChatArea({
               type: part.type,
               text: part.text,
             })),
+            cost: (msg.metadata as any)?.cost, // | undefined,
           });
 
           if (result && result._id) {
@@ -166,8 +177,8 @@ export default function ChatArea({
       return;
     }
 
-    if (input.trim() && chatStatus === "ready" && id) {
-      const userMessage = input.trim();
+    if (question.trim() && chatStatus === "ready" && id) {
+      const userMessage = question.trim();
 
       // Update chat title with first message if it's the first user message
       if (messages.length === 0) {
@@ -187,6 +198,9 @@ export default function ChatArea({
       }
 
       // Send message to AI (will be saved to Convex in onFinish callback)
+      // Note: useChat automatically sends all messages in the conversation for context
+      // This is necessary for coherent responses but increases cost with each message
+      // To reduce costs, consider implementing a context window limit (e.g., last 20 messages)
       sendMessage(
         {
           text: userMessage,
@@ -200,7 +214,8 @@ export default function ChatArea({
         }
       );
 
-      setInput("");
+      // setInput("");
+      setQuestion("");
     }
   };
 
@@ -247,7 +262,7 @@ export default function ChatArea({
             id: msg._id,
             role: msg.role,
             parts: msg.parts as any, // Type mismatch due to convex schema
-            metadata: { model: msg.ai_model },
+            metadata: { model: msg.ai_model, cost: msg.cost },
           })
         );
 
@@ -731,6 +746,9 @@ export default function ChatArea({
             }
           }
 
+          // Cost of the Answer
+          const answerCost = (message.metadata as any).cost ?? null;
+
           // Only consider streaming if it's the last message
           const isLastMessage = messageIndex === messages.length - 1;
           const isCurrentlyStreaming =
@@ -740,23 +758,24 @@ export default function ChatArea({
             <Message from={message.role} key={message.id} className="mb-4">
               <MessageContent className="bg-gray-800 p-3 rounded-lg">
                 {/* Reasoning Block: */}
-                {message.parts.map((part, index) =>
-                  part.type === "reasoning" ? (
-                    <div key={index} className="mb-2">
-                      <Reasoning
-                        className="w-full"
-                        isStreaming={isCurrentlyStreaming}
-                        duration={0}
-                        defaultOpen={false}
-                      >
-                        <ReasoningTrigger />
-                        <ReasoningContent className="bg-yellow-600 text-white p-2 rounded">
-                          {part.text}
-                        </ReasoningContent>
-                      </Reasoning>
-                    </div>
-                  ) : null
-                )}
+                {reasoningOn &&
+                  message.parts.map((part, index) =>
+                    part.type === "reasoning" ? (
+                      <div key={index} className="mb-2">
+                        <Reasoning
+                          className="w-full"
+                          isStreaming={isCurrentlyStreaming}
+                          duration={0}
+                          defaultOpen={false}
+                        >
+                          <ReasoningTrigger />
+                          <ReasoningContent className="bg-yellow-600 text-white p-2 rounded">
+                            {part.text}
+                          </ReasoningContent>
+                        </Reasoning>
+                      </div>
+                    ) : null
+                  )}
 
                 {/* Answer Block: */}
                 {message.parts.map((part, index) => {
@@ -785,10 +804,28 @@ export default function ChatArea({
                           onDeleteHighlight={handleDeleteHighlight}
                           onOpenExplainSideChat={handleOpenExplainSideChat}
                         />
+
+                        <HoverCard openDelay={100} closeDelay={100}>
+                          <HoverCardTrigger asChild>
+                            <CircleDollarSignIcon
+                              size={24}
+                              className="text-white bg-green-900 rounded-full mt-3"
+                            />
+                          </HoverCardTrigger>
+                          <HoverCardContent className="w-full z-50000">
+                            <div className="flex items-center gap-4 bg-black text-white text-[18px] p-2 rounded-sm">
+                              Answer Cost:
+                              <span className="text-green-600 font-semibold">
+                                <span className="text-white">$</span>
+                                {answerCost}
+                              </span>
+                            </div>
+                          </HoverCardContent>
+                        </HoverCard>
                       </div>
                     );
                   } else {
-                    // User messages: Render without highlight support
+                    // 👤 [USER's QUESTION]: "Render without highlight support"
                     return (
                       <Response key={index + message.id} className="text-lg">
                         {part.text || ""}
@@ -952,8 +989,8 @@ export default function ChatArea({
                 <PromptInputField
                   availableModels={availableModels}
                   handleSubmit={handleSubmit}
-                  input={input}
-                  setInput={setInput}
+                  // input={input}
+                  // setInput={setInput}
                   chatStatus={chatStatus}
                   inConversation={true}
                 />

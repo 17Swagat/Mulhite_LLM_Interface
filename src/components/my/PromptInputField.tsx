@@ -26,7 +26,7 @@ import type { ChatStatus } from "ai";
 import scrollbarStyle from "./PromptInputField.module.css";
 
 // Hooks:=>
-import { memo } from "react";
+import { memo, startTransition } from "react";
 
 // constants:
 
@@ -46,18 +46,19 @@ import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import { Avatar } from "../ui/avatar";
+import { useUserQuestionStore } from "@/stores/userQuestionStore";
 
 export const PromptInputField = memo(function PromptInputField({
   handleSubmit,
-  input,
-  setInput,
+  // input,
+  // setInput,
   chatStatus,
   inConversation = false,
   availableModels,
 }: {
   handleSubmit: (e: React.FormEvent) => void;
-  input: string;
-  setInput: (value: string) => void;
+  // input: string;
+  // setInput: (value: string) => void;
   chatStatus: ChatStatus;
   inConversation?: boolean;
   availableModels: any;
@@ -65,15 +66,23 @@ export const PromptInputField = memo(function PromptInputField({
   const { parentChatModel, setParentChatModel, reasoningOn, setReasoningOn } =
     useSelectedAIModelStore();
 
+  const { question, setQuestion } = useUserQuestionStore();
+
   return (
     <PromptInput onSubmit={handleSubmit}>
       <PromptInputTextarea
         className={`max-h-[16lh] ${scrollbarStyle.promptInput_Scrollbar}`}
-        value={input}
-        onChange={(e) => setInput(e.currentTarget.value)}
+        value={question} //{input}
+        onChange={(e) => {
+          // setQuestion(e.target.value);
+          startTransition(() => {
+            setQuestion(e.target.value);
+          });
+        }}
         disabled={chatStatus === "streaming"}
-        placeholder="What do you want to learn about?"
+        // placeholder="What do you want to learn about?"
       />
+
       <PromptInputToolbar>
         <PromptInputTools className="flex justify-between w-full">
           {/* Model Selection */}
@@ -91,7 +100,7 @@ export const PromptInputField = memo(function PromptInputField({
                   <PromptInputModelSelectItem
                     key={model.id}
                     value={model.id}
-                    className="flex  w-full"
+                    className="flex w-full"
                   >
                     <HoverModelInfoCard model={model} />
                     {model.name}
@@ -123,8 +132,13 @@ export const PromptInputField = memo(function PromptInputField({
           className="transition duration-300 ease-in hover:brightness-105 bg-purple-700 hover:bg-purple-400 active:bg-purple-900"
           disabled={
             (!inConversation &&
-              (chatStatus === "streaming" || !input.trim())) ||
-            (inConversation && !input.trim() && chatStatus === "ready")
+              (chatStatus === "streaming" ||
+                // !input.trim()
+                !question.trim())) ||
+            (inConversation &&
+              // !input.trim()
+              !question.trim() &&
+              chatStatus === "ready")
           }
           status={chatStatus}
         />

@@ -96,7 +96,7 @@ export function HighlightedResponseWithExplain({
       yellow: "rgba(238, 252, 50, 1)", //"rgb(254 240 138)",
       green: "rgba(153, 250, 115, 1)", //"rgb(187 247 208)",
       blue: "rgba(82, 253, 242, 1)", //"rgb(191 219 254)",
-      pink: "rgba(255, 114, 236, 1)",//"rgb(251 207 232)",
+      pink: "rgba(255, 114, 236, 1)", //"rgb(251 207 232)",
       orange: "rgba(247, 173, 36, 1)",
       red: "rgba(253, 107, 107, 1)",
       purple: "rgba(217, 122, 255, 1)",

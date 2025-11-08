@@ -8,6 +8,7 @@ import { Id } from "@/../convex/_generated/dataModel";
 import { PromptInputField } from "@/components/my/PromptInputField";
 // import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 import { LoadingScreen } from "@/components/my/LoadingScreen";
+import { useUserQuestionStore } from "@/stores/userQuestionStore";
 
 export function ChatPage_ClientComponent({
   availableModels,
@@ -15,9 +16,11 @@ export function ChatPage_ClientComponent({
   availableModels: any;
 }) {
   const router = useRouter();
-  const [input, setInput] = useState("");
+  // const [input, setInput] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { addChat, setActiveChat } = useChatStore();
+
+  const { question, setQuestion } = useUserQuestionStore();
 
   // Convex mutation
   const createConversation = useMutation(api.conversations.createConversation);
@@ -29,12 +32,13 @@ export function ChatPage_ClientComponent({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim() && !isSubmitting) {
+    if (question.trim() && !isSubmitting) {
       setIsSubmitting(true);
 
       try {
         // Create conversation in Convex
-        const title = input.substring(0, 50) + (input.length > 50 ? "..." : "");
+        const title =
+          question.substring(0, 50) + (question.length > 50 ? "..." : "");
         const result = await createConversation({ title });
         const conversationId = result._id;
         const now = Date.now();
@@ -49,12 +53,12 @@ export function ChatPage_ClientComponent({
         // Set as active chat
         setActiveChat(conversationId);
         // Store the initial message in sessionStorage with the conversation ID as key
-        sessionStorage.setItem(`pendingMessage_${conversationId}`, input);
+        sessionStorage.setItem(`pendingMessage_${conversationId}`, question);
 
         // Navigate to the chat page with the new ID
         router.push(`/chat/${conversationId}`);
 
-        setInput("");
+        setQuestion("");
       } catch (error) {
         console.error("Error creating chat:", error);
         alert("Failed to create chat. Please try again.");
@@ -88,8 +92,8 @@ export function ChatPage_ClientComponent({
             <PromptInputField
               availableModels={availableModels}
               handleSubmit={handleSubmit}
-              input={input}
-              setInput={setInput}
+              // input={input}
+              // setInput={setInput}
               chatStatus={"ready"}
             />
           </div>

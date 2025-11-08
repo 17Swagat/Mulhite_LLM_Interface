@@ -6,10 +6,10 @@ export async function getVercelAvailableModels() {
     /**
      * CURRENTLY ONLY WANT THE TEXT-BASED MODELS ONLY.
      */
-
     const availableModels = await gateway.getAvailableModels();
+
     const filteredModels = availableModels.models.filter((model) => {
-        if (
+        /*if (
             model.id.includes("gpt-4") ||
             model.id.includes("claude") ||
             model.id.includes("grok") ||
@@ -27,6 +27,13 @@ export async function getVercelAvailableModels() {
             ) {
                 return model;
             }
+        }*/
+
+        const selectedModels = [
+            'magistral-small-2506', 'magistral-medium-2506', 'mistral/ministral-3b'
+        ]
+        if (selectedModels.some((modelName) => model.id.includes(modelName))) {
+            return model;
         }
     })
 
