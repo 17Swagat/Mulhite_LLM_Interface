@@ -132,7 +132,6 @@ export default function ChatArea({
 
         for (const msg of lastTwoMessages) {
           // Check if message is already in Convex to avoid duplicates
-
           const result = await addMessageToConvex({
             conversationId: conversationId,
             ai_model:
@@ -305,11 +304,11 @@ export default function ChatArea({
     }
 
     // Re-Fetch Vercel Credits Left
-    fetch("/api/vercel-models/credits_left/")
-      .then((res) => res.json())
-      .then((data) => {
-        setCredits(data.creditsLeft);
-      });
+    // fetch("/api/vercel-models/credits_left/")
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     setCredits(data.creditsLeft);
+    //   });
   }, [messagesData, setMessages, cursor]);
 
   // Handle loading more messages
@@ -422,6 +421,17 @@ export default function ChatArea({
     messagesData?.hasMore,
     handleLoadMoreMessages,
   ]);
+
+  // Vercel Credits
+
+  // Re-Fetch Vercel Credits Left
+  useEffect(() => {
+    fetch("/api/vercel-models/credits_left/")
+      .then((res) => res.json())
+      .then((data) => {
+        setCredits(data.creditsLeft);
+      });
+  }, []);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   // [Handling Highlights]:===> [START]
@@ -763,16 +773,19 @@ export default function ChatArea({
           if (message.role === "assistant" && message.metadata) {
             const model = (message.metadata as any).model; // NOTE: TYPE-Error
             if (model) {
-              if (model === AI_MODELS[0].id) {
+              if (model.includes("mistral")) {
+                avatar_logo = "/ai-models/mistral.svg";
+              } else if (model.includes("deepseek")) {
                 avatar_logo = "/ai-models/deepseek.svg";
-              } else if (model === AI_MODELS[1].id) {
-                avatar_logo = "/ai-models/gemini.svg";
+              } else if (model.includes("openai")) {
+                avatar_logo = "/ai-models/openai.svg";
               }
             }
           }
 
-          // Cost of the Answer
-          const answerCost = (message.metadata as any).cost ?? null;
+          // Retrive-> [Cost of the Answer]
+          const answerCost = (message.metadata as any).cost;
+          console.log("Cost of message: " + answerCost);
 
           // Only consider streaming if it's the last message
           const isLastMessage = messageIndex === messages.length - 1;

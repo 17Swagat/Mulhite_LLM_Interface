@@ -14,7 +14,10 @@ export async function getVercelAvailableModels() {
             'magistral-small-2506', 'magistral-medium-2506', 'mistral/ministral-3b',
 
             // DeepSeek Models:
-            'deepseek/'
+            'deepseek/',
+
+            // OpenAI Models:
+            'openai/'
         ]
         if (selectedModels.some((modelName) => model.id.includes(modelName))) {
             // console.log(model)

@@ -8,6 +8,7 @@ import { createOllama } from 'ollama-ai-provider-v2';
 import { v7 as uuidv7 } from 'uuid';
 
 import { gateway } from 'ai';
+import { get } from 'http';
 
 // export const maxDuration = 30;
 // const ollama = createOllama({
@@ -117,8 +118,7 @@ export async function POST(req: Request) {
             prompt,
             // system: 'You are a Multi-LLM Model AI assistant specialized in answering questions based on user-provided context. Provide clear and concise answers. You are a teacher and you main goal is to help users understand concepts effectively. Provide step-by-step explanations when necessary, along with examples to illustrate your points.',
             // model: google("gemini-2.5-flash-lite-preview-09-2025"),
-            // model: ollama('deepseek-r1:1.5b'),
-            model: gateway(ai_model),//ai_model, //CURRENT_MODEL,
+            model: gateway(ai_model),
             //     providerOptions:
             //         ((reasoning)
             //         ) ? {
@@ -148,16 +148,49 @@ export async function POST(req: Request) {
         }
         );
 
+
+
         // Getting [Answer-cost] from provider metadata:
-        const data = await result.providerMetadata;
-        const answerCost = (data!.gateway as any).cost
+        // NOTE: [Docs-Reference]: 
+        // NOTE: https://vercel.com/docs/ai-gateway/provider-options#example-provider-metadata-output
+        // FIX: Need to Retreive the cost of the particular message after streaming is done
+        // #1
+
+        // const providerMetadataPromise = result.providerMetadata;
+        // return result.toUIMessageStreamResponse({
+        //     originalMessages: messages,
+        //     sendReasoning: true, //REVIEW:
+        //     messageMetadata: ({ part }): Record<string, string> | undefined => {
+        //         if (part.type === 'start') {
+        //             return { model: ai_model }
+        //         }
+
+        //         if (part.type === 'finish') {
+        //             setTimeout(async () => {
+        //                 const data = await providerMetadataPromise;
+        //                 const answerCost = (data!.gateway as any).cost
+        //                 console.log('Answer Cost:', answerCost);
+        //                 return { model: ai_model, cost: answerCost }
+        //             }, 1000);
+        //         }
+        //     },
+        // });
+
+        // #2
+        // Wait for metadata first
+        const providerMetadata = result.providerMetadata;
+        // const answerCost = (providerMetadata!.gateway as any).cost;
+        let answerCost = '0';
+        providerMetadata.then((data) => {
+            answerCost = (data!.gateway as any).cost;
+            console.log('Answer Cost:', answerCost);
+        });
 
 
-        return result.toUIMessageStreamResponse({
+        // Now create the stream with the cost already available
+        const stream = result.toUIMessageStreamResponse({
             originalMessages: messages,
-            sendReasoning: true, //REVIEW:
-
-            // Sending metadata when streaming starts:
+            sendReasoning: true,
             messageMetadata: ({ part }): Record<string, string> | undefined => {
                 if (part.type === 'start') {
                     return { model: ai_model }
@@ -167,6 +200,9 @@ export async function POST(req: Request) {
                 }
             },
         });
+
+
+        return stream;
 
     } catch (error) {
         console.error("Error streaming text:", error);
