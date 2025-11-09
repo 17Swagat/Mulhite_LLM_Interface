@@ -96,14 +96,14 @@ export const PromptInputField = memo(function PromptInputField({
 
             <PromptInputModelSelectContent>
               {availableModels.map((model: any) => (
-                <div key={model.id}>
+                <div key={model[0].id}>
                   <PromptInputModelSelectItem
-                    key={model.id}
-                    value={model.id}
+                    key={model[0].id}
+                    value={model[0].id}
                     className="flex w-full"
                   >
                     <HoverModelInfoCard model={model} />
-                    {model.name}
+                    {model[0].name}
                   </PromptInputModelSelectItem>
                 </div>
               ))}
@@ -149,6 +149,8 @@ export const PromptInputField = memo(function PromptInputField({
 
 // Model Info Hover Card Component:
 function HoverModelInfoCard({ model }: { model: any }) {
+  const isModelReasoningCapable = model[1] === "reasoning";
+  model = model[0]; //unpack
   return (
     <HoverCard key={model.id} openDelay={100} closeDelay={100}>
       <HoverCardTrigger asChild>
@@ -159,13 +161,13 @@ function HoverModelInfoCard({ model }: { model: any }) {
       <HoverCardContent
         align="end"
         sideOffset={8}
-        className="w-100 bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-xl border border-purple-500/30 shadow-2xl shadow-purple-600/30 rounded-2xl p-0 animate-in fade-in-0 zoom-in-95 duration-200"
+        className="w-80 bg-linear-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-xl border border-purple-500/30 shadow-2xl shadow-purple-600/30 rounded-2xl p-0 animate-in fade-in-0 zoom-in-95 duration-200"
       >
         <Card className="border-0 shadow-none bg-transparent overflow-hidden">
           <CardHeader className="pb-3 px-4 pt-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-linear-to-br from-purple-500 to-pink-500 flex items-center justify-center">
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
                 <Badge
@@ -177,12 +179,17 @@ function HoverModelInfoCard({ model }: { model: any }) {
               </div>
             </div>
 
-            <CardTitle className="text-lg font-bold text-white px-0">
+            <CardTitle className="text-lg font-bold text-white px-0 flex gap-2 items-center">
               {model.name}
+              <HoverCard openDelay={100} closeDelay={100}>
+                <HoverCardTrigger asChild>
+                  <InfoIcon className="w-4 h-4 inline-block text-gray-400" />
+                </HoverCardTrigger>
+                <HoverCardContent className="bg-purple-800 text-white p-2 rounded-md">
+                  <p className="text-sm">{model.description}</p>
+                </HoverCardContent>
+              </HoverCard>
             </CardTitle>
-            <CardDescription className="text-gray-400 text-sm">
-              {model.description}
-            </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4 pt-0 px-4 pb-4">
@@ -249,9 +256,20 @@ function HoverModelInfoCard({ model }: { model: any }) {
               <div className="flex justify-between">
                 <span>Type</span>
                 <span className="font-mono text-pink-400 capitalize">
-                  {model.modelType}
+                  {/* {model.modelType} */}
+                  {isModelReasoningCapable ? (
+                    <BrainIcon className="w-3.5 h-3.5 inline-block ml-1 text-green-500" />
+                  ) : (
+                    "Non-Reasoning"
+                  )}
                 </span>
               </div>
+
+              {/* {isModelReasoningCapable && (
+                <div className="flex justify-between">
+                  <BrainIcon className="w-3.5 h-3.5 inline-block ml-1 text-green-500" />
+                </div>
+              )} */}
             </div>
           </CardContent>
         </Card>

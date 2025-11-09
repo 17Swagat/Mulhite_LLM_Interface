@@ -113,37 +113,38 @@ export async function POST(req: Request) {
             return new Response("Invalid messages payload", { status: 400 });
         }
 
-        console.log('REASONING - VALUE-DEP: ' + reasoning)
         const result = streamText({
             prompt,
+            // system: 'You are a Multi-LLM Model AI assistant specialized in answering questions based on user-provided context. Provide clear and concise answers. You are a teacher and you main goal is to help users understand concepts effectively. Provide step-by-step explanations when necessary, along with examples to illustrate your points.',
             // model: google("gemini-2.5-flash-lite-preview-09-2025"),
             // model: ollama('deepseek-r1:1.5b'),
             model: gateway(ai_model),//ai_model, //CURRENT_MODEL,
-            providerOptions:
-                ((reasoning)
-                ) ? {
-                    // ollama: {
-                    //     think: true
-                    // },
+            //     providerOptions:
+            //         ((reasoning)
+            //         ) ? {
+            //             // ollama: {
+            //             //     think: true
+            //             // },
 
-                    gateway: {
-                        // what are the different parameters that we could give in here?
-                    },
+            //             gateway: {
+            //                 // what are the different parameters that we could give in here?
+            //             },
 
 
-                    google: {
-                        includeThoughts: reasoning,
-                    },
+            //             google: {
+            //                 includeThoughts: reasoning,
+            //             },
 
-                    deepseek: {
-                        reasoning: reasoning,
-                    },
+            //             deepseek: {
+            //                 reasoning: reasoning,
+            //             },
 
-                    mistral: {
+            //             mistral: {
 
-                    }
+            //             }
 
-                } : undefined
+            //         } : undefined
+            // }
         }
         );
 
@@ -154,7 +155,7 @@ export async function POST(req: Request) {
 
         return result.toUIMessageStreamResponse({
             originalMessages: messages,
-            sendReasoning: reasoning, // REVIEW:
+            sendReasoning: true, //REVIEW:
 
             // Sending metadata when streaming starts:
             messageMetadata: ({ part }): Record<string, string> | undefined => {

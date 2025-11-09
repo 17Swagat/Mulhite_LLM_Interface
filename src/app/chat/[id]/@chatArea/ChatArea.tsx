@@ -63,6 +63,10 @@ export default function ChatArea({
   availableModels: any[];
   // children: React.ReactNode;
 }) {
+  // 💵💵
+  // Vercel-Credits-Left:
+  const [credits, setCredits] = useState(0);
+
   // const [input, setInput] = useState("");
   const [hasProcessedPendingMessage, setHasProcessedPendingMessage] =
     useState(false);
@@ -167,6 +171,12 @@ export default function ChatArea({
         if (error?.message?.includes("maximum limit")) {
           alert(error.message);
         }
+      } finally {
+        fetch("/api/vercel-models/credits_left/")
+          .then((res) => res.json())
+          .then((data) => {
+            setCredits(data.creditsLeft);
+          });
       }
     },
   });
@@ -218,6 +228,13 @@ export default function ChatArea({
 
       // setInput("");
       setQuestion("");
+
+      // Re-Fetch Vercel Credits Left
+      // fetch("/api/vercel-models/credits_left/")
+      //   .then((res) => res.json())
+      //   .then((data) => {
+      //     setCredits(data.creditsLeft);
+      //   });
     }
   };
 
@@ -286,6 +303,13 @@ export default function ChatArea({
         }
       }
     }
+
+    // Re-Fetch Vercel Credits Left
+    fetch("/api/vercel-models/credits_left/")
+      .then((res) => res.json())
+      .then((data) => {
+        setCredits(data.creditsLeft);
+      });
   }, [messagesData, setMessages, cursor]);
 
   // Handle loading more messages
@@ -759,24 +783,24 @@ export default function ChatArea({
             <Message from={message.role} key={message.id} className="mb-4">
               <MessageContent className="bg-gray-800 p-3 rounded-lg">
                 {/* Reasoning Block: */}
-                {reasoningOn &&
-                  message.parts.map((part, index) =>
-                    part.type === "reasoning" ? (
-                      <div key={index} className="mb-2">
-                        <Reasoning
-                          className="w-full"
-                          isStreaming={isCurrentlyStreaming}
-                          duration={0}
-                          defaultOpen={false}
-                        >
-                          <ReasoningTrigger />
-                          <ReasoningContent className="bg-yellow-600 text-white p-2 rounded">
-                            {part.text}
-                          </ReasoningContent>
-                        </Reasoning>
-                      </div>
-                    ) : null
-                  )}
+                {/* {reasoningOn && */}
+                {message.parts.map((part, index) =>
+                  part.type === "reasoning" ? (
+                    <div key={index} className="mb-2">
+                      <Reasoning
+                        className="w-full"
+                        isStreaming={isCurrentlyStreaming}
+                        duration={0}
+                        defaultOpen={false}
+                      >
+                        <ReasoningTrigger />
+                        <ReasoningContent className="bg-yellow-600 text-white p-2 rounded">
+                          {part.text}
+                        </ReasoningContent>
+                      </Reasoning>
+                    </div>
+                  ) : null
+                )}
 
                 {/* Answer Block: */}
                 {message.parts.map((part, index) => {
@@ -955,14 +979,9 @@ export default function ChatArea({
 
   // 💵💵
   // Vercel-Credits-Left
-  const [credits, setCredits] = useState(0);
-  useEffect(() => {
-    fetch("/api/vercel-models/credits_left/")
-      .then((res) => res.json())
-      .then((data) => {
-        setCredits(data.creditsLeft);
-      });
-  }, [messages, sendMessage, messagesData, setMessages]);
+  // const [credits, setCredits] = useState(0);
+  // useEffect(() => {
+  // }, [messages, sendMessage]);
 
   // <ChatNotFound>:=>
   const conversationExists = useQuery(
