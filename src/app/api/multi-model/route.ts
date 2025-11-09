@@ -151,6 +151,7 @@ export async function POST(req: Request) {
         const data = await result.providerMetadata;
         const answerCost = (data!.gateway as any).cost
 
+
         return result.toUIMessageStreamResponse({
             originalMessages: messages,
             sendReasoning: reasoning, // REVIEW:

@@ -7,7 +7,7 @@ import {
 } from "@radix-ui/react-hover-card";
 
 import { UIMessage, useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
+import { DefaultChatTransport, gateway } from "ai";
 import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { Response } from "@/components/ui/shadcn-io/ai/response";
 import {
@@ -57,9 +57,11 @@ import { CircleDollarSignIcon, MessageCircle } from "lucide-react";
 export default function ChatArea({
   id,
   availableModels,
-}: {
+}: // children,
+{
   id: string;
   availableModels: any[];
+  // children: React.ReactNode;
 }) {
   // const [input, setInput] = useState("");
   const [hasProcessedPendingMessage, setHasProcessedPendingMessage] =
@@ -197,11 +199,11 @@ export default function ChatArea({
         }
       }
 
-      // Send message to AI (will be saved to Convex in onFinish callback)
-      // Note: useChat automatically sends all messages in the conversation for context
+      // NOTE: useChat automatically sends all messages in the conversation for context
       // This is necessary for coherent responses but increases cost with each message
       // To reduce costs, consider implementing a context window limit (e.g., last 20 messages)
       sendMessage(
+        // Send message to AI (will be saved to Convex in onFinish callback)
         {
           text: userMessage,
           metadata: { chatId: id },
@@ -361,7 +363,6 @@ export default function ChatArea({
 
   // Intersection observer for auto-loading older messages
   const loadMoreTriggerRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     // Only set up observer if there are actually more messages to load
     if (!messagesData?.hasMore || isLoadingMore || allMessagesLoaded) {
@@ -805,6 +806,7 @@ export default function ChatArea({
                           onOpenExplainSideChat={handleOpenExplainSideChat}
                         />
 
+                        {/* Answer-Cost */}
                         <HoverCard openDelay={100} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <CircleDollarSignIcon
@@ -951,6 +953,17 @@ export default function ChatArea({
     createExplainSideChatMutation,
   ]);
 
+  // 💵💵
+  // Vercel-Credits-Left
+  const [credits, setCredits] = useState(0);
+  useEffect(() => {
+    fetch("/api/vercel-models/credits_left/")
+      .then((res) => res.json())
+      .then((data) => {
+        setCredits(data.creditsLeft);
+      });
+  }, [messages, sendMessage, messagesData, setMessages]);
+
   // <ChatNotFound>:=>
   const conversationExists = useQuery(
     api.conversations.isConversationOwnedByUser,
@@ -985,6 +998,10 @@ export default function ChatArea({
               </ConversationContent>
               <ConversationScrollButton className="bottom-35 bg-gray-800/55 border-0 hover:bg-gray-500 hover:text-white z-20" />
 
+              {/* Credits Left */}
+              <CreditsLeft credits={credits} />
+
+              {/* Input-Field */}
               <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-1 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md">
                 <PromptInputField
                   availableModels={availableModels}
@@ -1012,5 +1029,27 @@ export default function ChatArea({
         <LoadingScreen />
       </AuthLoading>
     </>
+  );
+}
+
+function CreditsLeft({ credits }: { credits: number }) {
+  return (
+    <HoverCard openDelay={100} closeDelay={100}>
+      <HoverCardTrigger className="fixed top-0 right-8" asChild>
+        <CircleDollarSignIcon
+          size={32}
+          className="text-white bg-green-700 rounded-full mt-3"
+        />
+      </HoverCardTrigger>
+      <HoverCardContent className="w-full z-50000">
+        <div className="flex gap-2 bg-black text-white text-[18px] p-1 rounded-sm">
+          <span className="underline">Credits-Left:</span>
+          <span className="text-green-600 font-semibold">
+            <span className="text-white">$</span>
+            {credits}
+          </span>
+        </div>
+      </HoverCardContent>
+    </HoverCard>
   );
 }

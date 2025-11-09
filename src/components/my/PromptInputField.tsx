@@ -159,7 +159,7 @@ function HoverModelInfoCard({ model }: { model: any }) {
       <HoverCardContent
         align="end"
         sideOffset={8}
-        className="w-80 bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-xl border border-purple-500/30 shadow-2xl shadow-purple-600/30 rounded-2xl p-0 animate-in fade-in-0 zoom-in-95 duration-200"
+        className="w-100 bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-xl border border-purple-500/30 shadow-2xl shadow-purple-600/30 rounded-2xl p-0 animate-in fade-in-0 zoom-in-95 duration-200"
       >
         <Card className="border-0 shadow-none bg-transparent overflow-hidden">
           <CardHeader className="pb-3 px-4 pt-4">
