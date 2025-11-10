@@ -118,8 +118,6 @@ export async function POST(req: Request) {
             prompt,
             // model: google("gemini-2.5-flash-lite-preview-09-2025"),
             model: gateway(ai_model),
-            onFinish: async ({ usage, totalUsage }) => {
-            }
         }
         );
 
@@ -142,13 +140,19 @@ export async function POST(req: Request) {
         const stream = result.toUIMessageStreamResponse({
             originalMessages: messages,
             sendReasoning: true, //REVIEW:
+
             messageMetadata: ({ part }): Record<string, string> | undefined => {
                 if (part.type === 'start') {
                     return { model: ai_model }
                 }
 
                 if (part.type === 'finish') {
-                    return { model: ai_model, totalTokens: part.totalUsage.totalTokens?.toString() || '0', cost: cost }
+                    part.totalUsage.cachedInputTokens
+                    return {
+                        model: ai_model,
+                        totalTokens: part.totalUsage.totalTokens?.toString() || '0',
+                        // tokenInfo: `${part.totalUsage.inputTokens}-${part.totalUsage.outputTokens}-${part.totalUsage.reasoningTokens}-${part.totalUsage.cachedInputTokens}`
+                    }
                 }
             },
         });

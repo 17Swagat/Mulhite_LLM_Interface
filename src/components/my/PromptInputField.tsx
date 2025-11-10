@@ -95,18 +95,20 @@ export const PromptInputField = memo(function PromptInputField({
             </PromptInputModelSelectTrigger>
 
             <PromptInputModelSelectContent>
-              {availableModels.map((model: any) => (
-                <div key={model[0].id}>
-                  <PromptInputModelSelectItem
-                    key={model[0].id}
-                    value={model[0].id}
-                    className="flex w-full"
-                  >
-                    <HoverModelInfoCard model={model} />
-                    {model[0].name}
-                  </PromptInputModelSelectItem>
-                </div>
-              ))}
+              {availableModels.map((model: any) => {
+                return (
+                  <div key={model[0].id}>
+                    <PromptInputModelSelectItem
+                      key={model[0].id}
+                      value={model[0].id}
+                      className="flex w-full"
+                    >
+                      <HoverModelInfoCard model={model} />
+                      {model[0].name}
+                    </PromptInputModelSelectItem>
+                  </div>
+                );
+              })}
             </PromptInputModelSelectContent>
           </PromptInputModelSelect>
 

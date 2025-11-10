@@ -2,6 +2,7 @@
 
 import { gateway } from "ai";
 
+
 export async function getVercelAvailableModels() {
     /**
      * CURRENTLY ONLY WANT THE TEXT-BASED MODELS ONLY.
@@ -24,9 +25,13 @@ export async function getVercelAvailableModels() {
             return model
         }
     })
-        .map((model) => {
+        .map((model): [typeof model, string] => {
             const termsIncludes = ['reasoning', 'thinking']
             if (termsIncludes.some((term) => model.description?.includes(term))) {
+
+                // Pricing note:
+                // model
+
                 return [model, 'reasoning']
             } else {
                 return [model, 'standard']
