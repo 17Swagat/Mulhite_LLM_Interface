@@ -156,53 +156,23 @@ export async function POST(req: Request) {
         // FIX: Need to Retreive the cost of the particular message after streaming is done
         // #1
 
-        // const providerMetadataPromise = result.providerMetadata;
-        // return result.toUIMessageStreamResponse({
-        //     originalMessages: messages,
-        //     sendReasoning: true, //REVIEW:
-        //     messageMetadata: ({ part }): Record<string, string> | undefined => {
-        //         if (part.type === 'start') {
-        //             return { model: ai_model }
-        //         }
-
-        //         if (part.type === 'finish') {
-        //             setTimeout(async () => {
-        //                 const data = await providerMetadataPromise;
-        //                 const answerCost = (data!.gateway as any).cost
-        //                 console.log('Answer Cost:', answerCost);
-        //                 return { model: ai_model, cost: answerCost }
-        //             }, 1000);
-        //         }
-        //     },
-        // });
-
-        // #2
-        // Wait for metadata first
-        const providerMetadata = result.providerMetadata;
-        // const answerCost = (providerMetadata!.gateway as any).cost;
-        let answerCost = '0';
-        providerMetadata.then((data) => {
-            answerCost = (data!.gateway as any).cost;
-            console.log('Answer Cost:', answerCost);
-        });
-
-
-        // Now create the stream with the cost already available
-        const stream = result.toUIMessageStreamResponse({
+        const providerMetadataPromise = result.providerMetadata;
+        return result.toUIMessageStreamResponse({
             originalMessages: messages,
-            sendReasoning: true,
+            sendReasoning: true, //REVIEW:
             messageMetadata: ({ part }): Record<string, string> | undefined => {
                 if (part.type === 'start') {
                     return { model: ai_model }
                 }
+
                 if (part.type === 'finish') {
-                    return { model: ai_model, cost: answerCost }
+                    return { model: ai_model, cost: part.totalUsage.totalTokens?.toString() || '0' }
                 }
             },
         });
 
 
-        return stream;
+
 
     } catch (error) {
         console.error("Error streaming text:", error);

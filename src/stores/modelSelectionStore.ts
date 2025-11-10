@@ -19,6 +19,7 @@ export const useSelectedAIModelStore = create<{
             parentChatModel: AI_MODELS[0].id,
             setParentChatModel: (model) => set({ parentChatModel: model }),
 
+            // TODO: "Need to Remove this value. Does not seem necessary now. As AISDK does not allow <ReasoningButton> token to control whether a model should perform reasoning or not."
             // Reasoning toggle
             reasoningOn: false,
             setReasoningOn: (value) => set({ reasoningOn: value }),

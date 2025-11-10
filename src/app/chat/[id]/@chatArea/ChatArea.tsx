@@ -52,7 +52,7 @@ import { ExplainSideChatContent } from "./ExplainSideChat";
 import { LoadingScreen } from "@/components/my/LoadingScreen";
 import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 import { useUserQuestionStore } from "@/stores/userQuestionStore";
-import { CircleDollarSignIcon, MessageCircle } from "lucide-react";
+import { CircleDollarSignIcon, CpuIcon, MessageCircle } from "lucide-react";
 
 export default function ChatArea({
   id,
@@ -785,7 +785,7 @@ export default function ChatArea({
 
           // Retrive-> [Cost of the Answer]
           const answerCost = (message.metadata as any).cost;
-          console.log("Cost of message: " + answerCost);
+          console.log("Total Tokens: " + answerCost);
 
           // Only consider streaming if it's the last message
           const isLastMessage = messageIndex === messages.length - 1;
@@ -846,16 +846,16 @@ export default function ChatArea({
                         {/* Answer-Cost */}
                         <HoverCard openDelay={100} closeDelay={100}>
                           <HoverCardTrigger asChild>
-                            <CircleDollarSignIcon
+                            <CpuIcon
                               size={24}
                               className="text-white bg-green-900 rounded-full mt-3"
                             />
                           </HoverCardTrigger>
                           <HoverCardContent className="w-full z-50000">
-                            <div className="flex items-center gap-4 bg-black text-white text-[18px] p-2 rounded-sm">
-                              Answer Cost:
+                            <div className="flex items-center gap-1 bg-black text-white text-[18px] p-2 rounded-sm">
+                              Tokens:
                               <span className="text-green-600 font-semibold">
-                                <span className="text-white">$</span>
+                                {/* <span className="text-white">$</span> */}
                                 {answerCost}
                               </span>
                             </div>
