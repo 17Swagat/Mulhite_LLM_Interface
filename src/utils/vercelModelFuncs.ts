@@ -22,17 +22,18 @@ export async function getVercelAvailableModels() {
         ]
         if (selectedModels.some((modelName) => model.id.includes(modelName))) {
             // console.log(model)
-            return model
+            if (model.modelType == "language") {
+                return model
+            }
+        }
+    }).map((model): [typeof model, string] => {
+        const termsIncludes = ['reasoning', 'thinking']
+        if (termsIncludes.some((term) => model.description?.includes(term))) {
+            return [model, 'reasoning']
+        } else {
+            return [model, 'standard']
         }
     })
-        .map((model): [typeof model, string] => {
-            const termsIncludes = ['reasoning', 'thinking']
-            if (termsIncludes.some((term) => model.description?.includes(term))) {
-                return [model, 'reasoning']
-            } else {
-                return [model, 'standard']
-            }
-        })
 
 
     return filteredModels;

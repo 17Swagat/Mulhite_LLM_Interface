@@ -15,7 +15,12 @@ import { Button } from "@/components/ui/button";
 import { SheetTrigger } from "@/components/ui/sheet";
 // import { AI_MODELS } from "@/constants/models";
 import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
-import { HighlighterIcon, ShareIcon, ChevronDown } from "lucide-react";
+import {
+  HighlighterIcon,
+  ShareIcon,
+  ChevronDown,
+  BrainIcon,
+} from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
 const HIGHLIGHT_COLORS = [
@@ -251,17 +256,16 @@ export function ToolbarOnTextSelection({
         >
           <SelectTrigger
             size="sm"
-            className="border-0! 
+            className={`border-0! 
             border-transparent! 
-            bg-transparent! hover:bg-gray-200! p-0! mx-0! my-0! rounded-sm! text-black! hover:text-red-600!"
+            ${
+              explainSideChatModel.includes("openai")
+                ? "bg-white!"
+                : "bg-transparent!"
+            }
+             hover:bg-gray-200! p-0! mx-0! my-0! rounded-sm!`}
           >
-            {/* // className="w-[180px]"> */}
-            <SelectValue
-            // placeholder="Select a Model"
-            // autoSave=""
-            // defaultValue={"deepseek/deepseek-v3.1"}
-            // defaultValue={AI_MODELS[0][0].id}
-            >
+            <SelectValue>
               <span>
                 {explainSideChatModel.includes("deepseek") && (
                   <img
@@ -291,9 +295,33 @@ export function ToolbarOnTextSelection({
               <SelectLabel>AI-Models</SelectLabel>
               {AI_MODELS.map((model) => (
                 <SelectItem key={model[0].id} value={model[0].id}>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center w-full">
+                    {/******************/}
+                    {/* Model Logo */}
+                    {/******************/}
+                    <span className="mr-1">
+                      {model[0].id.includes("deepseek") && (
+                        <img src="/ai-models/deepseek.svg" alt="" sizes="18" />
+                      )}
+                      {model[0].id.includes("mistral") && (
+                        <img src="/ai-models/mistral.svg" alt="" sizes="18" />
+                      )}
+                      {model[0].id.includes("openai") && (
+                        <img src="/ai-models/openai.svg" alt="" sizes="18" />
+                      )}
+                    </span>
+
+                    {/******************/}
+                    {/* Model Name */}
+                    {/******************/}
                     {model[0].name}
-                    <div className="w-8 h-8 bg-amber-400"></div>
+
+                    {/* Model Reasoning or Not? */}
+                    {model[1] === "reasoning" && (
+                      <span className="mx-1">
+                        <BrainIcon size={30} className="text-pink-500" />
+                      </span>
+                    )}
                   </div>
                 </SelectItem>
               ))}
