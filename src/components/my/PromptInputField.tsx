@@ -38,21 +38,16 @@ import { HoverModelInfoCard } from "./HoverModelInfoCard";
 
 export const PromptInputField = memo(function PromptInputField({
   handleSubmit,
-  // input,
-  // setInput,
   chatStatus,
   inConversation = false,
   availableModels,
 }: {
   handleSubmit: (e: React.FormEvent) => void;
-  // input: string;
-  // setInput: (value: string) => void;
   chatStatus: ChatStatus;
   inConversation?: boolean;
   availableModels: any;
 }) {
-  const { parentChatModel, setParentChatModel, reasoningOn, setReasoningOn } =
-    useSelectedAIModelStore();
+  const { parentChatModel, setParentChatModel } = useSelectedAIModelStore();
 
   const { question, setQuestion } = useUserQuestionStore();
 
@@ -60,9 +55,8 @@ export const PromptInputField = memo(function PromptInputField({
     <PromptInput onSubmit={handleSubmit}>
       <PromptInputTextarea
         className={`max-h-[16lh] ${scrollbarStyle.promptInput_Scrollbar}`}
-        value={question} //{input}
+        value={question}
         onChange={(e) => {
-          // setQuestion(e.target.value);
           startTransition(() => {
             setQuestion(e.target.value);
           });
@@ -103,10 +97,9 @@ export const PromptInputField = memo(function PromptInputField({
             </PromptInputModelSelectContent>
           </PromptInputModelSelect>
 
-          <PromptInputButton
+          {/* <PromptInputButton
             onClick={() => {
               setReasoningOn(!reasoningOn);
-              // console.log("Reasoning toggled:", !reasoningOn);
             }}
             className={`mr-2 ${
               reasoningOn
@@ -118,7 +111,7 @@ export const PromptInputField = memo(function PromptInputField({
               className={`${reasoningOn ? "text-black" : ""}`}
               size={16}
             />
-          </PromptInputButton>
+          </PromptInputButton> */}
         </PromptInputTools>
 
         <PromptInputSubmit

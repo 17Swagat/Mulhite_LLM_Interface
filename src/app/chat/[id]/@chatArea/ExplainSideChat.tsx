@@ -331,8 +331,6 @@ export function ExplainSideChatContent({
         <PromptInputField
           availableModels={availableModels}
           handleSubmit={handleSubmit}
-          // input={input}
-          // setInput={setInput}
           chatStatus={chatStatus}
           inConversation={true}
         />

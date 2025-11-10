@@ -225,23 +225,6 @@ export function ToolbarOnTextSelection({
             }}
           >
             Explain
-            {/* <span>
-              {explainSideChatModel.includes("deepseek") && (
-                <img src="/ai-models/deepseek.svg" alt="DeepSeek" sizes="18" />
-              )}
-
-              {explainSideChatModel.includes("gemini") && (
-                <img src="/ai-models/gemini.svg" alt="Gemini" sizes="18" />
-              )}
-
-              {explainSideChatModel.includes("mistral") && (
-                <img src="/ai-models/mistral.svg" alt="Mistral" sizes="18" />
-              )}
-
-              {explainSideChatModel.includes("openai") && (
-                <img src="/ai-models/openai.svg" alt="OpenAI" sizes="18" />
-              )}
-            </span> */}
           </Button>
         </SheetTrigger>
 
@@ -290,7 +273,7 @@ export function ToolbarOnTextSelection({
             </SelectValue>
             {/* <ChevronDown size={18} className="text-gray-600" /> */}
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="dark">
             <SelectGroup>
               <SelectLabel>AI-Models</SelectLabel>
               {AI_MODELS.map((model) => (

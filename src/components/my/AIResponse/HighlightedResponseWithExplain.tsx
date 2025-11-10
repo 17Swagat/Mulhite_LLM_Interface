@@ -409,14 +409,16 @@ export function HighlightedResponseWithExplain({
           Math.min(targetOffset + 10, (targetNode!.textContent || "").length)
         );
 
-        const rect = range.getBoundingClientRect();
-        const absoluteTop = window.scrollY + rect.top;
-        const targetScroll = Math.max(
-          0,
-          absoluteTop - window.innerHeight / 2 + rect.height / 2
-        );
+        const scrollTarget =
+          (range.startContainer instanceof Element
+            ? range.startContainer
+            : range.startContainer?.parentElement) || targetNode!.parentElement;
 
-        window.scrollTo({ top: targetScroll, behavior: "smooth" });
+        scrollTarget?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "nearest",
+        });
 
         setTimeout(() => {
           const el = targetNode!.parentElement;
