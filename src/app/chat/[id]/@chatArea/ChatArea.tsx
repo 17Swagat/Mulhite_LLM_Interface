@@ -41,8 +41,6 @@ import { Highlight } from "@/ctypes/highlights";
 
 import { PromptInputField } from "@/components/my/PromptInputField";
 
-import { AI_MODELS } from "@/constants/models";
-
 import { Sheet } from "@/components/ui/sheet";
 import {
   HighlightedResponseWithExplain,
@@ -52,7 +50,12 @@ import { ExplainSideChatContent } from "./ExplainSideChat";
 import { LoadingScreen } from "@/components/my/LoadingScreen";
 import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 import { useUserQuestionStore } from "@/stores/userQuestionStore";
-import { CircleDollarSignIcon, CpuIcon, MessageCircle } from "lucide-react";
+import {
+  CircleDollarSignIcon,
+  CpuIcon,
+  DollarSignIcon,
+  MessageCircle,
+} from "lucide-react";
 
 export default function ChatArea({
   id,
@@ -843,23 +846,25 @@ export default function ChatArea({
                           onOpenExplainSideChat={handleOpenExplainSideChat}
                         />
 
-                        {/* Answer-Cost */}
-                        <HoverCard openDelay={100} closeDelay={100}>
-                          <HoverCardTrigger asChild>
-                            <CpuIcon
-                              size={24}
-                              className="text-blue-500 bg-transparent rounded-full mt-3"
-                            />
-                          </HoverCardTrigger>
-                          <HoverCardContent className="w-full z-50000">
-                            <div className="flex items-center gap-1 bg-black text-white text-[18px] p-2 rounded-sm">
-                              Total-Tokens:
-                              <span className="text-green-600 font-semibold">
-                                {totalTokens}
-                              </span>
-                            </div>
-                          </HoverCardContent>
-                        </HoverCard>
+                        {/* Answer-Token-Consumption */}
+                        {totalTokens !== undefined && (
+                          <HoverCard openDelay={100} closeDelay={100}>
+                            <HoverCardTrigger asChild>
+                              <CpuIcon
+                                size={24}
+                                className="text-blue-500 bg-transparent rounded-full mt-3"
+                              />
+                            </HoverCardTrigger>
+                            <HoverCardContent className="w-full z-50000">
+                              <div className="flex items-center gap-1 bg-black text-white text-[18px] p-2 rounded-sm">
+                                Total-Tokens:
+                                <span className="text-green-600 font-semibold">
+                                  {totalTokens}
+                                </span>
+                              </div>
+                            </HoverCardContent>
+                          </HoverCard>
+                        )}
                       </div>
                     );
                   } else {
@@ -1012,6 +1017,7 @@ export default function ChatArea({
         <div className="flex flex-col h-screen bg-gray-900 text-white overflow-hidden">
           <Sheet open={openExplainSidebar} onOpenChange={setOpenExplainSidebar}>
             <ToolbarOnTextSelection
+              availableModels={availableModels}
               _selection={_selection}
               selectedTextRect={selectedTextRect}
               onHighlight={handleHighlight}
@@ -1037,8 +1043,6 @@ export default function ChatArea({
                 <PromptInputField
                   availableModels={availableModels}
                   handleSubmit={handleSubmit}
-                  // input={input}
-                  // setInput={setInput}
                   chatStatus={chatStatus}
                   inConversation={true}
                 />
@@ -1047,6 +1051,7 @@ export default function ChatArea({
 
             {activeSideChatId && (
               <ExplainSideChatContent
+                availableModels={availableModels}
                 sideChatId={activeSideChatId}
                 onClose={() => setOpenExplainSidebar(false)}
                 parentConversationId={id}

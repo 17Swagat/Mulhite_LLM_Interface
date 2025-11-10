@@ -1,9 +1,19 @@
 // Toolbar component for highlighting text in assistant messages
 /* eslint-disable @next/next/no-inline-styles -- Positioning requires dynamic styles */
 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { Button } from "@/components/ui/button";
 import { SheetTrigger } from "@/components/ui/sheet";
-import { AI_MODELS } from "@/constants/models";
+// import { AI_MODELS } from "@/constants/models";
 import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 import { HighlighterIcon, ShareIcon, ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
@@ -58,6 +68,7 @@ interface ToolbarOnTextHighlightProps {
   _selection: Selection | null;
   onHighlight?: (selection: Selection, color: string) => void;
   onExplain: (selection: Selection) => void;
+  availableModels: any[];
 }
 
 export function ToolbarOnTextSelection({
@@ -65,11 +76,14 @@ export function ToolbarOnTextSelection({
   _selection,
   onHighlight,
   onExplain,
+  availableModels,
 }: ToolbarOnTextHighlightProps) {
   // Highlights
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState("yellow");
   const dropdownHighlightRef = useRef<HTMLDivElement>(null);
+
+  const AI_MODELS = availableModels;
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -93,6 +107,7 @@ export function ToolbarOnTextSelection({
   const [isModelPickerOpen, setIsModelPickerOpen] = useState(false);
   const dropdownModelRef = useRef<HTMLDivElement>(null);
 
+  // Previous Side-Chat Models
   const { explainSideChatModel, setExplainSideChatModel } =
     useSelectedAIModelStore();
 
@@ -195,7 +210,7 @@ export function ToolbarOnTextSelection({
       </div>
 
       {/* Explaining SideChat Btn*/}
-      <div className="rounded-[10px]  text-white flex items-center">
+      <div className="rounded-[10px] text-white flex items-center">
         <SheetTrigger asChild>
           <Button
             variant="ghost"
@@ -205,19 +220,90 @@ export function ToolbarOnTextSelection({
             }}
           >
             Explain
-            <span>
-              {explainSideChatModel === AI_MODELS[0].id && (
+            {/* <span>
+              {explainSideChatModel.includes("deepseek") && (
                 <img src="/ai-models/deepseek.svg" alt="DeepSeek" sizes="18" />
               )}
 
-              {explainSideChatModel === AI_MODELS[1].id && (
+              {explainSideChatModel.includes("gemini") && (
                 <img src="/ai-models/gemini.svg" alt="Gemini" sizes="18" />
               )}
-            </span>
+
+              {explainSideChatModel.includes("mistral") && (
+                <img src="/ai-models/mistral.svg" alt="Mistral" sizes="18" />
+              )}
+
+              {explainSideChatModel.includes("openai") && (
+                <img src="/ai-models/openai.svg" alt="OpenAI" sizes="18" />
+              )}
+            </span> */}
           </Button>
         </SheetTrigger>
 
-        <button
+        {/* Model Picker Dropdown */}
+        <Select
+          open={isModelPickerOpen}
+          onOpenChange={setIsModelPickerOpen}
+          value={explainSideChatModel}
+          onValueChange={(e) => {
+            setExplainSideChatModel && setExplainSideChatModel(e);
+          }}
+        >
+          <SelectTrigger
+            size="sm"
+            className="border-0! 
+            border-transparent! 
+            bg-transparent! hover:bg-gray-200! p-0! mx-0! my-0! rounded-sm! text-black! hover:text-red-600!"
+          >
+            {/* // className="w-[180px]"> */}
+            <SelectValue
+            // placeholder="Select a Model"
+            // autoSave=""
+            // defaultValue={"deepseek/deepseek-v3.1"}
+            // defaultValue={AI_MODELS[0][0].id}
+            >
+              <span>
+                {explainSideChatModel.includes("deepseek") && (
+                  <img
+                    src="/ai-models/deepseek.svg"
+                    alt="DeepSeek"
+                    sizes="18"
+                  />
+                )}
+
+                {explainSideChatModel.includes("gemini") && (
+                  <img src="/ai-models/gemini.svg" alt="Gemini" sizes="18" />
+                )}
+
+                {explainSideChatModel.includes("mistral") && (
+                  <img src="/ai-models/mistral.svg" alt="Mistral" sizes="18" />
+                )}
+
+                {explainSideChatModel.includes("openai") && (
+                  <img src="/ai-models/openai.svg" alt="OpenAI" sizes="18" />
+                )}
+              </span>
+            </SelectValue>
+            {/* <ChevronDown size={18} className="text-gray-600" /> */}
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>AI-Models</SelectLabel>
+              {AI_MODELS.map((model) => (
+                <SelectItem key={model[0].id} value={model[0].id}>
+                  <div className="flex justify-between">
+                    {model[0].name}
+                    <div className="w-8 h-8 bg-amber-400"></div>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        {/* ************************ */}
+
+        {/* <button
           type="button"
           className="rounded-full hover:bg-gray-100 transition-colors"
           aria-label="Choose Model"
@@ -227,7 +313,6 @@ export function ToolbarOnTextSelection({
           <ChevronDown size={18} className="text-gray-600" />
         </button>
 
-        {/* Model Picker Menu */}
         {isModelPickerOpen && (
           <div
             className="absolute top-full mt-2 right-0 bg-white rounded-lg shadow-xl border border-gray-200 min-w-40 py-1 z-50"
@@ -235,25 +320,25 @@ export function ToolbarOnTextSelection({
           >
             {AI_MODELS.map((model) => (
               <button
-                key={model.id}
+                key={model[0].id}
                 type="button"
                 className={`w-full text-left px-3 py-2 flex items-center gap-3 transition-colors ${
-                  // selectedModel === model.id
-                  explainSideChatModel === model.id
+                  explainSideChatModel === model[0].id
                     ? "bg-gray-100 font-semibold"
                     : "hover:bg-gray-50"
                 }`}
                 onClick={() => {
-                  // setSelectedModel(model.id);
-                  setExplainSideChatModel && setExplainSideChatModel(model.id);
+                  setExplainSideChatModel &&
+                    setExplainSideChatModel(model[0].id);
                   setIsModelPickerOpen(false);
                 }}
               >
-                <span className="text-sm text-gray-700">{model.name}</span>
+                <span className="text-sm text-gray-700">{model[0].name}</span>
               </button>
+
             ))}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

@@ -105,6 +105,9 @@ export const PromptInputField = memo(function PromptInputField({
                     >
                       <HoverModelInfoCard model={model} />
                       {model[0].name}
+                      {model[1] === "reasoning" && (
+                        <BrainIcon size={30} className="text-green-500" />
+                      )}
                     </PromptInputModelSelectItem>
                   </div>
                 );
@@ -157,7 +160,7 @@ function HoverModelInfoCard({ model }: { model: any }) {
     <HoverCard key={model.id} openDelay={100} closeDelay={100}>
       <HoverCardTrigger asChild>
         <Button variant="link">
-          <InfoIcon size={5} />
+          <InfoIcon className="rounded-full text-amber-500" size={8} />
         </Button>
       </HoverCardTrigger>
       <HoverCardContent
@@ -245,7 +248,7 @@ function HoverModelInfoCard({ model }: { model: any }) {
             <div className="text-xs space-y-1.5 text-gray-500">
               <div className="flex justify-between">
                 <span>ID</span>
-                <span className="font-mono text-cyan-400 truncate max-w-[140px]">
+                <span className="font-mono text-cyan-400 max-w-[140px]">
                   {model.specification.modelId}
                 </span>
               </div>
