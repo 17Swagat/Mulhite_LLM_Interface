@@ -143,7 +143,7 @@ export default function ChatArea({
               type: part.type,
               text: part.text,
             })),
-            cost: (msg.metadata as any)?.cost, // | undefined,
+            totalTokens: (msg.metadata as any)?.totalTokens,
           });
 
           if (result && result._id) {
@@ -280,7 +280,7 @@ export default function ChatArea({
             id: msg._id,
             role: msg.role,
             parts: msg.parts as any, // Type mismatch due to convex schema
-            metadata: { model: msg.ai_model, cost: msg.cost },
+            metadata: { model: msg.ai_model, totalTokens: msg.totalTokens },
           })
         );
 
@@ -784,8 +784,8 @@ export default function ChatArea({
           }
 
           // Retrive-> [Cost of the Answer]
-          const answerCost = (message.metadata as any).cost;
-          console.log("Total Tokens: " + answerCost);
+          const totalTokens = (message.metadata as any).totalTokens;
+          // console.log("Total Tokens: " + answerCost);
 
           // Only consider streaming if it's the last message
           const isLastMessage = messageIndex === messages.length - 1;
@@ -848,15 +848,14 @@ export default function ChatArea({
                           <HoverCardTrigger asChild>
                             <CpuIcon
                               size={24}
-                              className="text-white bg-green-900 rounded-full mt-3"
+                              className="text-blue-500 bg-transparent rounded-full mt-3"
                             />
                           </HoverCardTrigger>
                           <HoverCardContent className="w-full z-50000">
                             <div className="flex items-center gap-1 bg-black text-white text-[18px] p-2 rounded-sm">
-                              Tokens:
+                              Total-Tokens:
                               <span className="text-green-600 font-semibold">
-                                {/* <span className="text-white">$</span> */}
-                                {answerCost}
+                                {totalTokens}
                               </span>
                             </div>
                           </HoverCardContent>

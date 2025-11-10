@@ -252,7 +252,7 @@ export const addMessage = mutation({
                 text: v.optional(v.string()),
             })
         ),
-        cost: v.optional(v.string()),
+        totalTokens: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         await ensureUserOwnsConvoMutation(ctx, { conversationId: args.conversationId });
@@ -264,7 +264,7 @@ export const addMessage = mutation({
             ai_model: args.ai_model,
             role: args.role,
             parts: args.parts,
-            cost: args.cost, // COST!! 💵
+            totalTokens: args.totalTokens, // COST!! 💵
 
             timestamp: now, // TODO: "Must find a way to <DELETE> it & configure based on the PreSaved-Time (By Convex)"
         });

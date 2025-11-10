@@ -47,7 +47,7 @@ export default defineSchema({
         timestamp: v.number(),  // Unix timestamp for ordering messages
 
         // NEW-Field: $COST
-        cost: v.optional(v.string()),
+        totalTokens: v.optional(v.string()),
 
         // Removed: id (Convex auto-generates _id)
         // Removed: metadata (not currently used)

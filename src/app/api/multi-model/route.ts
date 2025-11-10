@@ -116,35 +116,10 @@ export async function POST(req: Request) {
 
         const result = streamText({
             prompt,
-            // system: 'You are a Multi-LLM Model AI assistant specialized in answering questions based on user-provided context. Provide clear and concise answers. You are a teacher and you main goal is to help users understand concepts effectively. Provide step-by-step explanations when necessary, along with examples to illustrate your points.',
             // model: google("gemini-2.5-flash-lite-preview-09-2025"),
             model: gateway(ai_model),
-            //     providerOptions:
-            //         ((reasoning)
-            //         ) ? {
-            //             // ollama: {
-            //             //     think: true
-            //             // },
-
-            //             gateway: {
-            //                 // what are the different parameters that we could give in here?
-            //             },
-
-
-            //             google: {
-            //                 includeThoughts: reasoning,
-            //             },
-
-            //             deepseek: {
-            //                 reasoning: reasoning,
-            //             },
-
-            //             mistral: {
-
-            //             }
-
-            //         } : undefined
-            // }
+            onFinish: async ({ usage, totalUsage }) => {
+            }
         }
         );
 
@@ -154,10 +129,17 @@ export async function POST(req: Request) {
         // NOTE: [Docs-Reference]: 
         // NOTE: https://vercel.com/docs/ai-gateway/provider-options#example-provider-metadata-output
         // FIX: Need to Retreive the cost of the particular message after streaming is done
+        // NOTE:
+        // ==> Currently, abandoning the idea of providing the answer cost (For now) as it deals to either choosing between <Having proper streaming [where we can't get the final cost]> OR <Getting the cost [but losing streaming]>.
         // #1
+        // const providerMetadataPromise = result.providerMetadata;
+        // const data = await providerMetadataPromise;
+        // const cost = (data!.gateway as any).cost
 
-        const providerMetadataPromise = result.providerMetadata;
-        return result.toUIMessageStreamResponse({
+
+        // #2
+        // Sending Just the tokens used for the response:
+        const stream = result.toUIMessageStreamResponse({
             originalMessages: messages,
             sendReasoning: true, //REVIEW:
             messageMetadata: ({ part }): Record<string, string> | undefined => {
@@ -166,12 +148,14 @@ export async function POST(req: Request) {
                 }
 
                 if (part.type === 'finish') {
-                    return { model: ai_model, cost: part.totalUsage.totalTokens?.toString() || '0' }
+                    return { model: ai_model, totalTokens: part.totalUsage.totalTokens?.toString() || '0', cost: cost }
                 }
             },
         });
 
 
+
+        return stream;
 
 
     } catch (error) {
