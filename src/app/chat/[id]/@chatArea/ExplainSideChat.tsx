@@ -320,14 +320,6 @@ export function ExplainSideChatContent({
 
       {/* Input Area */}
       <div className="border-0 flex items-center justify-center  mx-2.5">
-        {/* <PromptInputField
-          handleSubmit={handleSubmit}
-          input={input}
-          setInput={setInput}
-          chatStatus={chatStatus === "streaming" ? "streaming" : "ready"}
-          inConversation={true}
-        /> */}
-
         <PromptInputField
           availableModels={availableModels}
           handleSubmit={handleSubmit}
