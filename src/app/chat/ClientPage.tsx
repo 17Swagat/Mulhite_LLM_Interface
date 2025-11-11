@@ -9,6 +9,7 @@ import { PromptInputField } from "@/components/my/PromptInputField";
 // import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 import { LoadingScreen } from "@/components/my/LoadingScreen";
 import { useUserQuestionStore } from "@/stores/userQuestionStore";
+import { CreditsLeft } from "@/components/my/CreditsLeft";
 
 export function ChatPage_ClientComponent({
   availableModels,
@@ -16,7 +17,6 @@ export function ChatPage_ClientComponent({
   availableModels: any;
 }) {
   const router = useRouter();
-  // const [input, setInput] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { addChat, setActiveChat } = useChatStore();
 
@@ -72,8 +72,15 @@ export function ChatPage_ClientComponent({
 
   // Component Mount Check [Otherwise Zustand store has hydration issues]
   const [haveMounted, setHaveMounted] = useState(false);
+  const [credits, setCredits] = useState(0);
+
   useEffect(() => {
     setHaveMounted(true);
+    fetch("/api/vercel-models/credits_left/")
+      .then((res) => res.json())
+      .then((data) => {
+        setCredits(data.creditsLeft);
+      });
   }, []);
 
   if (!haveMounted) {
@@ -82,7 +89,13 @@ export function ChatPage_ClientComponent({
 
   return (
     haveMounted && (
-      <div className="w-full h-screen bg-purple-700/80 text-white flex justify-center items-center">
+      <div
+        className="w-full h-screen 
+     bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c] 
+      text-white flex justify-center items-center"
+      >
+        <CreditsLeft credits={credits} />
+
         <div className="flex flex-col items-center">
           <h1 className="text-3xl mb-2 font-semibold">
             Let's Start Learning 😊

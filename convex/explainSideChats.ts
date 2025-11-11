@@ -138,6 +138,7 @@ export const addExplainSideChatMessage = mutation({
         text: v.optional(v.string()),
       })
     ),
+    ai_model: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const user = await getCurrentUser(ctx);
@@ -155,6 +156,7 @@ export const addExplainSideChatMessage = mutation({
       role: args.role,
       parts: args.parts,
       timestamp: Date.now(),
+      ai_model: args.ai_model,
     });
 
     // Update the side-chat's updatedAt timestamp

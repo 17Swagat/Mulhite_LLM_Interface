@@ -25,7 +25,11 @@ import {
   ConversationContent,
   ConversationScrollButton,
 } from "@/components/ui/shadcn-io/ai/conversation";
-import { Message, MessageContent } from "@/components/ui/shadcn-io/ai/message";
+import {
+  Message,
+  MessageAvatar,
+  MessageContent,
+} from "@/components/ui/shadcn-io/ai/message";
 import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 import {
   Reasoning,
@@ -101,6 +105,10 @@ export function ExplainSideChatContent({
             explainSideChatId: sideChatId as Id<"explainSideChats">,
             role: msg.role as "user" | "assistant",
             parts: msg.parts.map((p: any) => ({ type: p.type, text: p.text })),
+            ai_model:
+              msg.role === "user"
+                ? undefined
+                : ((msg.metadata as any)?.model as string | undefined),
           });
         }
       } catch (e) {
@@ -119,6 +127,8 @@ export function ExplainSideChatContent({
         id: (m as any)._id,
         role: m.role,
         parts: m.parts as any,
+        metadata: { model: m.ai_model },
+        // ai_model: m.ai_model,
       }))
     );
   }, [convexMessages, setMessages, messages.length]);
@@ -263,6 +273,21 @@ export function ExplainSideChatContent({
             const isCurrentlyStreaming =
               chatStatus === "streaming" && isLastMessage;
 
+            // Avatar
+            let avatar_logo: string = "/ai-models/claude.svg";
+            if (msg.role === "assistant" && msg.metadata) {
+              const model = (msg.metadata as any).model; // NOTE: TYPE-Error
+              if (model) {
+                if (model.includes("mistral")) {
+                  avatar_logo = "/ai-models/mistral.svg";
+                } else if (model.includes("deepseek")) {
+                  avatar_logo = "/ai-models/deepseek.svg";
+                } else if (model.includes("openai")) {
+                  avatar_logo = "/ai-models/openai.svg";
+                }
+              }
+            }
+
             return (
               <Message key={messageId} from={msg.role}>
                 <MessageContent>
@@ -300,6 +325,13 @@ export function ExplainSideChatContent({
                     }
                   })}
                 </MessageContent>
+
+                {/* Avatar */}
+                <MessageAvatar
+                  name={msg.role}
+                  src={msg.role == "assistant" ? avatar_logo : "/user.png"}
+                  className="bg-white"
+                />
               </Message>
             );
           })}

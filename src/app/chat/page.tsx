@@ -1,4 +1,4 @@
-import { ChatPage_ClientComponent } from "./client_page";
+import { ChatPage_ClientComponent } from "./ClientPage";
 // import { gateway } from "ai";
 
 import { getVercelAvailableModels } from "@/utils/vercelModelFuncs";

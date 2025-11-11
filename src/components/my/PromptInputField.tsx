@@ -49,7 +49,12 @@ export const PromptInputField = memo(function PromptInputField({
   availableModels: any[];
   isSideChat?: boolean;
 }) {
-  const { parentChatModel, setParentChatModel } = useSelectedAIModelStore();
+  const {
+    parentChatModel,
+    setParentChatModel,
+    explainSideChatModel,
+    setExplainSideChatModel,
+  } = useSelectedAIModelStore();
   const { question, setQuestion, sideChatQuestion, setSideChatQuestion } =
     useUserQuestionStore();
 
@@ -75,8 +80,10 @@ export const PromptInputField = memo(function PromptInputField({
         <PromptInputTools className="flex justify-between w-full">
           {/* Model Selection */}
           <PromptInputModelSelect
-            value={parentChatModel}
-            onValueChange={setParentChatModel}
+            value={isSideChat ? explainSideChatModel : parentChatModel}
+            onValueChange={
+              isSideChat ? setExplainSideChatModel : setParentChatModel
+            }
           >
             <PromptInputModelSelectTrigger>
               <PromptInputModelSelectValue />

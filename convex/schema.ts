@@ -89,6 +89,7 @@ export default defineSchema({
                 text: v.optional(v.string()),  // Text content
             })
         ),
+        ai_model: v.optional(v.string()),  // Model used for this message
         timestamp: v.number(),  // Unix timestamp for ordering
     })
         .index("by_explainSideChatId", ["explainSideChatId"])  // Get all messages in a side-chat

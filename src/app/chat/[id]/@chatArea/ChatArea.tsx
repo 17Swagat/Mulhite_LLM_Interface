@@ -4,7 +4,9 @@ import {
   HoverCard,
   HoverCardTrigger,
   HoverCardContent,
-} from "@radix-ui/react-hover-card";
+} from "@/components/ui/hover-card";
+
+import { CreditsLeft } from "@/components/my/CreditsLeft";
 
 import { UIMessage, useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, gateway } from "ai";
@@ -51,7 +53,6 @@ import { LoadingScreen } from "@/components/my/LoadingScreen";
 import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 import { useUserQuestionStore } from "@/stores/userQuestionStore";
 import {
-  CircleDollarSignIcon,
   CpuIcon,
   DollarSignIcon,
   MessageCircle,
@@ -371,7 +372,7 @@ export default function ChatArea({
           {
             body: {
               model: parentChatModel,
-              reasoningOn: reasoningOn,
+              // reasoningOn: reasoningOn,
             },
           }
         );
@@ -1066,27 +1067,5 @@ export default function ChatArea({
         <LoadingScreen />
       </AuthLoading>
     </>
-  );
-}
-
-function CreditsLeft({ credits }: { credits: number }) {
-  return (
-    <HoverCard openDelay={100} closeDelay={100}>
-      <HoverCardTrigger className="fixed top-0 right-8" asChild>
-        <CircleDollarSignIcon
-          size={32}
-          className="text-white bg-green-700 rounded-full mt-3"
-        />
-      </HoverCardTrigger>
-      <HoverCardContent className="w-full z-50000">
-        <div className="flex gap-2 bg-black text-white text-[18px] p-1 rounded-sm">
-          <span className="underline">Credits-Left:</span>
-          <span className="text-green-600 font-semibold">
-            <span className="text-white">$</span>
-            {credits}
-          </span>
-        </div>
-      </HoverCardContent>
-    </HoverCard>
   );
 }
