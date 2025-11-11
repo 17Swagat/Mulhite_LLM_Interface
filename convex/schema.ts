@@ -48,9 +48,6 @@ export default defineSchema({
 
         // NEW-Field: $COST
         totalTokens: v.optional(v.string()),
-
-        // Removed: id (Convex auto-generates _id)
-        // Removed: metadata (not currently used)
     })
         .index("by_conversationId", ["conversationId"])  // Fast lookup of all messages in a conversation
         .index("by_timestamp", ["timestamp"]),  // Chronological ordering
@@ -77,7 +74,6 @@ export default defineSchema({
         endOffset: v.number(),  // Character offset where selected text ends
         selectedText: v.string(),  // The text that was selected for explanation
         highlightColor: v.string(),  // Color to highlight the clickable text (e.g., "blue", "purple")
-        // createdAt: v.number(),  // Timestamp
         updatedAt: v.number(),  // Last activity timestamp
     })
         .index("by_messageId", ["messageId"])  // Get all side-chats for a message

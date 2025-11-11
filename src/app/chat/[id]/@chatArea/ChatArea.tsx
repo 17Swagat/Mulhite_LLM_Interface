@@ -1049,6 +1049,7 @@ export default function ChatArea({
               </div>
             </Conversation>
 
+            {/* Explain-SideChat */}
             {activeSideChatId && (
               <ExplainSideChatContent
                 availableModels={availableModels}

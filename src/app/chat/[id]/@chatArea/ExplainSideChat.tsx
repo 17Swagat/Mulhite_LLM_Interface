@@ -7,13 +7,11 @@ import {
   SheetHeader,
   SheetTitle,
   SheetDescription,
-  SheetClose,
 } from "@/components/ui/sheet";
 
 import { Button } from "@/components/ui/button";
 import { PromptInputField } from "@/components/my/PromptInputField";
-import { AI_MODELS } from "@/constants/models";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { v7 as uuidv7 } from "uuid";
 import { Trash2 } from "lucide-react";
 import { api } from "@/../convex/_generated/api";
@@ -51,7 +49,6 @@ export function ExplainSideChatContent({
   parentMessages = [],
   availableModels,
 }: ExplainSideChatContentProps) {
-  // const [input, setInput] = useState<string>("");
   const { explainSideChatModel, setExplainSideChatModel } =
     useSelectedAIModelStore();
 
@@ -133,17 +130,11 @@ export function ExplainSideChatContent({
 
     // If there are already messages in Convex, this is an existing chat - don't send initial prompt
     if (convexMessages.length > 0) {
-      // initiatedRef.current = true;
       return;
     }
 
     // Don't send if we already initiated or not ready or already have messages
-    if (
-      // initiatedRef.current ||
-      chatStatus !== "ready" ||
-      messages.length > 0
-    )
-      return;
+    if (chatStatus !== "ready" || messages.length > 0) return;
 
     const pending =
       typeof window !== "undefined"
@@ -151,38 +142,34 @@ export function ExplainSideChatContent({
         : null;
 
     if (pending) {
-      // initiatedRef.current = true;
       sendMessage(
         { text: pending.trim(), metadata: { chatId: sideChatId } },
         {
           body: {
             model: explainSideChatModel,
-            // reasoning: reasoningOn,
           },
         }
       );
       sessionStorage.removeItem(`pendingExplainMessage_${sideChatId}`);
-      // sessionStorage.removeItem(`pendingExplainModel_${sideChatId}`);
       return;
     }
 
     // This shouldn't be needed anymore, but keep as fallback
     // REVIEW: "Will have to check if its important for not."
-    if (sideChat?.selectedText) {
-      // initiatedRef.current = true;
-      sendMessage(
-        {
-          text: `Explain "${sideChat.selectedText}" based on the current conversation.`,
-          metadata: { chatId: sideChatId },
-        },
-        {
-          body: {
-            model: explainSideChatModel,
-            // reasoning: reasoningOn,
-          },
-        }
-      );
-    }
+    // if (sideChat?.selectedText) {
+    //   // initiatedRef.current = true;
+    //   sendMessage(
+    //     {
+    //       text: `Explain "${sideChat.selectedText}" based on the current conversation.`,
+    //       metadata: { chatId: sideChatId },
+    //     },
+    //     {
+    //       body: {
+    //         model: explainSideChatModel,
+    //       },
+    //     }
+    //   );
+    // }
   }, [
     convexMessages,
     chatStatus,
@@ -203,7 +190,6 @@ export function ExplainSideChatContent({
       {
         body: {
           model: explainSideChatModel,
-          // reasoning: reasoningOn,
         },
       }
     );
