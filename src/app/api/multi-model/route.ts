@@ -32,14 +32,14 @@ export async function POST(req: Request) {
             model: ai_model,
             parentMessages,
             parentConversationId,
-            reasoning
+            // reasoning
         }: {
             messages: ExtendedUIMessage[];
             chatId?: string
             model: string
             parentMessages?: ExtendedUIMessage[];
             parentConversationId?: string;
-            reasoning?: boolean;
+            // reasoning?: boolean;
         } = req_;
 
 

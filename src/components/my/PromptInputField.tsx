@@ -41,24 +41,30 @@ export const PromptInputField = memo(function PromptInputField({
   chatStatus,
   inConversation = false,
   availableModels,
+  isSideChat = false,
 }: {
   handleSubmit: (e: React.FormEvent) => void;
   chatStatus: ChatStatus;
   inConversation?: boolean;
-  availableModels: any;
+  availableModels: any[];
+  isSideChat?: boolean;
 }) {
   const { parentChatModel, setParentChatModel } = useSelectedAIModelStore();
-
-  const { question, setQuestion } = useUserQuestionStore();
+  const { question, setQuestion, sideChatQuestion, setSideChatQuestion } =
+    useUserQuestionStore();
 
   return (
     <PromptInput onSubmit={handleSubmit}>
       <PromptInputTextarea
         className={`max-h-[16lh] ${scrollbarStyle.promptInput_Scrollbar}`}
-        value={question}
+        value={isSideChat ? sideChatQuestion : question}
         onChange={(e) => {
           startTransition(() => {
-            setQuestion(e.target.value);
+            if (isSideChat) {
+              setSideChatQuestion(e.target.value);
+            } else {
+              setQuestion(e.target.value);
+            }
           });
         }}
         disabled={chatStatus === "streaming"}
@@ -117,14 +123,16 @@ export const PromptInputField = memo(function PromptInputField({
         <PromptInputSubmit
           className="transition duration-300 ease-in hover:brightness-105 bg-purple-700 hover:bg-purple-400 active:bg-purple-900"
           disabled={
-            (!inConversation &&
-              (chatStatus === "streaming" ||
-                // !input.trim()
-                !question.trim())) ||
-            (inConversation &&
-              // !input.trim()
+            (!isSideChat &&
+              !inConversation &&
+              (chatStatus === "streaming" || !question.trim())) ||
+            (!isSideChat &&
+              inConversation &&
               !question.trim() &&
-              chatStatus === "ready")
+              chatStatus === "ready") ||
+            // // SideChat:
+            (isSideChat && sideChatQuestion.trim() === "")
+            // || (isSideChat && !sideChatQuestion.trim() && chatStatus === "ready")
           }
           status={chatStatus}
         />

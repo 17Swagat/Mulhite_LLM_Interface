@@ -34,6 +34,7 @@ import {
   ReasoningContent,
   ReasoningTrigger,
 } from "@/components/ui/shadcn-io/ai/reasoning";
+import { useUserQuestionStore } from "@/stores/userQuestionStore";
 
 interface ExplainSideChatContentProps {
   sideChatId: string;
@@ -50,9 +51,11 @@ export function ExplainSideChatContent({
   parentMessages = [],
   availableModels,
 }: ExplainSideChatContentProps) {
-  const [input, setInput] = useState<string>("");
-  const { explainSideChatModel, setExplainSideChatModel, reasoningOn } =
+  // const [input, setInput] = useState<string>("");
+  const { explainSideChatModel, setExplainSideChatModel } =
     useSelectedAIModelStore();
+
+  const { sideChatQuestion, setSideChatQuestion } = useUserQuestionStore();
 
   const sideChat = useQuery(api.explainSideChats.getExplainSideChat, {
     sideChatId: sideChatId as Id<"explainSideChats">,
@@ -154,7 +157,7 @@ export function ExplainSideChatContent({
         {
           body: {
             model: explainSideChatModel,
-            reasoning: reasoningOn,
+            // reasoning: reasoningOn,
           },
         }
       );
@@ -175,7 +178,7 @@ export function ExplainSideChatContent({
         {
           body: {
             model: explainSideChatModel,
-            reasoning: reasoningOn,
+            // reasoning: reasoningOn,
           },
         }
       );
@@ -192,15 +195,15 @@ export function ExplainSideChatContent({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
-    const text = input.trim();
-    setInput("");
+    if (!sideChatQuestion.trim()) return;
+    const text = sideChatQuestion.trim();
+    setSideChatQuestion("");
     sendMessage(
       { text, metadata: { chatId: sideChatId } },
       {
         body: {
           model: explainSideChatModel,
-          reasoning: reasoningOn,
+          // reasoning: reasoningOn,
         },
       }
     );
@@ -319,12 +322,13 @@ export function ExplainSideChatContent({
       </Conversation>
 
       {/* Input Area */}
-      <div className="border-0 flex items-center justify-center  mx-2.5">
+      <div className="border-0 flex items-center justify-center mx-2.5">
         <PromptInputField
           availableModels={availableModels}
           handleSubmit={handleSubmit}
           chatStatus={chatStatus}
           inConversation={true}
+          isSideChat={true} // * For turning on SideChat Input
         />
       </div>
     </SheetContent>
