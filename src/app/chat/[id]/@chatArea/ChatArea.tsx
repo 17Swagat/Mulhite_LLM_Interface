@@ -52,11 +52,8 @@ import { ExplainSideChatContent } from "./ExplainSideChat";
 import { LoadingScreen } from "@/components/my/LoadingScreen";
 import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 import { useUserQuestionStore } from "@/stores/userQuestionStore";
-import {
-  CpuIcon,
-  DollarSignIcon,
-  MessageCircle,
-} from "lucide-react";
+import { CpuIcon, DollarSignIcon, MessageCircle } from "lucide-react";
+import { useVercelAICreditsLeft } from "@/stores/aiprovidersCreditsStore";
 
 export default function ChatArea({
   id,
@@ -69,7 +66,9 @@ export default function ChatArea({
 }) {
   // 💵💵
   // Vercel-Credits-Left:
-  const [credits, setCredits] = useState(0);
+  // const [credits, setCredits] = useState(0);
+  const { vercelAiGatewayCredits, setVercelAiGatewayCredits } =
+    useVercelAICreditsLeft();
 
   // const [input, setInput] = useState("");
   const [hasProcessedPendingMessage, setHasProcessedPendingMessage] =
@@ -175,11 +174,12 @@ export default function ChatArea({
           alert(error.message);
         }
       } finally {
-        fetch("/api/vercel-models/credits_left/")
-          .then((res) => res.json())
-          .then((data) => {
-            setCredits(data.creditsLeft);
-          });
+        // fetch("/api/vercel-models/credits_left/")
+        //   .then((res) => res.json())
+        //   .then((data) => {
+        //     setCredits(data.creditsLeft);
+        //   });
+        setVercelAiGatewayCredits();
       }
     },
   });
@@ -231,13 +231,6 @@ export default function ChatArea({
 
       // setInput("");
       setQuestion("");
-
-      // Re-Fetch Vercel Credits Left
-      // fetch("/api/vercel-models/credits_left/")
-      //   .then((res) => res.json())
-      //   .then((data) => {
-      //     setCredits(data.creditsLeft);
-      //   });
     }
   };
 
@@ -306,13 +299,6 @@ export default function ChatArea({
         }
       }
     }
-
-    // Re-Fetch Vercel Credits Left
-    // fetch("/api/vercel-models/credits_left/")
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     setCredits(data.creditsLeft);
-    //   });
   }, [messagesData, setMessages, cursor]);
 
   // Handle loading more messages
@@ -430,11 +416,12 @@ export default function ChatArea({
 
   // Re-Fetch Vercel Credits Left
   useEffect(() => {
-    fetch("/api/vercel-models/credits_left/")
-      .then((res) => res.json())
-      .then((data) => {
-        setCredits(data.creditsLeft);
-      });
+    // fetch("/api/vercel-models/credits_left/")
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     setCredits(data.creditsLeft);
+    //   });
+    setVercelAiGatewayCredits();
   }, []);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -995,12 +982,6 @@ export default function ChatArea({
     createExplainSideChatMutation,
   ]);
 
-  // 💵💵
-  // Vercel-Credits-Left
-  // const [credits, setCredits] = useState(0);
-  // useEffect(() => {
-  // }, [messages, sendMessage]);
-
   // <ChatNotFound>:=>
   const conversationExists = useQuery(
     api.conversations.isConversationOwnedByUser,
@@ -1037,7 +1018,7 @@ export default function ChatArea({
               <ConversationScrollButton className="bottom-35 bg-gray-800/55 border-0 hover:bg-gray-500 hover:text-white z-20" />
 
               {/* Credits Left */}
-              <CreditsLeft credits={credits} />
+              <CreditsLeft credits={vercelAiGatewayCredits} />
 
               {/* Input-Field */}
               <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-1 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md">

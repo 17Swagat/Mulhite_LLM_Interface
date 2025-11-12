@@ -37,6 +37,7 @@ import {
   ReasoningTrigger,
 } from "@/components/ui/shadcn-io/ai/reasoning";
 import { useUserQuestionStore } from "@/stores/userQuestionStore";
+import { useVercelAICreditsLeft } from "@/stores/aiprovidersCreditsStore";
 
 interface ExplainSideChatContentProps {
   sideChatId: string;
@@ -55,6 +56,8 @@ export function ExplainSideChatContent({
 }: ExplainSideChatContentProps) {
   const { explainSideChatModel, setExplainSideChatModel } =
     useSelectedAIModelStore();
+
+  const { setVercelAiGatewayCredits } = useVercelAICreditsLeft();
 
   const { sideChatQuestion, setSideChatQuestion } = useUserQuestionStore();
 
@@ -113,6 +116,8 @@ export function ExplainSideChatContent({
         }
       } catch (e) {
         console.error("Failed to save explain side-chat messages:", e);
+      } finally {
+        setVercelAiGatewayCredits();
       }
     },
   });

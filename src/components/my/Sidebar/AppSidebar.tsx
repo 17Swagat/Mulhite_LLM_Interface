@@ -21,9 +21,7 @@ import { useMutation, usePaginatedQuery, useConvexAuth } from "convex/react";
 // import { api } from "../../../convex/_generated/api";
 import { api } from "@/../convex/_generated/api";
 import cssStyleSidebar from "./AppSidebar.module.css";
-import { Button } from "@/components/ui/button";
-import { UserButton, UserProfile, useUser } from "@clerk/nextjs";
-import { SidebarUser } from "./SidebarUser";
+import { UserButton, useUser } from "@clerk/nextjs";
 
 export function AppSidebar() {
   // ConvexClerk Auth
@@ -35,7 +33,7 @@ export function AppSidebar() {
   const { user } = useUser();
   const userName = user?.fullName || "Unknown User";
   const userEmail = user?.primaryEmailAddress?.emailAddress || "No Email";
-  const userAvatar = user?.imageUrl || "";
+  // const userAvatar = user?.imageUrl || "";
 
   // Ensure user exists in Convex on mount
   const ensureUser = useMutation(api.conversations.ensureUser);
