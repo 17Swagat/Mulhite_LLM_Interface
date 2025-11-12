@@ -31,7 +31,7 @@ const available_models = [
   {
     name: "Gemini",
     imgSrc: "/ai-models/gemini.svg",
-  }
+  },
 ];
 
 export default function Home() {
@@ -93,16 +93,16 @@ export default function Home() {
 
           {/* Features Panel */}
           <div className="flex flex-col gap-25 items-center">
-            <div className="text-white justify-center items-center">
-              <h3 className="text-3xl font-semibold text-blue-500 mb-4 leading-relaxed">
+            <div className="text-white justify-center items-center  p-8 mb-16 bg-linear-to-r bg-green-500 via-purple-500 from-red-500 rounded-3xl shadow-2xl">
+              <h3 className="text-3xl text-white font-bold mb-4 leading-relaxed">
                 Support for Multiple LLMs
               </h3>
-              <p>
-                Simply put your VERCEL AI GATEWAY API Key and use multiple LLMs.
+              <p className="text-2xl mb-6 max-w-3xl font-semibold">
+                Simply put your <span className="text-yellow-200 font-bold underline underline-offset-4">VERCEL AI GATEWAY API KEY</span> and use multiple LLMs.
               </p>
 
               {/* Infinite - Scrolls */}
-              <div className="flex bg-white overflow-hidden">
+              <div className="flex bg-gray-200 overflow-hidden p-2 rounded-2xl">
                 <ul className="flex space-x-16 animate-infinite-scroll max-w-3xl p-2">
                   {/* {[...available_models, ...available_models].map( */}
                   {[...available_models, ...available_models].map(
