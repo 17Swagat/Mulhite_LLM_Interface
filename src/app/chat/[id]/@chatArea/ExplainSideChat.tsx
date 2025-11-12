@@ -242,7 +242,7 @@ export function ExplainSideChatContent({
     // <SheetContent className="bg-gray-900 text-white w-[600px] sm:w-[600px] flex flex-col">
     <SheetContent
       className={` border-0 
-      bg-linear-60 from-purple-600 via-cyan-600 to-green-400 
+      bg-linear-60 from-purple-600 via-cyan-600 to-green-800 
         text-white w-full! sm:w-[500px]! lg:w-[600px]! max-w-none!`}
     >
       <SheetHeader className="border-b border-gray-700 pb-4">
@@ -254,11 +254,11 @@ export function ExplainSideChatContent({
 
           <Button
             variant="ghost"
-            size="icon"
+            size="icon-lg"
             onClick={handleDeleteSideChat}
-            className=" text-red-400 hover:text-red-300 hover:bg-red-900/20"
+            className=" text-red-500 bg-black/95 hover:text-red-600 active:text-blue-500 hover:bg-red-900/20"
           >
-            <Trash2 size={18} />
+            <Trash2 size={28} strokeWidth={2}/>
           </Button>
         </div>
       </SheetHeader>

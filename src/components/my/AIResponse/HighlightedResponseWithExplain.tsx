@@ -467,92 +467,94 @@ export function HighlightedResponseWithExplain({
       {totalItems > 0 && (
         <div className="mt-2 mx-auto rounded-lg flex items-center justify-start gap-2">
           {/* Highlights Menu Popup Menu */}
-          <Popover
-            open={openHighlightsMenu}
-            onOpenChange={setOpenHighlightsMenu}
-          >
-            <PopoverTrigger className="bg-black" asChild>
-              <Button
-                variant="outline"
-                style={{
-                  backgroundColor: openHighlightsMenu ? "#cce60aff" : "white",
-                }}
-              >
-                <HighlighterIcon size={14} />
-                <span>{highlights.length} Highlights</span>
-                <ChevronDown
-                  size={12}
-                  className={`transition-transform ${
-                    openHighlightsMenu ? "rotate-180" : ""
-                  }`}
-                />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80 bg-gray-900 text-white z-50">
-              <div className="mt-2 bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
-                <div className="px-3 py-2 bg-gray-700 border-b border-gray-600 flex items-center justify-between">
-                  <span className="text-sm font-medium text-white">
-                    Highlights & Explains
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setOpenHighlightsMenu(false)}
-                    className="p-1 hover:bg-gray-600 rounded"
-                    aria-label="Close menu"
-                  >
-                    <X size={20} className="text-gray-300" />
-                  </button>
-                </div>
-
-                <div
-                  className={`max-h-80 overflow-y-auto  ${highlightMenuStyles.highlight_scrollbar}`}
+          {highlights.length > 0 && (
+            <Popover
+              open={openHighlightsMenu}
+              onOpenChange={setOpenHighlightsMenu}
+            >
+              <PopoverTrigger className="bg-black" asChild>
+                <Button
+                  variant="outline"
+                  style={{
+                    backgroundColor: openHighlightsMenu ? "#cce60aff" : "white",
+                  }}
                 >
-                  {highlights.length > 0 && (
-                    <>
-                      <div className="px-3 py-2 bg-gray-750 text-xs text-gray-400 font-semibold">
-                        HIGHLIGHTS
-                      </div>
-                      {highlights.map((h, idx) => (
-                        <div
-                          key={h._id}
-                          className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
-                          onClick={() => scrollToHighlight(h)}
-                        >
-                          <div
-                            className={`w-2 h-2 rounded-full mt-1 shrink-0 ${getColorClass(
-                              h.color || "yellow"
-                            )}`}
-                          />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm text-gray-200 line-clamp-2">
-                              {h.text}
-                            </p>
-                            <p className="text-xs text-gray-500 mt-1">
-                              #{idx + 1}
-                            </p>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onDeleteHighlight?.(h._id);
-                            }}
-                            className="p-1 hover:bg-red-900/40 rounded opacity-0 group-hover:opacity-100"
-                            aria-label="Delete highlight"
-                          >
-                            <Trash2
-                              size={12}
-                              className="text-gray-400 hover:text-red-400"
-                            />
-                          </button>
+                  <HighlighterIcon size={14} />
+                  <span>{highlights.length} Highlights</span>
+                  <ChevronDown
+                    size={12}
+                    className={`transition-transform ${
+                      openHighlightsMenu ? "rotate-180" : ""
+                    }`}
+                  />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 bg-gray-900 text-white z-50">
+                <div className="mt-2 bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
+                  <div className="px-3 py-2 bg-gray-700 border-b border-gray-600 flex items-center justify-between">
+                    <span className="text-sm font-medium text-white">
+                      Highlights & Explains
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setOpenHighlightsMenu(false)}
+                      className="p-1 hover:bg-gray-600 rounded"
+                      aria-label="Close menu"
+                    >
+                      <X size={20} className="text-gray-300" />
+                    </button>
+                  </div>
+
+                  <div
+                    className={`max-h-80 overflow-y-auto  ${highlightMenuStyles.highlight_scrollbar}`}
+                  >
+                    {highlights.length > 0 && (
+                      <>
+                        <div className="px-3 py-2 bg-gray-750 text-xs text-gray-400 font-semibold">
+                          HIGHLIGHTS
                         </div>
-                      ))}
-                    </>
-                  )}
+                        {highlights.map((h, idx) => (
+                          <div
+                            key={h._id}
+                            className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
+                            onClick={() => scrollToHighlight(h)}
+                          >
+                            <div
+                              className={`w-2 h-2 rounded-full mt-1 shrink-0 ${getColorClass(
+                                h.color || "yellow"
+                              )}`}
+                            />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm text-gray-200 line-clamp-2">
+                                {h.text}
+                              </p>
+                              <p className="text-xs text-gray-500 mt-1">
+                                #{idx + 1}
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onDeleteHighlight?.(h._id);
+                              }}
+                              className="p-1 hover:bg-red-900/40 rounded opacity-0 group-hover:opacity-100"
+                              aria-label="Delete highlight"
+                            >
+                              <Trash2
+                                size={12}
+                                className="text-gray-400 hover:text-red-400"
+                              />
+                            </button>
+                          </div>
+                        ))}
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </PopoverContent>
-          </Popover>
+              </PopoverContent>
+            </Popover>
+          )}
 
           {/* Explain Popup Menu */}
           {explainSideChats.length > 0 && (

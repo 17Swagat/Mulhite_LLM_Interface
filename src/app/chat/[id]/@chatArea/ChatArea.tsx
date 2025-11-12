@@ -843,7 +843,7 @@ export default function ChatArea({
                                 className="text-blue-500 bg-transparent rounded-full mt-3"
                               />
                             </HoverCardTrigger>
-                            <HoverCardContent className="w-full z-50000">
+                            <HoverCardContent className="w-full z-50000 p-1! bg-linear-to-r from-[#2dd4bf]  to-[#95b5e0] border-0!">
                               <div className="flex items-center gap-1 bg-black text-white text-[18px] p-2 rounded-sm">
                                 Total-Tokens:
                                 <span className="text-green-600 font-semibold">
@@ -1021,7 +1021,7 @@ export default function ChatArea({
               <CreditsLeft credits={vercelAiGatewayCredits} />
 
               {/* Input-Field */}
-              <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-1 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md">
+              <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-0 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md">
                 <PromptInputField
                   availableModels={availableModels}
                   handleSubmit={handleSubmit}

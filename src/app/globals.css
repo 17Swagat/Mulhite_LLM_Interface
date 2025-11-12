@@ -5,7 +5,22 @@
 @custom-variant dark (&:is(.dark *));
 
 
+@keyframes infinite-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-112%);
+  }
+}
+
 @theme inline {
+
+  /* Adding Infinite Scroll (Tailwind v4: use --animate-* to create animate- utilities) */
+  --animate-infinite-scroll: infinite-scroll 5s linear infinite;
+
+
+  /* None animation: */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -43,7 +58,10 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
 }
+
+
 
 :root {
   --radius: 0.625rem;
