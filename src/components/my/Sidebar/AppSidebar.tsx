@@ -11,6 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
 } from "@/components/ui/sidebar";
 // import SidebarItem from "./SidebarItem";
 import SidebarItem from "../SidebarItem";
@@ -20,11 +21,21 @@ import { useMutation, usePaginatedQuery, useConvexAuth } from "convex/react";
 // import { api } from "../../../convex/_generated/api";
 import { api } from "@/../convex/_generated/api";
 import cssStyleSidebar from "./AppSidebar.module.css";
+import { Button } from "@/components/ui/button";
+import { UserButton, UserProfile, useUser } from "@clerk/nextjs";
+import { SidebarUser } from "./SidebarUser";
 
 export function AppSidebar() {
   // ConvexClerk Auth
   const { isLoading: isLoadingAuth, isAuthenticated } = useConvexAuth();
   const { chats, setActiveChat, setChats } = useChatStore();
+
+  // 📌
+  // Get current user Info
+  const { user } = useUser();
+  const userName = user?.fullName || "Unknown User";
+  const userEmail = user?.primaryEmailAddress?.emailAddress || "No Email";
+  const userAvatar = user?.imageUrl || "";
 
   // Ensure user exists in Convex on mount
   const ensureUser = useMutation(api.conversations.ensureUser);
@@ -194,6 +205,44 @@ export function AppSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
+        <SidebarFooter className="border-t border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="flex items-center justify-between p-3 w-full">
+            {/* User Info */}
+            <div className="flex flex-col truncate">
+              <p className="text-sm font-medium text-foreground truncate">
+                {userName}
+              </p>
+              <p className="text-xs text-muted-foreground truncate">
+                {userEmail}
+              </p>
+            </div>
+
+            {/* User Button with Gradient Hover Ring */}
+            <div className="flex-shrink-0">
+              <UserButton
+                userProfileMode="modal"
+                appearance={{
+                  elements: {
+                    avatarBox: `
+                  h-9 w-9 
+                  rounded-full 
+                  ring-2 ring-transparent 
+                  transition-all duration-300 ease-out
+                  hover:ring-4
+                  hover:ring-offset-2 hover:ring-offset-background
+                  hover:shadow-lg
+                  hover:shadow-purple-500/10
+                  bg-gradient-to-br from-purple-400 via-orange-400 to-pink-700 
+                  hover:bg-gradient-to-br hover:from-purple-500 hover:via-orange-500 hover:to-pink-500
+                  p-[2px] 
+                `,
+                    avatarImage: "rounded-full",
+                  },
+                }}
+              />
+            </div>
+          </div>
+        </SidebarFooter>
       </Sidebar>
     </>
   );
