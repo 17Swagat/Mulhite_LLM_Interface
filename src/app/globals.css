@@ -1,24 +1,21 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-
 @custom-variant dark (&:is(.dark *));
 
-
-@keyframes infinite-scroll {
+/* @keyframes infinite-scroll {
   from {
     transform: translateX(0);
   }
   to {
     transform: translateX(-112%);
   }
-}
+} */
 
 @theme inline {
 
   /* Adding Infinite Scroll (Tailwind v4: use --animate-* to create animate- utilities) */
-  --animate-infinite-scroll: infinite-scroll 5s linear infinite;
-
+  /* --animate-infinite-scroll: infinite-scroll 5s linear infinite; */
 
   /* None animation: */
   --color-background: var(--background);
@@ -58,10 +55,20 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --animate-orbit: orbit calc(var(--duration)*1s) linear infinite;
+  @keyframes orbit {
+  0% {
+    transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg));
+
+    }
+  100% {
+    transform: rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px)) rotate(calc((var(--angle) * -1deg) - 360deg));
+
+    }
+
+  }
 
 }
-
-
 
 :root {
   --radius: 0.625rem;
@@ -132,8 +139,6 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -142,5 +147,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-
