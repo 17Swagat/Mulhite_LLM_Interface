@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 // ClerkAuth:
-import { ClerkProvider } from '@clerk/nextjs'
+import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/components/convex_related/ConvexClientProvider";
 
 const geistSans = Geist({
@@ -16,9 +17,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const font_GMonoTrustDisplay = localFont({
+  src: "../../public/fonts/momofont.ttf", // ← Correct relative path
+  display: "swap",
+  variable: "--font-gmono-trust", // Optional: for CSS variable usage
+});
+
 export const metadata: Metadata = {
   title: "Nody - AI Chat & Highlighting",
-  description: "Chat with AI models and highlight important information in conversations",
+  description:
+    "Chat with AI models and highlight important information in conversations",
 };
 
 export default function RootLayout({

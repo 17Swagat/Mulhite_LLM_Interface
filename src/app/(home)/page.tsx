@@ -1,7 +1,19 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Oswald } from "next/font/google";
-import { OrbitingCircles } from "@/components/ui/orbiting-circles";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+
+import { font_GMonoTrustDisplay } from "../layout";
+import { Button } from "@/components/ui/button";
+import {
+  Info,
+  Highlighter,
+  MessageSquareDashedIcon,
+  MessageSquare,
+} from "lucide-react";
 
 const available_models = [
   {
@@ -83,26 +95,78 @@ export default function Home() {
       {/* Problem vs Solution Section */}
       <section className="bg-black py-8 sm:py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-purple-700 text-center mb-8 sm:mb-12">
+          <h2
+            className={`text-3xl sm:text-4xl md:text-5xl font-semibold text-purple-700 text-center mb-8 sm:mb-12 
+             ${font_GMonoTrustDisplay.className}
+              `}
+          >
             F E A T U R E S
           </h2>
 
           {/* Features Panel */}
-          <div className="flex flex-col gap-8 sm:gap-12 md:gap-16 lg:gap-20 items-center">
+          <div
+            className={`flex flex-col gap-8 sm:gap-12 md:gap-16 lg:gap-20 items-center`}
+          >
             <div className="text-white justify-center items-center p-4 sm:p-6 md:p-8 mb-8 sm:mb-12 md:mb-16 bg-linear-to-r bg-green-500 via-purple-500 from-red-500 rounded-2xl sm:rounded-3xl shadow-2xl w-full">
-              <h3 className="text-xl text-center sm:text-2xl md:text-3xl text-white font-bold mb-3 sm:mb-4 leading-relaxed">
+              <h3
+                className={`text-sm text-center sm:text-2xl md:text-3xl text-white  mb-3 sm:mb-4 leading-relaxed ${font_GMonoTrustDisplay.className}`}
+              >
                 Support for Multiple LLMs
               </h3>
-              <p className="text-base sm:text-lg md:text-xl lg:text-3xl mb-4 sm:mb-6 max-w-3xl mx-auto font-semibold px-2">
+              <p className="text-center text-base sm:text-lg md:text-xl lg:text-2xl mb-4 sm:mb-6 max-w-4xl mx-auto font-semibold px-2">
                 Simply put your{" "}
                 <span className="text-yellow-200 font-bold underline underline-offset-2 sm:underline-offset-4">
                   VERCEL AI GATEWAY API KEY
-                </span>{" "}
+                  <sup>
+                    <HoverCard openDelay={200} closeDelay={200}>
+                      <HoverCardTrigger asChild>
+                        {/* <Button variant="link" className=""> */}
+                        <Info
+                          className="text-green-300 inline-block ml-1 mr-2 size-4 lg:size-5"
+                          strokeWidth={3}
+                          // size={22}
+                        />
+                        {/* </Button> */}
+                      </HoverCardTrigger>
+                      <HoverCardContent className="w-80">
+                        <div className="flex justify-between gap-4">
+                          <div className="space-y-1">
+                            <h4 className="text-sm font-semibold">
+                              Vercel AI Gateway
+                            </h4>
+                            <ul className=" text-sm flex flex-col gap-0.5">
+                              <li className="font-semibold text-purple-500">
+                                Get one endpoint to access multiple LLMs.
+                              </li>
+                              <li className="text-blue-500 font-semibold">
+                                Offers tokens at list price from the upstream
+                                providers with{" "}
+                                <span className="text-yellow-500">
+                                  no markup.
+                                </span>
+                              </li>
+                            </ul>
+                            <div className="text-xs mt-2">
+                              {/* Joined December 2021 */}
+                              <Link
+                                href={"https://vercel.com/ai-gateway"}
+                                target="_blank"
+                                className="font-semibold text-blue-500 hover:text-green-800 bg-blue-200 p-1 hover:brightness-90  rounded-lg transition duration-200 ease-in"
+                              >
+                                More information on Vercel AI Gateway{" "}
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      </HoverCardContent>
+                    </HoverCard>
+                  </sup>
+                </span>
                 and use multiple LLMs.
               </p>
 
-              {/* Infinite - Scrolls */}
-              <div className="flex items-center justify-center p-1.5 sm:p-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-slate-300 via-purple-200 to-slate-200">
+              {/* Display Available LLMs */}
+              <div className="flex items-center justify-center p-1.5 sm:p-2 rounded-xl sm:rounded-2xl bg-linear-to-r from-slate-300 via-purple-200 to-slate-200">
                 <ul className="flex space-x-8 sm:space-x-12 md:space-x-16 max-w-3xl p-1.5 sm:p-2">
                   {available_models.map((model, index) => (
                     <li
@@ -134,21 +198,63 @@ export default function Home() {
                 />
               </div>
               <div className="w-full md:w-1/2 px-4">
-                <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold text-blue-500 mb-2 sm:mb-4 leading-relaxed text-center md:text-left">
-                  <span className="bg-[#ffe606] rounded-[5px] p-[3px]">
+                <div className="flex items-center space-x-2">
+                  <Highlighter
+                    className="text-yellow-300 inline-block mb-2 size-6 sm:size-7 md:size-8"
+                    strokeWidth={1.5}
+                  />
+                  <h3
+                    className={`text-xl sm:text-2xl md:text-3xl font-light text-blue-500 mb-2 sm:mb-4 leading-relaxed text-center md:text-left ${font_GMonoTrustDisplay.className}`}
+                  >
+                    <span className="bg-[#ffe606] rounded-[5px] p-[3px]">
+                      Highlight Text
+                    </span>{" "}
+                    in AI Responses
+                  </h3>
+                </div>
+                <p className="text-gray-200 text-md font-semibold mt-4">
+                  <span className="underline decoration-2 underline-offset-2 text-yellow-400">
                     Highlight Text
                   </span>{" "}
-                  in AI Responses
-                </h3>
+                  from responses that seems important to you.
+                  <br />
+                  Helps during{" "}
+                  <span className="underline decoration-2 underline-offset-2 text-green-400">
+                    revision
+                  </span>{" "}
+                  🤓🧠
+                </p>
               </div>
             </div>
 
             {/* Explain-Sidechat-Thread */}
             <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-4 sm:gap-6 md:gap-8 w-full">
               <div className="w-full md:w-1/2 px-4">
-                <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold text-blue-500 mb-2 sm:mb-4 text-center md:text-left">
-                  Explain Sidechat Thread
-                </h3>
+                <div className="flex items-center space-x-2">
+                  <MessageSquare
+                    className="text-orange-300 inline-block mb-2 size-6 sm:size-7 md:size-8"
+                    strokeWidth={2.5}
+                  />
+                  <h3
+                    className={`bg-blue-200 w-fit text-xl sm:text-2xl md:text-3xl font-light text-blue-500 mb-2 sm:mb-4 text-center md:text-left rounded-[5px] p-[3px] ${font_GMonoTrustDisplay.className}`}
+                  >
+                    Explain Sidechat Thread
+                  </h3>
+                </div>
+                <p className="text-gray-200 text-md font-semibold mt-4">
+                  Unable to understand a certain part of the response? <br />{" "}
+                  <span className="text-amber-500">
+                    Just{" "}
+                    <span className="underline decoration-2 underline-offset-2">
+                      select
+                    </span>{" "}
+                    that portion and start a{" "}
+                    <span className="underline decoration-2 underline-offset-2">
+                      sidechat thread
+                    </span>{" "}
+                    related to that portion.
+                  </span>
+                </p>
               </div>
 
               <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl">
