@@ -26,22 +26,23 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex space-x-10 text-lg text-gray-400">
-          <Link href="/features" className="hover:text-white transition">
+        <div className="hidden md:flex space-x-10 text-lg text-gray-400 ">
+          <Link href="#features" className="hover:text-white transition">
             Features
           </Link>
-          <Link href="/pricing" className="hover:text-white transition">
+          <Link href="#pricing" className="hover:text-white transition">
             Pricing
           </Link>
-          <Link href="/tutorial" className="hover:text-white transition">
+          {/* <Link href="/tutorial" className="hover:text-white transition">
             Tutorial
-          </Link>
-          <Link href="/changelog" className="hover:text-white transition">
+          </Link> */}
+          {/* <Link href="/changelog" className="hover:text-white transition">
             Changelog
-          </Link>
+          </Link> */}
         </div>
 
         {/* Right side buttons */}
+        {/*
         <div className="hidden md:flex space-x-4 items-center">
           <SignedOut>
             <SignInButton>
@@ -64,7 +65,7 @@ export default function Navbar() {
               <UserButton />
             </div>
           </SignedIn>
-        </div>
+        </div> */}
 
         {/* Mobile Menu Toggle */}
         <button
@@ -97,7 +98,7 @@ export default function Navbar() {
           >
             Pricing
           </Link>
-          <Link
+          {/* <Link
             href="/tutorial"
             className="hover:text-white transition"
             onClick={() => setIsOpen(false)}
@@ -110,9 +111,9 @@ export default function Navbar() {
             onClick={() => setIsOpen(false)}
           >
             Changelog
-          </Link>
+          </Link> */}
 
-          <div className="flex flex-col gap-3 pt-4 border-t border-gray-700">
+          {/* <div className="flex flex-col gap-3 pt-4 border-t border-gray-700">
             <SignedOut>
               <SignInButton>
                 <button className="bg-gradient-to-r from-purple-700 to-teal-500 text-white rounded-full font-medium text-base h-10 px-4 hover:from-blue-700 hover:to-pink-700 transition">
@@ -131,8 +132,8 @@ export default function Navbar() {
               <div className="bg-linear-to-br from-purple-500 via-blue-500 to-green-500 p-1 rounded-[10px] hover:from-purple-400 hover:via-blue-600 hover:to-pink-500 transition w-10 h-10">
                 <UserButton />
               </div>
-            </SignedIn>
-          </div>
+            </SignedIn> 
+          </div> */}
         </div>
       </div>
     </header>

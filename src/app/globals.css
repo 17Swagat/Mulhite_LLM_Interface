@@ -12,6 +12,10 @@
   }
 } */
 
+html {
+  scroll-behavior: smooth;
+}
+
 @theme inline {
 
   /* Adding Infinite Scroll (Tailwind v4: use --animate-* to create animate- utilities) */

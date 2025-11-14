@@ -91,8 +91,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Problem vs Solution Section */}
-      <section className="bg-black py-8 sm:py-12 md:py-16">
+      <section id="features" className="bg-black py-8 sm:py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2
             className={`text-3xl sm:text-4xl md:text-5xl font-semibold text-purple-400 text-center mb-8 sm:mb-12 
@@ -112,7 +111,7 @@ export default function Home() {
               >
                 Support for Multiple LLMs
               </h3>
-              <p className="text-center text-base sm:text-lg md:text-xl lg:text-2xl mb-4 sm:mb-6 max-w-4xl mx-auto font-semibold px-2">
+              <p className="text-center text-base sm:text-lg md:text-xl lg:text-2xl mb-4 sm:mb-2 max-w-4xl mx-auto font-semibold px-2">
                 Simply put your{" "}
                 <span className="text-yellow-200 font-bold underline underline-offset-2 sm:underline-offset-4">
                   VERCEL AI GATEWAY API KEY
@@ -158,6 +157,10 @@ export default function Home() {
                   </sup>
                 </span>
                 and use multiple LLMs.
+              </p>
+
+              <p className="text-center text-base sm:text-lg md:text-xl lg:text-2xl mb-4 sm:mb-6 max-w-4xl mx-auto font-semibold px-2">
+                Pay credits for what you use. No overhead cost for using LLMs.
               </p>
 
               <div className="flex items-center justify-center p-1.5 sm:p-2 rounded-xl sm:rounded-2xl bg-linear-to-r from-slate-300 via-purple-200 to-slate-200">
@@ -302,7 +305,10 @@ export default function Home() {
       </section>
 
       {/* Pricing Section */}
-      <section className="bg-black text-white py-8 sm:py-12 md:py-16">
+      <section
+        id="pricing"
+        className="bg-black text-white py-8 sm:py-12 md:py-16"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2
             className={`text-2xl sm:text-3xl lg:text-7xl font-bold text-center mb-8 sm:mb-12 px-4 ${font_GMonoTrustDisplay.className} 
