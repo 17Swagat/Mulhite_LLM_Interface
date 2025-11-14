@@ -20,7 +20,7 @@ export default function Navbar() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
         {/* Brand */}
         <Link href="/" className="flex items-center space-x-2">
-          <h1 className="text-3xl font-bold text-white tracking-wider bg-gradient-to-tr from-purple-700 via-teal-600 to-blue-950 px-2 py-1 rounded-lg cursor-pointer hover:bg-gradient-to-tr hover:from-red-400 hover:via-gray-600 hover:to-teal-400 transition duration-700 ease-in-out hover:scale-105">
+          <h1 className="text-3xl font-bold text-white tracking-wider bg-linear-to-tr from-purple-700 via-teal-600 to-blue-950 px-2 py-1 rounded-lg cursor-pointer hover:bg-linear-to-tr hover:from-red-400 hover:via-gray-600 hover:to-teal-400 transition duration-700 ease-in-out hover:scale-105">
             Nody
           </h1>
         </Link>
@@ -45,20 +45,22 @@ export default function Navbar() {
         <div className="hidden md:flex space-x-4 items-center">
           <SignedOut>
             <SignInButton>
-              <button className="bg-gradient-to-r from-purple-700 to-teal-500 text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 hover:from-blue-700 hover:to-pink-700 transition">
+              <button
+                type="button"
+                className="bg-linear-to-r from-purple-700 to-teal-500 text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 hover:from-blue-700 hover:to-pink-700 transition"
+              >
                 Login
               </button>
             </SignInButton>
-
             <SignUpButton>
-              <button className="bg-gradient-to-r from-purple-700 via-teal-600 to-blue-950 text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 hover:from-purple-700 hover:via-red-700 hover:to-pink-700 transition">
+              <button className="bg-linear-to-r from-purple-700 via-teal-600 to-blue-950 text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 hover:from-purple-700 hover:via-red-700 hover:to-pink-700 transition">
                 Create Account
               </button>
             </SignUpButton>
           </SignedOut>
 
           <SignedIn>
-            <div className="bg-gradient-to-br from-purple-500 via-blue-500 to-green-500 p-1 rounded-[10px] hover:from-purple-400 hover:via-blue-600 hover:to-pink-500 transition">
+            <div className="bg-linear-to-br rounded-sm from-purple-500 via-blue-500 to-purple-500  hover:from-purple-400 hover:via-blue-600 hover:to-pink-500 transition pt-1 px-1 absolute">
               <UserButton />
             </div>
           </SignedIn>

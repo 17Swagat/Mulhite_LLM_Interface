@@ -7,12 +7,11 @@ import {
 } from "@/components/ui/hover-card";
 
 import { font_GMonoTrustDisplay } from "../layout";
-import { Button } from "@/components/ui/button";
 import {
   Info,
   Highlighter,
-  MessageSquareDashedIcon,
   MessageSquare,
+  CircleDollarSign,
 } from "lucide-react";
 
 const available_models = [
@@ -48,8 +47,8 @@ export default function Home() {
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16 text-center">
         <h2
-          className="text-2xl leading-snug sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-linear-to-r from-purple-400 via-blue-500 to-purple-500 bg-clip-text text-transparent
-        mb-4 px-2"
+          className={`text-2xl leading-snug sm:text-3xl md:text-4xl lg:text-5xl font-extralight bg-linear-to-r from-purple-400 via-blue-500 to-purple-500 bg-clip-text text-transparent
+        mb-4 px-2 ${font_GMonoTrustDisplay.className} `}
         >
           <span className="bg-linear-to-tr from-purple-900 via-teal-800 to-pink-700 rounded-xl sm:rounded-2xl p-1 sm:p-1.5 hover:cursor-pointer  hover:bg-linear-to-r hover:bg-green-500 hover:via-purple-500 hover:from-red-500 transition duration-500 ease-in-out decoration-purple-600 decoration-6  text-white inline-block">
             LLM INTERFACE
@@ -96,7 +95,7 @@ export default function Home() {
       <section className="bg-black py-8 sm:py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2
-            className={`text-3xl sm:text-4xl md:text-5xl font-semibold text-purple-700 text-center mb-8 sm:mb-12 
+            className={`text-3xl sm:text-4xl md:text-5xl font-semibold text-purple-400 text-center mb-8 sm:mb-12 
              ${font_GMonoTrustDisplay.className}
               `}
           >
@@ -107,7 +106,7 @@ export default function Home() {
           <div
             className={`flex flex-col gap-8 sm:gap-12 md:gap-16 lg:gap-20 items-center`}
           >
-            <div className="text-white justify-center items-center p-4 sm:p-6 md:p-8 mb-8 sm:mb-12 md:mb-16 bg-linear-to-r bg-green-500 via-purple-500 from-red-500 rounded-2xl sm:rounded-3xl shadow-2xl w-full">
+            <div className="text-white justify-center items-center p-4 sm:p-6 md:p-8 mb-8 sm:mb-12 md:mb-16 bg-linear-to-r bg-green-600 via-purple-900 from-purple-700 rounded-2xl sm:rounded-3xl shadow-2xl w-full">
               <h3
                 className={`text-sm text-center sm:text-2xl md:text-3xl text-white  mb-3 sm:mb-4 leading-relaxed ${font_GMonoTrustDisplay.className}`}
               >
@@ -120,13 +119,10 @@ export default function Home() {
                   <sup>
                     <HoverCard openDelay={200} closeDelay={200}>
                       <HoverCardTrigger asChild>
-                        {/* <Button variant="link" className=""> */}
                         <Info
                           className="text-green-300 inline-block ml-1 mr-2 size-4 lg:size-5"
                           strokeWidth={3}
-                          // size={22}
                         />
-                        {/* </Button> */}
                       </HoverCardTrigger>
                       <HoverCardContent className="w-80">
                         <div className="flex justify-between gap-4">
@@ -147,7 +143,6 @@ export default function Home() {
                               </li>
                             </ul>
                             <div className="text-xs mt-2">
-                              {/* Joined December 2021 */}
                               <Link
                                 href={"https://vercel.com/ai-gateway"}
                                 target="_blank"
@@ -165,14 +160,10 @@ export default function Home() {
                 and use multiple LLMs.
               </p>
 
-              {/* Display Available LLMs */}
               <div className="flex items-center justify-center p-1.5 sm:p-2 rounded-xl sm:rounded-2xl bg-linear-to-r from-slate-300 via-purple-200 to-slate-200">
                 <ul className="flex space-x-8 sm:space-x-12 md:space-x-16 max-w-3xl p-1.5 sm:p-2">
                   {available_models.map((model, index) => (
-                    <li
-                      key={model.name + index}
-                      // className="inline-block mx-4 sm:mx-6"
-                    >
+                    <li key={model.name + index}>
                       <Image
                         src={model.imgSrc}
                         alt={model.name}
@@ -188,13 +179,13 @@ export default function Home() {
 
             {/* Highlighting */}
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 md:gap-8 w-full">
-              <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl">
+              <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-140 transition-transform duration-300 ease-in-out">
                 <Image
                   src="/landing/text-highlighting.png"
                   alt="Highlighting Text in AI Responses"
                   width={800}
                   height={800}
-                  className="rounded-lg w-full h-auto"
+                  className="rounded-lg w-full h-auto "
                 />
               </div>
               <div className="w-full md:w-1/2 px-4">
@@ -226,7 +217,6 @@ export default function Home() {
                 </p>
               </div>
             </div>
-
             {/* Explain-Sidechat-Thread */}
             <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-4 sm:gap-6 md:gap-8 w-full">
               <div className="w-full md:w-1/2 px-4">
@@ -257,7 +247,7 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl">
+              <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-140 transition-transform duration-300 ease-in-out">
                 <Image
                   src="/landing/explainsidechat.png"
                   alt="Highlighting Text in AI Responses"
@@ -267,55 +257,61 @@ export default function Home() {
                 />
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="bg-gray-50 py-8 sm:py-12 md:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-8 sm:mb-12 px-4">
-            Side Project Mastery, Effortlessly Within Reach
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
-                Resources
-              </h3>
-              <p className="text-sm sm:text-base text-gray-600">
-                Add and favorite resources to quickly access essential tools and
-                information directly.
-              </p>
-            </div>
-            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
-                Collaboration
-              </h3>
-              <p className="text-sm sm:text-base text-gray-600">
-                Invite collaborators for access and contributions to project
-                tasks and finances.
-              </p>
-            </div>
-            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
-                In-app Messaging
-              </h3>
-              <p className="text-sm sm:text-base text-gray-600">
-                Send messages, create AI-generated work items, and collaborate
-                efficiently.
-              </p>
+            {/* Credits-Left */}
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 md:gap-8 w-full">
+              <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-140 transition-transform duration-300 ease-in-out">
+                <Image
+                  src="/landing/credits_left2.png"
+                  alt="Credits-Left"
+                  width={1000}
+                  height={1000}
+                  className="rounded-lg w-full h-auto"
+                />
+              </div>
+              <div className="w-full md:w-1/2 px-4">
+                <div className="flex items-center space-x-2">
+                  <CircleDollarSign
+                    className="text-green-400 inline-block mb-2 size-6 sm:size-7 md:size-8"
+                    strokeWidth={2.3}
+                  />
+                  <h3
+                    className={`text-xl sm:text-2xl md:text-3xl font-light text-blue-500 mb-2 sm:mb-4 leading-relaxed text-center md:text-left ${font_GMonoTrustDisplay.className}`}
+                  >
+                    <span className="bg-[#96ff34] rounded-[5px] p-[3px]">
+                      Credits-Left
+                    </span>{" "}
+                    {/* in AI Responses */}
+                  </h3>
+                </div>
+                <p className="text-gray-200 text-md font-semibold mt-4">
+                  View{"  "}
+                  <span className="underline decoration-2 underline-offset-2 text-green-400">
+                    Credits-Left
+                  </span>{" "}
+                  {/* <br /> */}
+                  💸💸 in your Vercel AI Gateway Account{" "}
+                  {/* <span className="underline decoration-2 underline-offset-2 text-green-400">
+                    revision
+                  </span>{" "} */}
+                  {/* 🤓🧠 */}
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Pricing Section */}
-      <section className="bg-white py-8 sm:py-12 md:py-16">
+      <section className="bg-black text-white py-8 sm:py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-8 sm:mb-12 px-4">
-            Manage Your Projects Today!
+          <h2
+            className={`text-2xl sm:text-3xl lg:text-7xl font-bold text-center mb-8 sm:mb-12 px-4 ${font_GMonoTrustDisplay.className} 
+              bg-clip-text text-transparent bg-linear-to-t from-purple-700 via-pink-500 to-purple-400 
+           `}
+          >
+            P L A N S
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto ">
             <div className="bg-gray-50 p-4 sm:p-6 rounded-lg shadow-sm text-center">
               <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4">
                 Basic Plan
@@ -374,7 +370,7 @@ export default function Home() {
       <footer className="bg-gray-800 text-white py-6 sm:py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm sm:text-base">
-            &copy; 2025 ProjectPlannerAI. All rights reserved.
+            &copy; 2025 Nody. All rights reserved.
           </p>
         </div>
       </footer>

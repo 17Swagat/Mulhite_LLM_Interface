@@ -216,7 +216,7 @@ export function AppSidebar() {
             </div>
 
             {/* User Button with Gradient Hover Ring */}
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <UserButton
                 userProfileMode="modal"
                 appearance={{
