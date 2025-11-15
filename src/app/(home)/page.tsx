@@ -298,12 +298,7 @@ export default function Home() {
                   <span className="underline decoration-2 underline-offset-2 text-green-400">
                     Credits-Left
                   </span>{" "}
-                  {/* <br /> */}
                   💸💸 in your Vercel AI Gateway Account{" "}
-                  {/* <span className="underline decoration-2 underline-offset-2 text-green-400">
-                    revision
-                  </span>{" "} */}
-                  {/* 🤓🧠 */}
                 </p>
               </div>
             </div>
@@ -412,13 +407,13 @@ function ImageModalCard({
       </DialogTrigger>
       <DialogContent
         showCloseButton={false}
-        className="bg-transparent border-0! p-0! m-0! max-w-[95vw] md:max-w-[90vw] lg:max-w-[1000px] w-full"
+        className="bg-transparent border-purple-500! p-0! m-0! max-w-[95vw] md:max-w-[90vw] lg:max-w-[1000px] w-full"
       >
         <DialogHeader className="sr-only">
           <DialogTitle></DialogTitle>
         </DialogHeader>
 
-        <div className="w-full flex items-center justify-center p-2 sm:p-4 md:p-6 border-0!">
+        <div className="w-full flex items-center justify-center p-2! border-0! sm:p-4 md:p-6 ">
           <Image
             src={imageSrc}
             alt={altText}

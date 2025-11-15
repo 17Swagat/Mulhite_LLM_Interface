@@ -2,19 +2,15 @@ import Navbar from "@/components/my/Navbar";
 import Link from "next/link";
 export default function HomeLayout({
   children,
-  modal,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
 }>) {
   return (
-    // <>
-    <div className="min-h-screen bg-black">
-      {/* Header */}
-      <Navbar />
-      {/* {modal} */}
-      {children}
-    </div>
-    // </>
+    <>
+      <div className="min-h-screen bg-black">
+        <Navbar />
+        {children}
+      </div>
+    </>
   );
 }
