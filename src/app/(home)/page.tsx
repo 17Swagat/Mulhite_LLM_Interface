@@ -14,6 +14,20 @@ import {
   CircleDollarSign,
 } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
 const available_models = [
   {
     name: "Claude",
@@ -182,13 +196,10 @@ export default function Home() {
 
             {/* Highlighting */}
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 md:gap-8 w-full">
-              <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-140 transition-transform duration-300 ease-in-out">
-                <Image
-                  src="/landing/text-highlighting.png"
-                  alt="Highlighting Text in AI Responses"
-                  width={800}
-                  height={800}
-                  className="rounded-lg w-full h-auto "
+              <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 transition-transform duration-300 ease-in-out hover:cursor-pointer">
+                <ImageModalCard
+                  imageSrc="/landing/text-highlighting.png"
+                  altText="Highlight Text in AI Responses"
                 />
               </div>
               <div className="w-full md:w-1/2 px-4">
@@ -220,6 +231,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
+
             {/* Explain-Sidechat-Thread */}
             <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-4 sm:gap-6 md:gap-8 w-full">
               <div className="w-full md:w-1/2 px-4">
@@ -250,25 +262,20 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-140 transition-transform duration-300 ease-in-out">
-                <Image
-                  src="/landing/explainsidechat.png"
-                  alt="Highlighting Text in AI Responses"
-                  width={800}
-                  height={800}
-                  className="rounded-lg w-full h-auto"
+              <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 transition-transform duration-300 ease-in-out hover:cursor-pointer">
+                <ImageModalCard
+                  imageSrc="/landing/explainsidechat.png"
+                  altText="Explain Sidechat Thread"
                 />
               </div>
             </div>
+
             {/* Credits-Left */}
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 md:gap-8 w-full">
-              <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-140 transition-transform duration-300 ease-in-out">
-                <Image
-                  src="/landing/credits_left2.png"
-                  alt="Credits-Left"
-                  width={1000}
-                  height={1000}
-                  className="rounded-lg w-full h-auto"
+              <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 transition-transform duration-300 ease-in-out">
+                <ImageModalCard
+                  imageSrc="/landing/credits_left2.png"
+                  altText="Credits-Left"
                 />
               </div>
               <div className="w-full md:w-1/2 px-4">
@@ -312,7 +319,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2
             className={`text-2xl sm:text-3xl lg:text-7xl font-bold text-center mb-8 sm:mb-12 px-4 ${font_GMonoTrustDisplay.className} 
-              bg-clip-text text-transparent bg-linear-to-t from-purple-700 via-pink-500 to-purple-400 
+              bg-clip-text text-transparent bg-linear-to-t from-purple-700 via-blue-500 to-purple-400 
            `}
           >
             P L A N S
@@ -382,5 +389,45 @@ export default function Home() {
       </footer>
     </>
     // </div>
+  );
+}
+
+function ImageModalCard({
+  imageSrc,
+  altText,
+}: {
+  imageSrc: string;
+  altText: string;
+}) {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Image
+          src={imageSrc}
+          alt={altText}
+          width={800}
+          height={800}
+          className="rounded-lg w-full h-auto "
+        />
+      </DialogTrigger>
+      <DialogContent
+        showCloseButton={false}
+        className="bg-transparent border-0! p-0! m-0! max-w-[95vw] md:max-w-[90vw] lg:max-w-[1000px] w-full"
+      >
+        <DialogHeader className="sr-only">
+          <DialogTitle></DialogTitle>
+        </DialogHeader>
+
+        <div className="w-full flex items-center justify-center p-2 sm:p-4 md:p-6 border-0!">
+          <Image
+            src={imageSrc}
+            alt={altText}
+            width={1800}
+            height={1800}
+            className="rounded-lg w-full h-auto max-w-full object-contain"
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
