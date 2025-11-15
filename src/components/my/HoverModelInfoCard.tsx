@@ -46,7 +46,7 @@ export function HoverModelInfoCard({ model }: { model: any }) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Image
-                  src="/assets/ai_provider2.svg"
+                  src="/assets/ai_provider3.svg"
                   alt=""
                   width={16}
                   height={16}
@@ -64,7 +64,7 @@ export function HoverModelInfoCard({ model }: { model: any }) {
               {model.name}
               <HoverCard openDelay={50} closeDelay={50}>
                 <HoverCardTrigger asChild>
-                  <InfoIcon className="w-3.5 h-3.5 inline-block text-gray-400 hover:text-gray-300" />
+                  <InfoIcon className="w-5 h-5 inline-block text-pink-300 hover:text-gray-300" />
                 </HoverCardTrigger>
                 <HoverCardContent className="bg-gray-800 text-white p-2 rounded-md text-xs">
                   {model.description}
@@ -124,25 +124,22 @@ export function HoverModelInfoCard({ model }: { model: any }) {
             {/* Model Info Section */}
             <div className="text-xs space-y-1 text-gray-400">
               <div className="flex justify-between">
-                <span>ID</span>
-                <span className="font-mono text-cyan-300 max-w-[120px] ">
+                <span>Model ID</span>
+                <span className="font-mono text-green-300 max-w-[120px] ">
                   {/* truncate */}
                   {model.specification.modelId}
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span>Version</span>
-                <span className="font-mono text-purple-300">
-                  v{model.specification.specificationVersion}
-                </span>
-              </div>
-              <div className="flex justify-between">
+
+              <Separator className="bg-purple-500/10 my-2" />
+
+              <div className="flex justify-between mt-2">
                 <span>Type</span>
                 <span className="font-mono text-pink-300 capitalize flex items-center gap-1">
                   {isModelReasoningCapable ? (
                     <>
                       Reasoning
-                      <BrainIcon className="w-3 h-3 text-green-400" />
+                      <BrainIcon className="w-4 h-4 text-green-400" />
                     </>
                   ) : (
                     "Non-Reasoning"

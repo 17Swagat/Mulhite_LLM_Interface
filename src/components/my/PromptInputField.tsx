@@ -89,7 +89,7 @@ export const PromptInputField = memo(function PromptInputField({
               <PromptInputModelSelectValue />
             </PromptInputModelSelectTrigger>
 
-            <PromptInputModelSelectContent>
+            <PromptInputModelSelectContent className="dark">
               {availableModels.map((model: any) => {
                 return (
                   <div key={model[0].id}>

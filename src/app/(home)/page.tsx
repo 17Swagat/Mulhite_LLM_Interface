@@ -119,6 +119,7 @@ export default function Home() {
           <div
             className={`flex flex-col gap-8 sm:gap-12 md:gap-16 lg:gap-20 items-center`}
           >
+            {/* Multiple LLM Support */}
             <div className="text-white justify-center items-center p-4 sm:p-6 md:p-8 mb-8 sm:mb-12 md:mb-16 bg-linear-to-r bg-green-600 via-purple-900 from-purple-700 rounded-2xl sm:rounded-3xl shadow-2xl w-full">
               <h3
                 className={`text-sm text-center sm:text-2xl md:text-3xl text-white  mb-3 sm:mb-4 leading-relaxed ${font_GMonoTrustDisplay.className}`}

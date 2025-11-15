@@ -290,7 +290,9 @@ export function ToolbarOnTextSelection({
                         <img src="/ai-models/mistral.svg" alt="" sizes="18" />
                       )}
                       {model[0].id.includes("openai") && (
-                        <img src="/ai-models/openai.svg" alt="" sizes="18" />
+                        <div className="bg-white rounded-full">
+                          <img src="/ai-models/openai.svg" alt="" sizes="18" />
+                        </div>
                       )}
                     </span>
 
