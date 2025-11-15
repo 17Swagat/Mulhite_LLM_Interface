@@ -226,7 +226,7 @@ export function HighlightedResponseWithExplain({
         background-color: ${bgColor}; 
         border-radius: 3px; 
         cursor: pointer;
-        text-decoration: underline;
+        text-decoration: underline solid;
         text-decoration-color: ${
           color === "blue"
             ? "#3b82f6"
@@ -234,9 +234,8 @@ export function HighlightedResponseWithExplain({
             ? "#a855f7"
             : "#6366f1"
         };
-        text-decoration-style: solid;
-        text-decoration-thickness: 5px;
-        text-underline-offset: 2px;
+        text-decoration-thickness: 4px;
+        text-underline-offset: 5px;
       }`;
       if (!style.textContent?.includes(cssRule)) {
         style.textContent = (style.textContent || "") + cssRule;
