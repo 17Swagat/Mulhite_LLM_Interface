@@ -1,6 +1,7 @@
 // Toolbar component for highlighting text in assistant messages
 /* eslint-disable @next/next/no-inline-styles -- Positioning requires dynamic styles */
 
+import { HoverModelInfoCard } from "../HoverModelInfoCard";
 import {
   Select,
   SelectContent,
@@ -279,6 +280,8 @@ export function ToolbarOnTextSelection({
               {AI_MODELS.map((model) => (
                 <SelectItem key={model[0].id} value={model[0].id}>
                   <div className="flex justify-between items-center w-full">
+                    <HoverModelInfoCard model={model} infoIconSize={3} />
+                    
                     {/******************/}
                     {/* Model Logo */}
                     {/******************/}
@@ -290,9 +293,7 @@ export function ToolbarOnTextSelection({
                         <img src="/ai-models/mistral.svg" alt="" sizes="18" />
                       )}
                       {model[0].id.includes("openai") && (
-                        <div className="bg-white rounded-full">
-                          <img src="/ai-models/openai.svg" alt="" sizes="18" />
-                        </div>
+                        <img src="/ai-models/openai.svg" alt="" sizes="18" />
                       )}
                     </span>
 
@@ -304,7 +305,7 @@ export function ToolbarOnTextSelection({
                     {/* Model Reasoning or Not? */}
                     {model[1] === "reasoning" && (
                       <span className="mx-1">
-                        <BrainIcon size={30} className="text-pink-500" />
+                        <BrainIcon size={30} className="text-green-500" />
                       </span>
                     )}
                   </div>

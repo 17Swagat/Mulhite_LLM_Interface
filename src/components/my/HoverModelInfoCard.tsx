@@ -2,7 +2,6 @@ import Image from "next/image";
 import {
   InfoIcon,
   BrainIcon,
-  Sparkles,
   DollarSign,
   Zap,
   Clock,
@@ -19,10 +18,15 @@ import {
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
-import { Avatar } from "../ui/avatar";
 
 // Model Info Hover Card Component:
-export function HoverModelInfoCard({ model }: { model: any }) {
+export function HoverModelInfoCard({
+  model,
+  infoIconSize,
+}: {
+  model: any;
+  infoIconSize?: number;
+}) {
   const isModelReasoningCapable = model[1] === "reasoning";
   model = model[0]; //unpack
   return (
@@ -31,7 +35,7 @@ export function HoverModelInfoCard({ model }: { model: any }) {
         <Button variant="link">
           <InfoIcon
             className="rounded-full text-amber-500"
-            size={8}
+            size={infoIconSize ?? 8}
             strokeWidth={3}
           />
         </Button>
