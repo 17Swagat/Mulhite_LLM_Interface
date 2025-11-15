@@ -281,7 +281,7 @@ export function ToolbarOnTextSelection({
                 <SelectItem key={model[0].id} value={model[0].id}>
                   <div className="flex justify-between items-center w-full">
                     <HoverModelInfoCard model={model} infoIconSize={3} />
-                    
+
                     {/******************/}
                     {/* Model Logo */}
                     {/******************/}
@@ -314,45 +314,6 @@ export function ToolbarOnTextSelection({
             </SelectGroup>
           </SelectContent>
         </Select>
-
-        {/* ************************ */}
-
-        {/* <button
-          type="button"
-          className="rounded-full hover:bg-gray-100 transition-colors"
-          aria-label="Choose Model"
-          onClick={() => setIsModelPickerOpen(!isModelPickerOpen)}
-          title="Choose different model"
-        >
-          <ChevronDown size={18} className="text-gray-600" />
-        </button>
-
-        {isModelPickerOpen && (
-          <div
-            className="absolute top-full mt-2 right-0 bg-white rounded-lg shadow-xl border border-gray-200 min-w-40 py-1 z-50"
-            ref={dropdownModelRef}
-          >
-            {AI_MODELS.map((model) => (
-              <button
-                key={model[0].id}
-                type="button"
-                className={`w-full text-left px-3 py-2 flex items-center gap-3 transition-colors ${
-                  explainSideChatModel === model[0].id
-                    ? "bg-gray-100 font-semibold"
-                    : "hover:bg-gray-50"
-                }`}
-                onClick={() => {
-                  setExplainSideChatModel &&
-                    setExplainSideChatModel(model[0].id);
-                  setIsModelPickerOpen(false);
-                }}
-              >
-                <span className="text-sm text-gray-700">{model[0].name}</span>
-              </button>
-
-            ))}
-          </div>
-        )} */}
       </div>
     </div>
   );
