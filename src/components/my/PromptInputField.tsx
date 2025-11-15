@@ -109,22 +109,6 @@ export const PromptInputField = memo(function PromptInputField({
               })}
             </PromptInputModelSelectContent>
           </PromptInputModelSelect>
-
-          {/* <PromptInputButton
-            onClick={() => {
-              setReasoningOn(!reasoningOn);
-            }}
-            className={`mr-2 ${
-              reasoningOn
-                ? "bg-linear-to-b from-[#11ca55] via-[#68f39b] to-[#06cf4c] "
-                : "bg-gray-400"
-            } active:bg-green-700 transition-colors duration-200 ease-in-out hover:brightness-125`}
-          >
-            <BrainIcon
-              className={`${reasoningOn ? "text-black" : ""}`}
-              size={16}
-            />
-          </PromptInputButton> */}
         </PromptInputTools>
 
         <PromptInputSubmit

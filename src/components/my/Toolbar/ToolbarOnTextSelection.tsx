@@ -14,14 +14,8 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { SheetTrigger } from "@/components/ui/sheet";
-// import { AI_MODELS } from "@/constants/models";
 import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
-import {
-  HighlighterIcon,
-  ShareIcon,
-  ChevronDown,
-  BrainIcon,
-} from "lucide-react";
+import { HighlighterIcon, ChevronDown, BrainIcon } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
 const HIGHLIGHT_COLORS = [
