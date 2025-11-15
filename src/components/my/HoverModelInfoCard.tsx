@@ -41,63 +41,61 @@ export function HoverModelInfoCard({ model }: { model: any }) {
         className="w-80 bg-linear-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-xl border border-purple-500/30 shadow-2xl shadow-purple-600/30 rounded-2xl p-0 animate-in fade-in-0 zoom-in-95 duration-200"
       >
         <Card className="border-0 shadow-none bg-transparent overflow-hidden">
-          <CardHeader className="pb-3 px-4 pt-4">
+          <CardHeader className="pb-2 px-3 pt-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-xl bg-linear-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-white" />
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 text-white" />
                 </div>
                 <Badge
                   variant="outline"
-                  className="border-cyan-500/50 text-cyan-400 bg-cyan-500/10 text-xs px-2 py-0.5"
+                  className="border-cyan-500/30 text-cyan-300 bg-cyan-900/20 text-xs px-1.5 py-0.5"
                 >
                   {model.specification.provider}
                 </Badge>
               </div>
             </div>
-
-            <CardTitle className="text-lg font-bold text-white px-0 flex gap-2 items-center">
+            <CardTitle className="text-base font-semibold text-white px-0 flex gap-1.5 items-center">
               {model.name}
-              <HoverCard openDelay={100} closeDelay={100}>
+              <HoverCard openDelay={50} closeDelay={50}>
                 <HoverCardTrigger asChild>
-                  <InfoIcon className="w-4 h-4 inline-block text-gray-400" />
+                  <InfoIcon className="w-3.5 h-3.5 inline-block text-gray-400 hover:text-gray-300" />
                 </HoverCardTrigger>
-                <HoverCardContent className="bg-purple-800 text-white p-2 rounded-md">
-                  <p className="text-sm">{model.description}</p>
+                <HoverCardContent className="bg-gray-800 text-white p-2 rounded-md text-xs">
+                  {model.description}
                 </HoverCardContent>
               </HoverCard>
             </CardTitle>
           </CardHeader>
 
-          <CardContent className="space-y-4 pt-0 px-4 pb-4">
-            <Separator className="bg-purple-500/20" />
-
-            <div className="space-y-2 text-sm">
+          <CardContent className="space-y-2.5 pt-0 px-3 pb-3">
+            <div className="space-y-1.5 text-xs">
+              {/* Pricing Section */}
               <div className="flex justify-between items-center">
                 <span className="flex items-center gap-1 text-gray-400">
-                  <DollarSign className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
+                  <DollarSign className="w-3 h-3 text-green-400" />
                   Input
                 </span>
-                <span className="font-mono text-cyan-400">
+                <span className="font-mono text-cyan-300 text-sm">
                   ${model.pricing?.input ?? "—"} /M
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="flex items-center gap-1 text-gray-400">
-                  <DollarSign className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+                  <DollarSign className="w-3 h-3 text-blue-400" />
                   Output
                 </span>
-                <span className="font-mono text-cyan-400">
+                <span className="font-mono text-cyan-300 text-sm">
                   ${model.pricing?.output ?? "—"} /M
                 </span>
               </div>
               {model.pricing?.cachedInputTokens && (
                 <div className="flex justify-between items-center">
                   <span className="flex items-center gap-1 text-gray-400">
-                    <Zap className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
+                    <Zap className="w-3 h-3 text-yellow-400" />
                     Cache Read
                   </span>
-                  <span className="font-mono text-yellow-400 text-xs">
+                  <span className="font-mono text-yellow-300 text-xs">
                     ${model.pricing.cachedInputTokens} /M
                   </span>
                 </div>
@@ -105,48 +103,47 @@ export function HoverModelInfoCard({ model }: { model: any }) {
               {model.pricing?.cacheCreationInputTokens && (
                 <div className="flex justify-between items-center">
                   <span className="flex items-center gap-1 text-gray-400">
-                    <Clock className="w-3.5 h-3.5 text-orange-500 flex-shrink-0" />
+                    <Clock className="w-3 h-3 text-orange-400" />
                     Cache Write
                   </span>
-                  <span className="font-mono text-orange-400 text-xs">
+                  <span className="font-mono text-orange-300 text-xs">
                     ${model.pricing.cacheCreationInputTokens} /M
                   </span>
                 </div>
               )}
             </div>
 
-            <Separator className="bg-purple-500/20" />
+            {/* Separator */}
+            <Separator className="bg-purple-500/10 my-2" />
 
-            <div className="text-xs space-y-1.5 text-gray-500">
+            {/* Model Info Section */}
+            <div className="text-xs space-y-1 text-gray-400">
               <div className="flex justify-between">
                 <span>ID</span>
-                <span className="font-mono text-cyan-400 max-w-[140px]">
+                <span className="font-mono text-cyan-300 max-w-[120px] ">
+                  {/* truncate */}
                   {model.specification.modelId}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span>Version</span>
-                <span className="font-mono text-purple-400">
+                <span className="font-mono text-purple-300">
                   v{model.specification.specificationVersion}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span>Type</span>
-                <span className="font-mono text-pink-400 capitalize">
-                  {/* {model.modelType} */}
+                <span className="font-mono text-pink-300 capitalize flex items-center gap-1">
                   {isModelReasoningCapable ? (
-                    <BrainIcon className="w-3.5 h-3.5 inline-block ml-1 text-green-500" />
+                    <>
+                      Reasoning
+                      <BrainIcon className="w-3 h-3 text-green-400" />
+                    </>
                   ) : (
                     "Non-Reasoning"
                   )}
                 </span>
               </div>
-
-              {/* {isModelReasoningCapable && (
-                <div className="flex justify-between">
-                  <BrainIcon className="w-3.5 h-3.5 inline-block ml-1 text-green-500" />
-                </div>
-              )} */}
             </div>
           </CardContent>
         </Card>
