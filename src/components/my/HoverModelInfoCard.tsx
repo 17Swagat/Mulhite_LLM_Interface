@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   InfoIcon,
   BrainIcon,
@@ -44,9 +45,13 @@ export function HoverModelInfoCard({ model }: { model: any }) {
           <CardHeader className="pb-2 px-3 pt-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-white" />
-                </div>
+                <Image
+                  src="/assets/ai_provider2.svg"
+                  alt=""
+                  width={16}
+                  height={16}
+                  className="w-16 h-16"
+                />
                 <Badge
                   variant="outline"
                   className="border-cyan-500/30 text-cyan-300 bg-cyan-900/20 text-xs px-1.5 py-0.5"
