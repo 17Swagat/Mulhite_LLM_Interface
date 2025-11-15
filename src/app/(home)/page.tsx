@@ -407,7 +407,7 @@ function ImageModalCard({
       </DialogTrigger>
       <DialogContent
         showCloseButton={false}
-        className="bg-transparent border-purple-500! p-0! m-0! max-w-[95vw] md:max-w-[90vw] lg:max-w-[1000px] w-full"
+        className="bg-transparent border-none! border-purple-500! p-0! m-0! max-w-[95vw] md:max-w-[90vw] lg:max-w-[1000px] w-full"
       >
         <DialogHeader className="sr-only">
           <DialogTitle></DialogTitle>
