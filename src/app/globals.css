@@ -18,6 +18,12 @@ html {
 
 @theme inline {
 
+  /* Custom breakpoints */
+  --breakpoint-mobile: 480px;
+  --breakpoint-tablet: 756px;
+  --breakpoint-laptop: 1024px;
+  --breakpoint-desktop: 1280px;
+
   /* Adding Infinite Scroll (Tailwind v4: use --animate-* to create animate- utilities) */
   /* --animate-infinite-scroll: infinite-scroll 5s linear infinite; */
 
@@ -75,6 +81,10 @@ html {
 }
 
 :root {
+
+
+
+
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -107,6 +117,7 @@ html {
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
 }
 
 .dark {

@@ -59,7 +59,7 @@ export const PromptInputField = memo(function PromptInputField({
     useUserQuestionStore();
 
   return (
-    <PromptInput onSubmit={handleSubmit}>
+    <PromptInput onSubmit={handleSubmit} className="tablet:w-xl lg:w-3xl">
       <PromptInputTextarea
         className={`max-h-[16lh] ${scrollbarStyle.promptInput_Scrollbar}`}
         value={isSideChat ? sideChatQuestion : question}

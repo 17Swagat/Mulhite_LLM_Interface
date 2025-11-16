@@ -134,7 +134,7 @@ export function AppSidebar() {
             </h1>
           </Link>
         </SidebarHeader>
-        <SidebarContent className={cssStyleSidebar.sidebar_scrollbar}>
+        <SidebarContent className={`${cssStyleSidebar.sidebar_scrollbar}`}>
           <SidebarGroup>
             <SidebarGroupLabel>Chat History</SidebarGroupLabel>
             <SidebarGroupContent>

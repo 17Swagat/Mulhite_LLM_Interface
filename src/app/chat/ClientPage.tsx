@@ -9,7 +9,9 @@ import { PromptInputField } from "@/components/my/PromptInputField";
 // import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 import { LoadingScreen } from "@/components/my/LoadingScreen";
 import { useUserQuestionStore } from "@/stores/userQuestionStore";
-import { CreditsLeft } from "@/components/my/CreditsLeft";
+import {
+  CreditsLeft,
+} from "@/components/my/CreditsLeft";
 
 export function ChatPage_ClientComponent({
   availableModels,
@@ -67,8 +69,6 @@ export function ChatPage_ClientComponent({
     }
   };
 
-  // const { parentChatModel } = useSelectedAIModelStore();
-
   // Component Mount Check [Otherwise Zustand store has hydration issues]
   const [haveMounted, setHaveMounted] = useState(false);
   const [credits, setCredits] = useState(0);
@@ -100,15 +100,13 @@ export function ChatPage_ClientComponent({
             Let's Start Learning 😊
           </h1>
 
-          <div className="md:w-2xl max-w-3xl mx-auto py-2 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md rounded-2xl ">
-            <PromptInputField
-              availableModels={availableModels}
-              handleSubmit={handleSubmit}
-              // input={input}
-              // setInput={setInput}
-              chatStatus={"ready"}
-            />
-          </div>
+          {/* <div className="w-sm mx-auto   max-w-3xl md:w-2xl py-2 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md rounded-2xl "> */}
+          <PromptInputField
+            availableModels={availableModels}
+            handleSubmit={handleSubmit}
+            chatStatus={"ready"}
+          />
+          {/* </div> */}
         </div>
       </div>
     )
