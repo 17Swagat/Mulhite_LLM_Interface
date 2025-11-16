@@ -83,34 +83,13 @@ export default function Home() {
           Use LLMs to help you study and learn better!
         </p>
 
-        {/* #1.1 */}
-        <div className="flex items-center gap-2 justify-center">
-          <Link
-            href="/chat"
-            className="inline-block bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-base sm:text-lg font-medium hover:bg-blue-700 transition-colors"
-          >
-            Get Started
-          </Link>
-
-          {/* <Link
-            href="/login"
-            className="inline-block bg-purple-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-base sm:text-lg font-medium hover:bg-blue-700 transition-colors"
-          >
-            Login
-          </Link> */}
-          <SignInButton mode="redirect">
-            <Button className="inline-block bg-purple-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-base sm:text-lg font-medium hover:bg-blue-700 transition-colors">
-              Sign-In
-            </Button>
-          </SignInButton>
-
-          <Link
-            href="/signup"
-            className="inline-block bg-yellow-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-base sm:text-lg font-medium hover:bg-blue-700 transition-colors"
-          >
-            Sign Up
-          </Link>
-        </div>
+        {/* Get-Started -> [Login] -> [/chat Area] */}
+        <Link
+          href="/chat"
+          className="inline-block bg-purple-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-base sm:text-lg font-medium hover:brightness-85 active:brightness-110 transition duration-300 ease-in-out"
+        >
+          Get Started
+        </Link>
 
         {/* Temporary Test Div for Text-Selection and showing a PopupOver Context Menu on Text Highlight */}
         <div className="mt-8 sm:mt-12">
@@ -430,7 +409,7 @@ function ImageModalCard({
       </DialogTrigger>
       <DialogContent
         showCloseButton={false}
-        className="bg-transparent border-none! border-purple-500! p-0! m-0! max-w-[95vw] md:max-w-[90vw] lg:max-w-[1000px] w-full"
+        className="bg-transparent border-purple-500!  p-0! m-0! max-w-[95vw] md:max-w-[90vw] lg:max-w-[1000px] w-full"
       >
         <DialogHeader className="sr-only">
           <DialogTitle></DialogTitle>
