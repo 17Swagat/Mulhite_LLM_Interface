@@ -9,9 +9,8 @@ import { PromptInputField } from "@/components/my/PromptInputField";
 // import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 import { LoadingScreen } from "@/components/my/LoadingScreen";
 import { useUserQuestionStore } from "@/stores/userQuestionStore";
-import {
-  CreditsLeft,
-} from "@/components/my/CreditsLeft";
+import { CreditsLeft } from "@/components/my/CreditsLeft";
+import { useAboutDeviceInfo } from "@/stores/aboutDevice";
 
 export function ChatPage_ClientComponent({
   availableModels,
@@ -21,7 +20,6 @@ export function ChatPage_ClientComponent({
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { addChat, setActiveChat } = useChatStore();
-
   const { question, setQuestion } = useUserQuestionStore();
 
   // Convex mutation
@@ -72,14 +70,32 @@ export function ChatPage_ClientComponent({
   // Component Mount Check [Otherwise Zustand store has hydration issues]
   const [haveMounted, setHaveMounted] = useState(false);
   const [credits, setCredits] = useState(0);
-
+  const { isTouchDevice, setIsTouchDevice } = useAboutDeviceInfo(); // "For, touch device Check"
   useEffect(() => {
     setHaveMounted(true);
+    // Get credits left:
     fetch("/api/vercel-models/credits_left/")
       .then((res) => res.json())
       .then((data) => {
         setCredits(data.creditsLeft);
       });
+
+    // REVISIT:
+    // Check if device supports touch:
+    const checkTouch = () => {
+      setIsTouchDevice(
+        "ontouchstart" in window ||
+          navigator.maxTouchPoints > 0 ||
+          // @ts-ignore
+          navigator.msMaxTouchPoints > 0
+      );
+    };
+
+    checkTouch();
+    // Also check on resize in case device orientation changes
+    // REVISIT: "Check whether this is necessary or not"
+    window.addEventListener("resize", checkTouch);
+    return () => window.removeEventListener("resize", checkTouch);
   }, []);
 
   if (!haveMounted) {
@@ -93,7 +109,7 @@ export function ChatPage_ClientComponent({
      bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c] 
       text-white flex justify-center items-center"
       >
-        <CreditsLeft credits={credits} />
+        <CreditsLeft credits={credits} isTouchDevice={isTouchDevice} />
 
         <div className="flex flex-col items-center">
           <h1 className="text-3xl mb-2 font-semibold">
