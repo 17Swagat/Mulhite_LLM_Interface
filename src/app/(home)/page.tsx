@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SignInButton } from "@clerk/nextjs";
 
 const available_models = [
   {
@@ -83,12 +84,33 @@ export default function Home() {
         </p>
 
         {/* #1.1 */}
-        <Link
-          href="/chat"
-          className="inline-block bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-base sm:text-lg font-medium hover:bg-blue-700 transition-colors"
-        >
-          Get Started
-        </Link>
+        <div className="flex items-center gap-2 justify-center">
+          <Link
+            href="/chat"
+            className="inline-block bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-base sm:text-lg font-medium hover:bg-blue-700 transition-colors"
+          >
+            Get Started
+          </Link>
+
+          {/* <Link
+            href="/login"
+            className="inline-block bg-purple-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-base sm:text-lg font-medium hover:bg-blue-700 transition-colors"
+          >
+            Login
+          </Link> */}
+          <SignInButton mode="redirect">
+            <Button className="inline-block bg-purple-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-base sm:text-lg font-medium hover:bg-blue-700 transition-colors">
+              Sign-In
+            </Button>
+          </SignInButton>
+
+          <Link
+            href="/signup"
+            className="inline-block bg-yellow-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-base sm:text-lg font-medium hover:bg-blue-700 transition-colors"
+          >
+            Sign Up
+          </Link>
+        </div>
 
         {/* Temporary Test Div for Text-Selection and showing a PopupOver Context Menu on Text Highlight */}
         <div className="mt-8 sm:mt-12">
