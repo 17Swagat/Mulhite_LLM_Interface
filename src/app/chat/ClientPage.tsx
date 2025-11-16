@@ -11,6 +11,7 @@ import { LoadingScreen } from "@/components/my/LoadingScreen";
 import { useUserQuestionStore } from "@/stores/userQuestionStore";
 import { CreditsLeft } from "@/components/my/CreditsLeft";
 import { useAboutDeviceInfo } from "@/stores/aboutDevice";
+import { isDeviceTouch } from "@/utils/clientfuncs/isDeviceTouch";
 
 export function ChatPage_ClientComponent({
   availableModels,
@@ -82,20 +83,22 @@ export function ChatPage_ClientComponent({
 
     // REVISIT:
     // Check if device supports touch:
-    const checkTouch = () => {
-      setIsTouchDevice(
-        "ontouchstart" in window ||
-          navigator.maxTouchPoints > 0 ||
-          // @ts-ignore
-          navigator.msMaxTouchPoints > 0
-      );
-    };
+    // const checkTouch = () => {
+    //   setIsTouchDevice(
+    //     "ontouchstart" in window ||
+    //       navigator.maxTouchPoints > 0 ||
+    //       // @ts-ignore
+    //       navigator.msMaxTouchPoints > 0 // "it it useful? TS: showing Errors"
+    //   );
+    // };
 
-    checkTouch();
+    setIsTouchDevice(isDeviceTouch());
+    // checkTouch();
+
     // Also check on resize in case device orientation changes
     // REVISIT: "Check whether this is necessary or not"
-    window.addEventListener("resize", checkTouch);
-    return () => window.removeEventListener("resize", checkTouch);
+    window.addEventListener("resize", isDeviceTouch);
+    return () => window.removeEventListener("resize", isDeviceTouch);
   }, []);
 
   if (!haveMounted) {

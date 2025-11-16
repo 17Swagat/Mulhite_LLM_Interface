@@ -54,6 +54,7 @@ import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 import { useUserQuestionStore } from "@/stores/userQuestionStore";
 import { CpuIcon, DollarSignIcon, MessageCircle } from "lucide-react";
 import { useVercelAICreditsLeft } from "@/stores/aiprovidersCreditsStore";
+import { useAboutDeviceInfo } from "@/stores/aboutDevice";
 
 export default function ChatArea({
   id,
@@ -174,11 +175,6 @@ export default function ChatArea({
           alert(error.message);
         }
       } finally {
-        // fetch("/api/vercel-models/credits_left/")
-        //   .then((res) => res.json())
-        //   .then((data) => {
-        //     setCredits(data.creditsLeft);
-        //   });
         setVercelAiGatewayCredits();
       }
     },
@@ -413,14 +409,9 @@ export default function ChatArea({
   ]);
 
   // Vercel Credits
-
   // Re-Fetch Vercel Credits Left
+  const { isTouchDevice, setIsTouchDevice } = useAboutDeviceInfo();
   useEffect(() => {
-    // fetch("/api/vercel-models/credits_left/")
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     setCredits(data.creditsLeft);
-    //   });
     setVercelAiGatewayCredits();
   }, []);
 
@@ -554,6 +545,7 @@ export default function ChatArea({
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
     null
   );
+
   // Adding Event Listener for text selection changes
   useEffect(() => {
     const handleSelectionChange = () => {
@@ -989,6 +981,7 @@ export default function ChatArea({
       conversationId: id || "",
     }
   );
+
   if (conversationExists === false) {
     return <ChatNotFound id={id || ""} />;
   }
@@ -1018,7 +1011,10 @@ export default function ChatArea({
               <ConversationScrollButton className="bottom-35 bg-gray-800/55 border-0 hover:bg-gray-500 hover:text-white z-20" />
 
               {/* Credits Left */}
-              <CreditsLeft credits={vercelAiGatewayCredits} />
+              <CreditsLeft
+                credits={vercelAiGatewayCredits}
+                isTouchDevice={isTouchDevice}
+              />
 
               {/* Input-Field */}
               <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-0 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md">
