@@ -409,7 +409,6 @@ export default function ChatArea({
     handleLoadMoreMessages,
   ]);
 
-
   const { isTouchDevice, setIsTouchDevice } = useAboutDeviceInfo();
   useEffect(() => {
     setVercelAiGatewayCredits(); // Vercel Credits
@@ -1025,14 +1024,18 @@ export default function ChatArea({
               />
 
               {/* Input-Field */}
-              <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-0 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md">
-                <PromptInputField
-                  availableModels={availableModels}
-                  handleSubmit={handleSubmit}
-                  chatStatus={chatStatus}
-                  inConversation={true}
-                />
+              {/* <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-0 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md"> */}
+              <div className="sticky bottom-0 w-full flex justify-center">
+                <div className="w-[50%] lg:w-[70%] xl:w-[50%]">
+                  <PromptInputField
+                    availableModels={availableModels}
+                    handleSubmit={handleSubmit}
+                    chatStatus={chatStatus}
+                    inConversation={true}
+                  />
+                </div>
               </div>
+              {/* </div> */}
             </Conversation>
 
             {/* Explain-SideChat */}
