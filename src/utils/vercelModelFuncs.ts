@@ -1,7 +1,5 @@
-// 'use server';
-
+'use server';
 import { gateway } from "ai";
-
 
 export async function getVercelAvailableModels() {
     /**

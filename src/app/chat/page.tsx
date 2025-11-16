@@ -7,4 +7,3 @@ export default async function ChatPage() {
   const filteredModels = await getVercelAvailableModels();
   return <ChatPage_ClientComponent availableModels={filteredModels} />;
 }
-

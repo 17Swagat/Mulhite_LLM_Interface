@@ -380,7 +380,7 @@ export default function Home() {
       <footer className="bg-gray-800 text-white py-6 sm:py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm sm:text-base">
-            &copy; 2025 Nody. All rights reserved.
+            &copy; 2025 Mulhite. All rights reserved.
           </p>
         </div>
       </footer>
@@ -409,7 +409,7 @@ function ImageModalCard({
       </DialogTrigger>
       <DialogContent
         showCloseButton={false}
-        className="bg-transparent border-purple-500!  p-0! m-0! max-w-[95vw] md:max-w-[90vw] lg:max-w-[1000px] w-full"
+        className="bg-transparent border-none! border-purple-500! p-0! m-0! max-w-[95vw] md:max-w-[90vw] lg:max-w-[1000px] w-full"
       >
         <DialogHeader className="sr-only">
           <DialogTitle></DialogTitle>

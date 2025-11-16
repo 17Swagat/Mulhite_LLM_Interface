@@ -46,7 +46,6 @@ export function ChatPage_ClientComponent({
         addChat({
           _id: conversationId,
           title,
-          // createdAt: now,
           updatedAt: now,
           userId: "" as Id<"users">,
         });
