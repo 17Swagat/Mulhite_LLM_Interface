@@ -55,6 +55,7 @@ import { useUserQuestionStore } from "@/stores/userQuestionStore";
 import { CpuIcon, DollarSignIcon, MessageCircle } from "lucide-react";
 import { useVercelAICreditsLeft } from "@/stores/aiprovidersCreditsStore";
 import { useAboutDeviceInfo } from "@/stores/aboutDevice";
+import { isDeviceTouch } from "@/utils/clientfuncs/isDeviceTouch";
 
 export default function ChatArea({
   id,
@@ -408,11 +409,18 @@ export default function ChatArea({
     handleLoadMoreMessages,
   ]);
 
-  // Vercel Credits
-  // Re-Fetch Vercel Credits Left
+
   const { isTouchDevice, setIsTouchDevice } = useAboutDeviceInfo();
   useEffect(() => {
-    setVercelAiGatewayCredits();
+    setVercelAiGatewayCredits(); // Vercel Credits
+
+    // Check if device supports touch:
+    const touchValidation = () => {
+      setIsTouchDevice(isDeviceTouch());
+    };
+    touchValidation();
+    window.addEventListener("resize", touchValidation); // CHECK:
+    return () => window.removeEventListener("resize", touchValidation);
   }, []);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////

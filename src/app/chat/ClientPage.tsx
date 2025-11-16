@@ -81,24 +81,13 @@ export function ChatPage_ClientComponent({
         setCredits(data.creditsLeft);
       });
 
-    // REVISIT:
-    // Check if device supports touch:
-    // const checkTouch = () => {
-    //   setIsTouchDevice(
-    //     "ontouchstart" in window ||
-    //       navigator.maxTouchPoints > 0 ||
-    //       // @ts-ignore
-    //       navigator.msMaxTouchPoints > 0 // "it it useful? TS: showing Errors"
-    //   );
-    // };
-
-    setIsTouchDevice(isDeviceTouch());
-    // checkTouch();
-
-    // Also check on resize in case device orientation changes
-    // REVISIT: "Check whether this is necessary or not"
-    window.addEventListener("resize", isDeviceTouch);
-    return () => window.removeEventListener("resize", isDeviceTouch);
+    // is Touch Device Check:
+    const touchValidation = () => {
+      setIsTouchDevice(isDeviceTouch());
+    };
+    touchValidation();
+    window.addEventListener("resize", touchValidation); // CHECK: "Whether this is necessary or not"
+    return () => window.removeEventListener("resize", touchValidation);
   }, []);
 
   if (!haveMounted) {
