@@ -1011,7 +1011,8 @@ export default function ChatArea({
             >
               {/* TODO: "Not sure why but the scroll-bar design is not taking place." */}
               <ConversationContent
-                className="laptop:mx-auto laptop:w-[50%] bg-amber-300 "
+                // className="laptop:mx-auto laptop:w-[50%] bg-amber-300 "
+                className="laptop:mx-auto laptop:w-[1000px] bg-amber-300 "
                 // className={`flex flex-col items-end place-content-center w-[70%] mx-auto overflow-y-auto  py-6 relative`}
               >
                 {renderedMessages}

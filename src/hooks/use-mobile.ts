@@ -1,6 +1,7 @@
 import * as React from "react"
 
-const MOBILE_BREAKPOINT = 768
+// 1256:=> For including iPad Pro 
+const MOBILE_BREAKPOINT = 1256 //768
 
 export function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
