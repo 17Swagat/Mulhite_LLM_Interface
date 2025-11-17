@@ -35,6 +35,7 @@ import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 
 import { useUserQuestionStore } from "@/stores/userQuestionStore";
 import { HoverModelInfoCard } from "./HoverModelInfoCard";
+import { useAboutDeviceInfo } from "@/stores/aboutDevice";
 
 export const PromptInputField = memo(function PromptInputField({
   handleSubmit,
@@ -57,6 +58,8 @@ export const PromptInputField = memo(function PromptInputField({
   } = useSelectedAIModelStore();
   const { question, setQuestion, sideChatQuestion, setSideChatQuestion } =
     useUserQuestionStore();
+
+  const { isTouchDevice } = useAboutDeviceInfo();
 
   return (
     <PromptInput onSubmit={handleSubmit} className=" tablet:w-xl lg:w-3xl">
@@ -92,13 +95,16 @@ export const PromptInputField = memo(function PromptInputField({
             <PromptInputModelSelectContent className="dark">
               {availableModels.map((model: any) => {
                 return (
-                  <div key={model[0].id}>
+                  <div key={model[0].id} className="flex items-center">
+                    {isTouchDevice && (
+                      <HoverModelInfoCard model={model} infoIconSize={18} />
+                    )}
                     <PromptInputModelSelectItem
                       key={model[0].id}
                       value={model[0].id}
                       className="flex w-full"
                     >
-                      <HoverModelInfoCard model={model} />
+                      {!isTouchDevice && <HoverModelInfoCard model={model} />}
                       {model[0].name}
                       {model[1] === "reasoning" && (
                         <BrainIcon size={30} className="text-green-500" />

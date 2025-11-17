@@ -38,7 +38,6 @@ export function TokensConsumed({
 
   const displayContentPopover = (
     <PopoverContent className="w-full z-50000 p-1! bg-linear-to-r from-[#2dd4bf] to-[#95b5e0] border-0!">
-      {/* {contentElement} */}
       <div className="flex items-center gap-1 bg-black text-white text-[18px] p-2 rounded-sm">
         Total-Tokens:
         <span className="text-green-600 font-semibold">
@@ -52,7 +51,9 @@ export function TokensConsumed({
     return (
       <Popover>
         <PopoverTrigger>
-          <button type="button">{iconElement}</button>
+          {/* <button type="button"> */}
+          {iconElement}
+          {/* </button> */}
         </PopoverTrigger>
         {displayContentPopover}
       </Popover>

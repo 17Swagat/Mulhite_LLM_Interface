@@ -836,22 +836,6 @@ export default function ChatArea({
 
                         {/* Answer-Token-Consumption */}
                         {totalTokens !== undefined && (
-                          // <HoverCard openDelay={100} closeDelay={100}>
-                          //   <HoverCardTrigger asChild>
-                          //     <CpuIcon
-                          //       size={24}
-                          //       className="text-blue-500 bg-transparent rounded-full mt-3"
-                          //     />
-                          //   </HoverCardTrigger>
-                          //   <HoverCardContent className="w-full z-50000 p-1! bg-linear-to-r from-[#2dd4bf]  to-[#95b5e0] border-0!">
-                          //     <div className="flex items-center gap-1 bg-black text-white text-[18px] p-2 rounded-sm">
-                          //       Total-Tokens:
-                          //       <span className="text-green-600 font-semibold">
-                          //         {totalTokens}
-                          //       </span>
-                          //     </div>
-                          //   </HoverCardContent>
-                          // </HoverCard>
                           <TokensConsumed
                             totalTokensConsumed={totalTokens}
                             isTouchDevice={isTouchDevice}
@@ -1033,7 +1017,7 @@ export default function ChatArea({
               {/* Input-Field */}
               {/* <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-0 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md"> */}
               {/* <div className="sticky bottom-0 w-full flex  justify-center bg-amber-700 place-content-center"> */}
-              <div className="sticky bottom-0 px-2 py-2 w-full flex  bg-amber-700 place-content-center">
+              <div className="sticky bottom-0 px-2 py-2 w-full flex  place-content-center">
                 {/* <div className="w-full mx-2 lg:w-[70%] xl:w-[50%]"> */}
                 <PromptInputField
                   availableModels={availableModels}
