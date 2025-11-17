@@ -1011,7 +1011,8 @@ export default function ChatArea({
             >
               {/* TODO: "Not sure why but the scroll-bar design is not taking place." */}
               <ConversationContent
-                className={`flex flex-col items-center place-content-center w-[70%] mx-auto overflow-y-auto  py-6 relative`}
+                className="laptop:mx-auto laptop:w-[50%] bg-amber-300 "
+                // className={`flex flex-col items-end place-content-center w-[70%] mx-auto overflow-y-auto  py-6 relative`}
               >
                 {renderedMessages}
               </ConversationContent>
@@ -1025,15 +1026,16 @@ export default function ChatArea({
 
               {/* Input-Field */}
               {/* <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-0 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md"> */}
-              <div className="sticky bottom-0 w-full flex justify-center">
-                <div className="w-full mx-2 lg:w-[70%] xl:w-[50%]">
-                  <PromptInputField
-                    availableModels={availableModels}
-                    handleSubmit={handleSubmit}
-                    chatStatus={chatStatus}
-                    inConversation={true}
-                  />
-                </div>
+              {/* <div className="sticky bottom-0 w-full flex  justify-center bg-amber-700 place-content-center"> */}
+              <div className="sticky bottom-0 px-2 py-2 w-full flex  bg-amber-700 place-content-center">
+                {/* <div className="w-full mx-2 lg:w-[70%] xl:w-[50%]"> */}
+                <PromptInputField
+                  availableModels={availableModels}
+                  handleSubmit={handleSubmit}
+                  chatStatus={chatStatus}
+                  inConversation={true}
+                />
+                {/* </div> */}
               </div>
               {/* </div> */}
             </Conversation>
