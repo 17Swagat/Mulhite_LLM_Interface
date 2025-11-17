@@ -784,7 +784,7 @@ export default function ChatArea({
             chatStatus === "streaming" && isLastMessage;
 
           return (
-            <Message from={message.role} key={message.id} className="mb-4">
+            <Message from={message.role} key={message.id} className="mb-4 dark">
               <MessageContent className="bg-gray-800 p-3 rounded-lg">
                 {/* Reasoning Block: */}
                 {/* {reasoningOn && */}
@@ -1017,17 +1017,15 @@ export default function ChatArea({
               {/* Input-Field */}
               {/* <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-0 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md"> */}
               {/* <div className="sticky bottom-0 w-full flex  justify-center bg-amber-700 place-content-center"> */}
-              <div className="sticky bottom-0 px-2 py-2 w-full flex  place-content-center">
-                {/* <div className="w-full mx-2 lg:w-[70%] xl:w-[50%]"> */}
+
+              <div className="sticky bottom-0  px-2  lg:py-0.5 w-full flex  place-content-center">
                 <PromptInputField
                   availableModels={availableModels}
                   handleSubmit={handleSubmit}
                   chatStatus={chatStatus}
                   inConversation={true}
                 />
-                {/* </div> */}
               </div>
-              {/* </div> */}
             </Conversation>
 
             {/* Explain-SideChat */}

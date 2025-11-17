@@ -93,13 +93,13 @@ export function HighlightedResponseWithExplain({
     if (!containerRef.current) return;
 
     const colorMap: Record<string, string> = {
-      yellow: "rgba(238, 252, 50, 1)", //"rgb(254 240 138)",
-      green: "rgba(153, 250, 115, 1)", //"rgb(187 247 208)",
-      blue: "rgba(82, 253, 242, 1)", //"rgb(191 219 254)",
-      pink: "rgba(255, 114, 236, 1)", //"rgb(251 207 232)",
-      orange: "rgba(247, 173, 36, 1)",
-      red: "rgba(253, 107, 107, 1)",
-      purple: "rgba(217, 122, 255, 1)",
+      yellow: "#cca300",
+      green: "#0c7c01ff",
+      blue: "#0099ff",
+      pink: "#cc0099",
+      orange: "#e67300",
+      red: " #ff0000",
+      purple: "#b31aff",
     };
 
     const ensureStyleAndRule = (color: string) => {
@@ -203,16 +203,6 @@ export function HighlightedResponseWithExplain({
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const explainColorMap: Record<string, string> = {
-      yellow: "rgba(254, 240, 138, 0.6)",
-      green: "rgba(187, 247, 208, 0.6)",
-      blue: "rgba(147, 197, 253, 0.7)",
-      pink: "rgba(251, 207, 232, 0.6)",
-      orange: "rgba(254, 215, 170, 0.6)",
-      red: "rgba(254, 202, 202, 0.6)",
-      purple: "rgba(216, 180, 254, 0.7)",
-    };
-
     const ensureExplainStyleAndRule = (color: string) => {
       const styleId = `explain-${messageId}`;
       let style = document.getElementById(styleId) as HTMLStyleElement | null;
@@ -221,22 +211,17 @@ export function HighlightedResponseWithExplain({
         style.id = styleId;
         document.head.appendChild(style);
       }
-      const bgColor = explainColorMap[color] || explainColorMap.blue;
+      const bgColor = "transparent"; //explainColorMap[color] || explainColorMap.blue;
       const cssRule = `::highlight(explain-${messageId}-${color}) { 
-        background-color: ${bgColor}; 
+        background-color: ${bgColor};
+        padding: 2px;
         border-radius: 3px; 
-        cursor: pointer;
         text-decoration: underline solid;
-        text-decoration-color: ${
-          color === "blue"
-            ? "#3b82f6"
-            : color === "purple"
-            ? "#a855f7"
-            : "#6366f1"
-        };
+        text-decoration-color: red;
         text-decoration-thickness: 4px;
         text-underline-offset: 5px;
       }`;
+
       if (!style.textContent?.includes(cssRule)) {
         style.textContent = (style.textContent || "") + cssRule;
       }
@@ -434,8 +419,8 @@ export function HighlightedResponseWithExplain({
   };
 
   const totalItems = highlights.length + explainSideChats.length;
-
   if (totalItems === 0) {
+    // In case no highlights or explains, just render plain response
     return (
       <div
         ref={containerRef}
@@ -562,17 +547,17 @@ export function HighlightedResponseWithExplain({
                 <Button
                   variant="outline"
                   style={{
-                    backgroundColor: openExplainMenu ? "#cce60aff" : "white",
+                    backgroundColor: openExplainMenu ? "#009900" : "black",
                   }}
                   onClick={() => {
                     setOpenExplainMenu((prev) => !prev);
                   }}
                 >
-                  <MessageSquare size={14} />
-                  <span>{explainSideChats.length} Explains</span>
+                  <MessageSquare size={14} className="text-pink-500" />
+                  <span className="">{explainSideChats.length} Explains</span>
                   <ChevronDown
                     size={12}
-                    className={`transition-transform ${
+                    className={` transition-transform ${
                       openExplainMenu ? "rotate-180" : ""
                     }`}
                   />
@@ -592,9 +577,10 @@ export function HighlightedResponseWithExplain({
                       >
                         <MessageSquare
                           size={14}
-                          className={`mt-1 shrink-0 ${getExplainColorClass(
-                            e.highlightColor
-                          )}`}
+                          className={`mt-1 shrink-0 
+                            text-pink-500
+                          `}
+                          // ${getExplainColorClass(e.highlightColor)}
                         />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm text-gray-200 line-clamp-2">
@@ -630,12 +616,12 @@ function getColorClass(color: string): string {
   return colorMap[color] || colorMap.yellow;
 }
 
-function getExplainColorClass(color: string): string {
-  const colorMap: Record<string, string> = {
-    blue: "text-blue-400",
-    purple: "text-purple-400",
-    indigo: "text-indigo-400",
-    cyan: "text-cyan-400",
-  };
-  return colorMap[color] || colorMap.blue;
-}
+// function getExplainColorClass(color: string): string {
+//   const colorMap: Record<string, string> = {
+//     blue: "text-blue-400",
+//     purple: "text-purple-400",
+//     indigo: "text-indigo-400",
+//     cyan: "text-cyan-400",
+//   };
+//   return colorMap[color] || colorMap.blue;
+// }
