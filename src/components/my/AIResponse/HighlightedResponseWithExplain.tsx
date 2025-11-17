@@ -56,7 +56,6 @@ export function HighlightedResponseWithExplain({
   const [openExplainMenu, setOpenExplainMenu] = useState(false);
   const prevColorsRef = useRef<Set<string>>(new Set());
   const prevExplainColorsRef = useRef<Set<string>>(new Set());
-  const [forceUpdateKey, setForceUpdateKey] = useState(0);
   // Store live ranges for explain highlights to compute click hit-testing reliably
   const explainRangesRef = useRef<Map<string, Range[]>>(new Map());
 
@@ -65,7 +64,6 @@ export function HighlightedResponseWithExplain({
     () =>
       highlights
         .map((h) => `${h._id}-${h.startOffset}-${h.endOffset}-${h.color}`)
-        .sort()
         .join("|"),
     [highlights]
   );
@@ -76,17 +74,9 @@ export function HighlightedResponseWithExplain({
         .map(
           (e) => `${e._id}-${e.startOffset}-${e.endOffset}-${e.highlightColor}`
         )
-        .sort()
         .join("|"),
     [explainSideChats]
   );
-
-  // Force re-render when explain side chats change
-  useEffect(() => {
-    if (explainKey) {
-      setForceUpdateKey((prev) => prev + 1);
-    }
-  }, [explainKey]);
 
   // Apply CSS Highlight API for regular highlights
   useEffect(() => {
@@ -190,12 +180,12 @@ export function HighlightedResponseWithExplain({
     prevColorsRef.current = currentColors;
 
     return () => {
-      if (typeof CSS !== "undefined" && CSS.highlights) {
+      if (typeof CSS !== "undefined" && CSS.highlights && prevColorsRef.current.size > 0) {
         prevColorsRef.current.forEach((color) => {
           CSS.highlights.delete(`msg-${messageId}-${color}`);
         });
+        prevColorsRef.current = new Set();
       }
-      prevColorsRef.current = new Set();
     };
   }, [highlightsKey, messageId]);
 
@@ -308,12 +298,12 @@ export function HighlightedResponseWithExplain({
     prevExplainColorsRef.current = currentExplainColors;
 
     return () => {
-      if (typeof CSS !== "undefined" && CSS.highlights) {
+      if (typeof CSS !== "undefined" && CSS.highlights && prevExplainColorsRef.current.size > 0) {
         prevExplainColorsRef.current.forEach((color) => {
           CSS.highlights.delete(`explain-${messageId}-${color}`);
         });
+        prevExplainColorsRef.current = new Set();
       }
-      prevExplainColorsRef.current = new Set();
     };
   }, [explainKey, messageId]);
 

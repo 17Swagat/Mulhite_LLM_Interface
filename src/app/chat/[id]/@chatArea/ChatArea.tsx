@@ -414,13 +414,8 @@ export default function ChatArea({
   useEffect(() => {
     setVercelAiGatewayCredits(); // Vercel Credits
 
-    // Check if device supports touch:
-    const touchValidation = () => {
-      setIsTouchDevice(isDeviceTouch());
-    };
-    touchValidation();
-    window.addEventListener("resize", touchValidation); // CHECK:
-    return () => window.removeEventListener("resize", touchValidation);
+    // Check if device supports touch (runs once on mount)
+    setIsTouchDevice(isDeviceTouch());
   }, []);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -482,9 +477,6 @@ export default function ChatArea({
     Map<string, Highlight[]>
   >(new Map());
 
-  // Cache for stable empty arrays - prevent creating new [] on every render
-  const emptyHighlightsArray = useRef<Highlight[]>([]);
-
   // Cache to store previous highlights and only update if they actually changed
   const prevHighlightsByMessageRef = useRef<Map<string, Highlight[]>>(
     new Map()
@@ -522,16 +514,13 @@ export default function ChatArea({
             hasChanges = true;
             break;
           }
-          // Compare highlight IDs
-          const newIds = newHighlights
-            .map((h) => h._id)
-            .sort()
-            .join(",");
-          const prevIds = prevHighlights
-            .map((h) => h._id)
-            .sort()
-            .join(",");
-          if (newIds !== prevIds) {
+          // Compare highlight IDs using Set for faster comparison
+          const newIdSet = new Set(newHighlights.map((h) => h._id));
+          const prevIdSet = new Set(prevHighlights.map((h) => h._id));
+          if (
+            newIdSet.size !== prevIdSet.size ||
+            !Array.from(newIdSet).every((id) => prevIdSet.has(id))
+          ) {
             hasChanges = true;
             break;
           }
@@ -812,10 +801,9 @@ export default function ChatArea({
 
                   // Only use <HighlightedResponseWithExplain> for assistant messages
                   if (message.role === "assistant") {
-                    // Get highlights for this message - use stable empty array reference
+                    // Get highlights for this message
                     const messageHighlights =
-                      highlightsByMessage.get(message.id) ||
-                      emptyHighlightsArray.current;
+                      highlightsByMessage.get(message.id) || [];
 
                     // Get explain side chats for this message
                     const messageExplainChats =
