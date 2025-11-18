@@ -58,9 +58,9 @@ export function HighlightedResponseWithExplain({
   const prevExplainColorsRef = useRef<Set<string>>(new Set());
   // Store live ranges for explain highlights to compute click hit-testing reliably
   const explainRangesRef = useRef<Map<string, Range[]>>(new Map());
-  const [hoverOverlays, setHoverOverlays] = useState<
-    Array<{ id: string; rects: DOMRect[] }>
-  >([]);
+  // Store overlays with their explain IDs - we'll calculate positions on render
+  const [overlayIds, setOverlayIds] = useState<string[]>([]);
+  const [, forceUpdate] = useState({});
 
   // Shared function to find text range - avoids duplicate tree walker code
   const findTextRange = useCallback(
@@ -240,7 +240,7 @@ export function HighlightedResponseWithExplain({
     const prevExplainColors = prevExplainColorsRef.current;
     // Reset ranges map before recomputing
     explainRangesRef.current = new Map();
-    const newOverlays: Array<{ id: string; rects: DOMRect[] }> = [];
+    const newOverlayIds = new Set<string>();
 
     if (!explainSideChats.length) {
       if (typeof CSS !== "undefined" && CSS.highlights) {
@@ -273,16 +273,8 @@ export function HighlightedResponseWithExplain({
           arr.push(range);
           explainRangesRef.current.set(e._id, arr);
 
-          // Collect rects for hover overlays
-          const rects = Array.from(range.getClientRects());
-          if (rects.length > 0) {
-            const existing = newOverlays.find((o) => o.id === e._id);
-            if (existing) {
-              existing.rects.push(...rects);
-            } else {
-              newOverlays.push({ id: e._id, rects: [...rects] });
-            }
-          }
+          // Store the explain ID - we'll calculate rects on render
+          newOverlayIds.add(e._id);
         }
       });
 
@@ -302,7 +294,7 @@ export function HighlightedResponseWithExplain({
     }
 
     prevExplainColorsRef.current = currentExplainColors;
-    setHoverOverlays(newOverlays);
+    setOverlayIds(Array.from(newOverlayIds));
 
     return () => {
       if (
@@ -318,7 +310,35 @@ export function HighlightedResponseWithExplain({
     };
   }, [explainKey, messageId, findTextRange]);
 
+  // Force re-render on scroll/resize to update overlay positions
+  useEffect(() => {
+    if (!containerRef.current || overlayIds.length === 0) return;
 
+    const handleUpdate = () => {
+      forceUpdate({});
+    };
+
+    // Find scrollable parent
+    let scrollParent: HTMLElement | Window = window;
+    let element = containerRef.current.parentElement;
+    while (element) {
+      const style = window.getComputedStyle(element);
+      if (style.overflow === 'auto' || style.overflow === 'scroll' || style.overflowY === 'auto' || style.overflowY === 'scroll') {
+        scrollParent = element;
+        break;
+      }
+      element = element.parentElement;
+    }
+
+    // Listen to scroll and resize
+    scrollParent.addEventListener('scroll', handleUpdate, { passive: true });
+    window.addEventListener('resize', handleUpdate, { passive: true });
+
+    return () => {
+      scrollParent.removeEventListener('scroll', handleUpdate);
+      window.removeEventListener('resize', handleUpdate);
+    };
+  }, [overlayIds.length]);
 
   const scrollToHighlight = (h: Highlight) => {
     if (!containerRef.current) return;
@@ -366,7 +386,7 @@ export function HighlightedResponseWithExplain({
         while (scrollContainer) {
           const style = window.getComputedStyle(scrollContainer);
           const overflowY = style.overflowY;
-          if (overflowY === 'auto' || overflowY === 'scroll') {
+          if (overflowY === "auto" || overflowY === "scroll") {
             break;
           }
           scrollContainer = scrollContainer.parentElement;
@@ -375,22 +395,22 @@ export function HighlightedResponseWithExplain({
         // Determine scroll behavior based on element position
         const targetRect = scrollTarget?.getBoundingClientRect();
         const containerRect = scrollContainer?.getBoundingClientRect();
-        
+
         let blockPosition: ScrollLogicalPosition = "nearest";
-        
+
         if (targetRect && containerRect) {
           const viewportHeight = window.innerHeight;
           const elementTop = targetRect.top;
           const elementBottom = targetRect.bottom;
-          
+
           // Check if element is already visible
           const isVisible = elementTop >= 0 && elementBottom <= viewportHeight;
-          
+
           if (!isVisible) {
             // If element is below viewport, scroll to start (top of element visible)
             if (elementTop > viewportHeight) {
               blockPosition = "start";
-            } 
+            }
             // If element is above viewport, scroll to end (bottom of element visible)
             else if (elementBottom < 0) {
               blockPosition = "end";
@@ -453,31 +473,42 @@ export function HighlightedResponseWithExplain({
       <Response>{text}</Response>
 
       {/* Invisible overlays for cursor pointer on explain highlights */}
-      {hoverOverlays.length > 0 && (() => {
-        const containerRect = containerRef.current?.getBoundingClientRect();
-        if (!containerRect) return null;
+      {overlayIds.length > 0 &&
+        (() => {
+          const containerRect = containerRef.current?.getBoundingClientRect();
+          if (!containerRect) return null;
 
-        return hoverOverlays.map((overlay) =>
-          overlay.rects.map((rect, idx) => {
-            const overlayStyle = {
-              left: `${rect.left - containerRect.left}px`,
-              top: `${rect.top - containerRect.top}px`,
-              width: `${rect.width}px`,
-              height: `${rect.height}px`,
-            };
+          const overlays: React.ReactElement[] = [];
 
-            return (
-              // eslint-disable-next-line react/forbid-dom-props
-              <div
-                key={`${overlay.id}-${idx}`}
-                className={highlightMenuStyles.explainOverlay}
-                style={overlayStyle}
-                onClick={() => onOpenExplainSideChat?.(overlay.id)}
-              />
-            );
-          })
-        );
-      })()}
+          overlayIds.forEach((explainId) => {
+            const ranges = explainRangesRef.current.get(explainId);
+            if (!ranges) return;
+
+            ranges.forEach((range) => {
+              const rects = range.getClientRects();
+              Array.from(rects).forEach((rect, idx) => {
+                const overlayStyle = {
+                  left: `${rect.left - containerRect.left}px`,
+                  top: `${rect.top - containerRect.top}px`,
+                  width: `${rect.width}px`,
+                  height: `${rect.height}px`,
+                };
+
+                overlays.push(
+                  // eslint-disable-next-line react/forbid-dom-props
+                  <div
+                    key={`${explainId}-${idx}`}
+                    className={highlightMenuStyles.explainOverlay}
+                    style={overlayStyle}
+                    onClick={() => onOpenExplainSideChat?.(explainId)}
+                  />
+                );
+              });
+            });
+          });
+
+          return overlays;
+        })()}
 
       {totalItems > 0 && (
         <div className="mt-2 mx-auto rounded-lg flex flex-col lg:flex-row items-start justify-start gap-1 lg:gap-2">
@@ -535,7 +566,6 @@ export function HighlightedResponseWithExplain({
                           className={`mt-1 shrink-0 
                             text-pink-500
                           `}
-                          // ${getExplainColorClass(e.highlightColor)}
                         />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm text-gray-200 line-clamp-2">
