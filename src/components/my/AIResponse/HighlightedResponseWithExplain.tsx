@@ -227,7 +227,7 @@ export function HighlightedResponseWithExplain({
         padding: 2px;
         border-radius: 3px; 
         text-decoration: underline solid;
-        text-decoration-color: red;
+        text-decoration-color: #f03e76;
         text-decoration-thickness: 4px;
         text-underline-offset: 5px;
       }`;
@@ -323,7 +323,12 @@ export function HighlightedResponseWithExplain({
     let element = containerRef.current.parentElement;
     while (element) {
       const style = window.getComputedStyle(element);
-      if (style.overflow === 'auto' || style.overflow === 'scroll' || style.overflowY === 'auto' || style.overflowY === 'scroll') {
+      if (
+        style.overflow === "auto" ||
+        style.overflow === "scroll" ||
+        style.overflowY === "auto" ||
+        style.overflowY === "scroll"
+      ) {
         scrollParent = element;
         break;
       }
@@ -331,12 +336,12 @@ export function HighlightedResponseWithExplain({
     }
 
     // Listen to scroll and resize
-    scrollParent.addEventListener('scroll', handleUpdate, { passive: true });
-    window.addEventListener('resize', handleUpdate, { passive: true });
+    scrollParent.addEventListener("scroll", handleUpdate, { passive: true });
+    window.addEventListener("resize", handleUpdate, { passive: true });
 
     return () => {
-      scrollParent.removeEventListener('scroll', handleUpdate);
-      window.removeEventListener('resize', handleUpdate);
+      scrollParent.removeEventListener("scroll", handleUpdate);
+      window.removeEventListener("resize", handleUpdate);
     };
   }, [overlayIds.length]);
 
