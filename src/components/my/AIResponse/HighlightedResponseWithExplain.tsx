@@ -447,7 +447,7 @@ export function HighlightedResponseWithExplain({
       <Response>{text}</Response>
 
       {totalItems > 0 && (
-        <div className="mt-2 mx-auto rounded-lg flex flex-col lg:flex-row items-start justify-start gap-2">
+        <div className="mt-2 mx-auto rounded-lg flex flex-col lg:flex-row items-start justify-start gap-1 lg:gap-2">
           {/* #[1] */}
           {/* Highlights Menu Popup Menu */}
           {highlights.length > 0 && (

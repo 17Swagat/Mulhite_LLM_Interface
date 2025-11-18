@@ -29,11 +29,11 @@ export const metadata: Metadata = {
     "Mulhite - Multimodal LLM Chat interface with Highlighting & in-chat Threads.",
   description:
     "Chat with AI models and highlight important information in conversations and create in-chat threads for better context management.",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    viewportFit: "cover",
-  },
+  // viewport: {
+  //   width: "device-width",
+  //   initialScale: 1,
+  //   viewportFit: "cover",
+  // },
 };
 
 export default function RootLayout({
