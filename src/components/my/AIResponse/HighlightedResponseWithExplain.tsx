@@ -123,14 +123,26 @@ export function HighlightedResponseWithExplain({
   useEffect(() => {
     if (!containerRef.current) return;
 
+    // Old Colors:
+    // const colorMap: Record<string, string> = {
+    //   yellow: "#cca300",
+    //   green: "#0c7c01ff",
+    //   blue: "#0099ff",
+    //   pink: "#cc0099",
+    //   orange: "#e67300",
+    //   red: " #ff0000",
+    //   purple: "#b31aff",
+    // };
+
+    // From-Deepseek:
     const colorMap: Record<string, string> = {
-      yellow: "#cca300",
-      green: "#0c7c01ff",
-      blue: "#0099ff",
-      pink: "#cc0099",
-      orange: "#e67300",
-      red: " #ff0000",
-      purple: "#b31aff",
+      yellow: "#b38f00", // Darker yellow that contrasts with white text
+      green: "#2e7d32", // Deeper green as background for white text
+      blue: "#1565c0", // Darker blue that works with white font
+      pink: "#ad1457", // Deeper pink as highlight background
+      orange: "#ef6c00", // Darker orange for white text contrast
+      red: "#c62828", // Darker red that doesn't wash out white text
+      purple: "#6a1b9a", // Deeper purple as highlight background
     };
 
     const ensureStyleAndRule = (color: string) => {
@@ -533,63 +545,84 @@ export function HighlightedResponseWithExplain({
           {/* #[2] */}
           {/* Explain Popup Menu */}
           {explainSideChats.length > 0 && (
-            <Popover open={openExplainMenu} onOpenChange={setOpenExplainMenu}>
-              <PopoverTrigger className="bg-black" asChild>
-                <Button
-                  variant="outline"
-                  style={{
-                    backgroundColor: openExplainMenu ? "#5e055e" : "black",
-                  }}
-                  onClick={() => {
-                    setOpenExplainMenu((prev) => !prev);
-                  }}
-                >
-                  <MessageSquare size={14} className="text-pink-500" />
-                  <span className="">{explainSideChats.length} Explains</span>
-                  <ChevronDown
-                    size={12}
-                    className={` transition-transform ${
-                      openExplainMenu ? "rotate-180" : ""
-                    }`}
-                  />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80 bg-gray-900 text-white z-50 rounded-[10px]">
-                {explainSideChats.length > 0 && (
-                  <>
-                    <div className="px-3 py-2 bg-gray-750 text-xs text-gray-400 font-semibold border-t border-gray-700">
-                      EXPLAIN CHATS (Click text to open)
-                    </div>
-                    {explainSideChats.map((e, idx) => (
-                      <div
-                        key={e._id}
-                        className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
-                        onClick={() => onOpenExplainSideChat?.(e._id)}
-                      >
-                        <MessageSquare
-                          size={14}
-                          className={`mt-1 shrink-0 
-                            text-pink-500
-                          `}
-                        />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm text-gray-200 line-clamp-2">
-                            {e.selectedText}
-                          </p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            Explain #{idx + 1}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </>
-                )}
-              </PopoverContent>
-            </Popover>
+            <ExplainSideChatMenuPopover
+              openExplainMenu={openExplainMenu}
+              setOpenExplainMenu={setOpenExplainMenu}
+              explainSideChats={explainSideChats}
+              onOpenExplainSideChat={onOpenExplainSideChat}
+            />
           )}
         </div>
       )}
     </div>
+  );
+}
+
+function ExplainSideChatMenuPopover({
+  openExplainMenu,
+  setOpenExplainMenu,
+  explainSideChats,
+  onOpenExplainSideChat,
+}: {
+  openExplainMenu: boolean;
+  setOpenExplainMenu: (open: boolean) => void;
+  explainSideChats: ExplainSideChat[];
+  onOpenExplainSideChat?: (sideChatId: string) => void;
+}) {
+  return (
+    <Popover open={openExplainMenu} onOpenChange={setOpenExplainMenu}>
+      <PopoverTrigger className="bg-black" asChild>
+        <Button
+          variant="outline"
+          style={{
+            backgroundColor: openExplainMenu ? "#5e055e" : "black",
+          }}
+          // onClick={() => {
+          //   setOpenExplainMenu(open => !open)//(prev) => !prev);
+          // }}
+        >
+          <MessageSquare size={14} className="text-pink-500" />
+          <span className="">{explainSideChats.length} Explains</span>
+          <ChevronDown
+            size={12}
+            className={` transition-transform ${
+              openExplainMenu ? "rotate-180" : ""
+            }`}
+          />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 bg-gray-900 text-white z-50 rounded-[10px]">
+        {explainSideChats.length > 0 && (
+          <>
+            <div className="px-3 py-2 bg-gray-750 text-xs text-gray-400 font-semibold border-t border-gray-700">
+              EXPLAIN CHATS (Click text to open)
+            </div>
+            {explainSideChats.map((e, idx) => (
+              <div
+                key={e._id}
+                className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
+                onClick={() => onOpenExplainSideChat?.(e._id)}
+              >
+                <MessageSquare
+                  size={14}
+                  className={`mt-1 shrink-0 
+                            text-pink-500
+                          `}
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-gray-200 line-clamp-2">
+                    {e.selectedText}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Explain #{idx + 1}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+      </PopoverContent>
+    </Popover>
   );
 }
 
@@ -638,11 +671,11 @@ function HighlightMenuPopover({
           />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 bg-gray-900 text-white z-50">
+      <PopoverContent className="w-80 bg-transparent text-white z-50">
         <div className="mt-2 bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
-          <div className="px-3 py-2 bg-gray-700 border-b border-gray-600 flex items-center justify-between">
+          <div className="px-3 py-2 bg-gray-900 border-b border-gray-600 flex items-center justify-between">
             <span className="text-sm font-medium text-white">
-              Highlights & Explains
+              Your Highlights
             </span>
             <button
               type="button"
@@ -659,9 +692,9 @@ function HighlightMenuPopover({
           >
             {highlights.length > 0 && (
               <>
-                <div className="px-3 py-2 bg-gray-750 text-xs text-gray-400 font-semibold">
+                {/* <div className="px-3 py-2 bg-gray-750 text-xs text-gray-400 font-semibold">
                   HIGHLIGHTS
-                </div>
+                </div> */}
                 {highlights.map((h, idx) => (
                   <div
                     key={h._id}
@@ -703,16 +736,3 @@ function HighlightMenuPopover({
     </Popover>
   );
 }
-
-// function getColorClass(color: string): string {
-//   const colorMap: Record<string, string> = {
-//     yellow: "bg-yellow-200",
-//     green: "bg-green-200",
-//     blue: "bg-blue-200",
-//     pink: "bg-pink-200",
-//     orange: "bg-orange-200",
-//     red: "bg-red-200",
-//     purple: "bg-purple-200",
-//   };
-//   return colorMap[color] || colorMap.yellow;
-// }
