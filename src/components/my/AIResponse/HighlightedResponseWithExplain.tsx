@@ -180,7 +180,11 @@ export function HighlightedResponseWithExplain({
     prevColorsRef.current = currentColors;
 
     return () => {
-      if (typeof CSS !== "undefined" && CSS.highlights && prevColorsRef.current.size > 0) {
+      if (
+        typeof CSS !== "undefined" &&
+        CSS.highlights &&
+        prevColorsRef.current.size > 0
+      ) {
         prevColorsRef.current.forEach((color) => {
           CSS.highlights.delete(`msg-${messageId}-${color}`);
         });
@@ -298,7 +302,11 @@ export function HighlightedResponseWithExplain({
     prevExplainColorsRef.current = currentExplainColors;
 
     return () => {
-      if (typeof CSS !== "undefined" && CSS.highlights && prevExplainColorsRef.current.size > 0) {
+      if (
+        typeof CSS !== "undefined" &&
+        CSS.highlights &&
+        prevExplainColorsRef.current.size > 0
+      ) {
         prevExplainColorsRef.current.forEach((color) => {
           CSS.highlights.delete(`explain-${messageId}-${color}`);
         });
@@ -439,7 +447,8 @@ export function HighlightedResponseWithExplain({
       <Response>{text}</Response>
 
       {totalItems > 0 && (
-        <div className="mt-2 mx-auto rounded-lg flex items-center justify-start gap-2">
+        <div className="mt-2 mx-auto rounded-lg flex flex-col lg:flex-row items-start justify-start gap-2">
+          {/* #[1] */}
           {/* Highlights Menu Popup Menu */}
           {highlights.length > 0 && (
             <Popover
@@ -450,10 +459,10 @@ export function HighlightedResponseWithExplain({
                 <Button
                   variant="outline"
                   style={{
-                    backgroundColor: openHighlightsMenu ? "#cce60aff" : "white",
+                    backgroundColor: openHighlightsMenu ? "#5e055e" : "black",
                   }}
                 >
-                  <HighlighterIcon size={14} />
+                  <HighlighterIcon size={14} className="text-yellow-500" />
                   <span>{highlights.length} Highlights</span>
                   <ChevronDown
                     size={12}
@@ -530,6 +539,7 @@ export function HighlightedResponseWithExplain({
             </Popover>
           )}
 
+          {/* #[2] */}
           {/* Explain Popup Menu */}
           {explainSideChats.length > 0 && (
             <Popover open={openExplainMenu} onOpenChange={setOpenExplainMenu}>
@@ -537,7 +547,7 @@ export function HighlightedResponseWithExplain({
                 <Button
                   variant="outline"
                   style={{
-                    backgroundColor: openExplainMenu ? "#009900" : "black",
+                    backgroundColor: openExplainMenu ? "#5e055e" : "black",
                   }}
                   onClick={() => {
                     setOpenExplainMenu((prev) => !prev);
