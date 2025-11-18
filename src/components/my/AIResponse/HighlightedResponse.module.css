@@ -37,3 +37,14 @@
 .textCursor {
   cursor: text;
 }
+
+.relativeContainer {
+  position: relative;
+}
+
+.explainOverlay {
+  position: absolute;
+  pointer-events: auto;
+  z-index: 1;
+  cursor: pointer;
+}

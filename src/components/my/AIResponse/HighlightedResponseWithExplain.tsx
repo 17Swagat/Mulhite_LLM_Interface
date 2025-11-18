@@ -58,6 +58,9 @@ export function HighlightedResponseWithExplain({
   const prevExplainColorsRef = useRef<Set<string>>(new Set());
   // Store live ranges for explain highlights to compute click hit-testing reliably
   const explainRangesRef = useRef<Map<string, Range[]>>(new Map());
+  const [hoverOverlays, setHoverOverlays] = useState<
+    Array<{ id: string; rects: DOMRect[] }>
+  >([]);
 
   // Create a stable dependency key for both highlights and explains
   const highlightsKey = useMemo(
@@ -224,6 +227,7 @@ export function HighlightedResponseWithExplain({
     const prevExplainColors = prevExplainColorsRef.current;
     // Reset ranges map before recomputing
     explainRangesRef.current = new Map();
+    const newOverlays: Array<{ id: string; rects: DOMRect[] }> = [];
 
     if (!explainSideChats.length) {
       if (typeof CSS !== "undefined" && CSS.highlights) {
@@ -277,6 +281,17 @@ export function HighlightedResponseWithExplain({
             arr.push(range);
             explainRangesRef.current.set(e._id, arr);
 
+            // Collect rects for hover overlays
+            const rects = Array.from(range.getClientRects());
+            if (rects.length > 0) {
+              const existing = newOverlays.find((o) => o.id === e._id);
+              if (existing) {
+                existing.rects.push(...rects);
+              } else {
+                newOverlays.push({ id: e._id, rects: [...rects] });
+              }
+            }
+
             break;
           }
 
@@ -300,6 +315,7 @@ export function HighlightedResponseWithExplain({
     }
 
     prevExplainColorsRef.current = currentExplainColors;
+    setHoverOverlays(newOverlays);
 
     return () => {
       if (
@@ -315,45 +331,7 @@ export function HighlightedResponseWithExplain({
     };
   }, [explainKey, messageId]);
 
-  // Handle click on explain highlights using range hit-testing (reliable across browsers)
-  useEffect(() => {
-    if (!containerRef.current) return;
 
-    const handleClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (!target.closest("[data-message-text]")) return;
-
-      const x = e.clientX;
-      const y = e.clientY;
-
-      // Prioritize precise rect hit-test from stored ranges
-      for (const explain of explainSideChats) {
-        const ranges = explainRangesRef.current.get(explain._id) || [];
-        for (const r of ranges) {
-          const rects = r.getClientRects();
-          for (let i = 0; i < rects.length; i++) {
-            const rect = rects[i];
-            if (
-              x >= rect.left &&
-              x <= rect.right &&
-              y >= rect.top &&
-              y <= rect.bottom
-            ) {
-              onOpenExplainSideChat?.(explain._id);
-              return;
-            }
-          }
-        }
-      }
-    };
-
-    const container = containerRef.current;
-    container.addEventListener("click", handleClick);
-
-    return () => {
-      container.removeEventListener("click", handleClick);
-    };
-  }, [explainSideChats, onOpenExplainSideChat]);
 
   const scrollToHighlight = (h: Highlight) => {
     if (!containerRef.current) return;
@@ -478,14 +456,39 @@ export function HighlightedResponseWithExplain({
   return (
     <div
       ref={containerRef}
-      className={[className, highlightMenuStyles.textCursor]
-        .filter(Boolean)
-        .join(" ")}
+      className={`${className || ""} ${highlightMenuStyles.textCursor} ${
+        highlightMenuStyles.relativeContainer
+      }`}
       data-message-id={messageId}
       data-message-text="true"
       data-assistant-message="true"
     >
       <Response>{text}</Response>
+
+      {/* Invisible overlays for cursor pointer on explain highlights */}
+      {hoverOverlays.map((overlay) =>
+        overlay.rects.map((rect, idx) => {
+          const containerRect = containerRef.current?.getBoundingClientRect();
+          if (!containerRect) return null;
+
+          const overlayStyle = {
+            left: `${rect.left - containerRect.left}px`,
+            top: `${rect.top - containerRect.top}px`,
+            width: `${rect.width}px`,
+            height: `${rect.height}px`,
+          };
+
+          return (
+            // eslint-disable-next-line react/forbid-dom-props
+            <div
+              key={`${overlay.id}-${idx}`}
+              className={highlightMenuStyles.explainOverlay}
+              style={overlayStyle}
+              onClick={() => onOpenExplainSideChat?.(overlay.id)}
+            />
+          );
+        })
+      )}
 
       {totalItems > 0 && (
         <div className="mt-2 mx-auto rounded-lg flex flex-col lg:flex-row items-start justify-start gap-1 lg:gap-2">
