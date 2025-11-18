@@ -2,7 +2,7 @@
 
 import { Response } from "@/components/ui/shadcn-io/ai/response";
 import type { Highlight } from "@/ctypes/highlights";
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import {
   Trash2,
   HighlighterIcon,
@@ -61,6 +61,44 @@ export function HighlightedResponseWithExplain({
   const [hoverOverlays, setHoverOverlays] = useState<
     Array<{ id: string; rects: DOMRect[] }>
   >([]);
+
+  // Shared function to find text range - avoids duplicate tree walker code
+  const findTextRange = useCallback(
+    (startOffset: number, endOffset: number): Range | null => {
+      if (!containerRef.current) return null;
+
+      const walker = document.createTreeWalker(
+        containerRef.current,
+        NodeFilter.SHOW_TEXT
+      );
+
+      let offset = 0;
+      let node: Node | null;
+      let startNode: Node | null = null;
+      let startNodeOffset = 0;
+
+      while ((node = walker.nextNode())) {
+        const text = node.textContent || "";
+        const end = offset + text.length;
+
+        if (!startNode && startOffset >= offset && startOffset <= end) {
+          startNode = node;
+          startNodeOffset = startOffset - offset;
+        }
+
+        if (startNode && endOffset >= offset && endOffset <= end) {
+          const range = document.createRange();
+          range.setStart(startNode, startNodeOffset);
+          range.setEnd(node, endOffset - offset);
+          return range;
+        }
+
+        offset = end;
+      }
+      return null;
+    },
+    []
+  );
 
   // Create a stable dependency key for both highlights and explains
   const highlightsKey = useMemo(
@@ -134,34 +172,9 @@ export function HighlightedResponseWithExplain({
     Object.entries(byColor).forEach(([color, colorHighlights]) => {
       const ranges: Range[] = [];
       colorHighlights.forEach((h) => {
-        const walker = document.createTreeWalker(
-          containerRef.current!,
-          NodeFilter.SHOW_TEXT
-        );
-
-        let offset = 0;
-        let node: Node | null;
-        let startNode: Node | null = null;
-        let startOffset = 0;
-
-        while ((node = walker.nextNode())) {
-          const text = node.textContent || "";
-          const end = offset + text.length;
-
-          if (!startNode && h.startOffset >= offset && h.startOffset <= end) {
-            startNode = node;
-            startOffset = h.startOffset - offset;
-          }
-
-          if (startNode && h.endOffset >= offset && h.endOffset <= end) {
-            const range = document.createRange();
-            range.setStart(startNode, startOffset);
-            range.setEnd(node, h.endOffset - offset);
-            ranges.push(range);
-            break;
-          }
-
-          offset = end;
+        const range = findTextRange(h.startOffset, h.endOffset);
+        if (range) {
+          ranges.push(range);
         }
       });
 
@@ -194,7 +207,7 @@ export function HighlightedResponseWithExplain({
         prevColorsRef.current = new Set();
       }
     };
-  }, [highlightsKey, messageId]);
+  }, [highlightsKey, messageId, findTextRange]);
 
   // Apply CSS Highlight API for explain side-chats with glowing effect
   useEffect(() => {
@@ -251,51 +264,25 @@ export function HighlightedResponseWithExplain({
     Object.entries(byColor).forEach(([color, colorExplains]) => {
       const ranges: Range[] = [];
       colorExplains.forEach((e) => {
-        const walker = document.createTreeWalker(
-          containerRef.current!,
-          NodeFilter.SHOW_TEXT
-        );
+        const range = findTextRange(e.startOffset, e.endOffset);
+        if (range) {
+          ranges.push(range);
 
-        let offset = 0;
-        let node: Node | null;
-        let startNode: Node | null = null;
-        let startOffset = 0;
+          // Save range for this explain id for precise click hit-test
+          const arr = explainRangesRef.current.get(e._id) ?? [];
+          arr.push(range);
+          explainRangesRef.current.set(e._id, arr);
 
-        while ((node = walker.nextNode())) {
-          const text = node.textContent || "";
-          const end = offset + text.length;
-
-          if (!startNode && e.startOffset >= offset && e.startOffset <= end) {
-            startNode = node;
-            startOffset = e.startOffset - offset;
-          }
-
-          if (startNode && e.endOffset >= offset && e.endOffset <= end) {
-            const range = document.createRange();
-            range.setStart(startNode, startOffset);
-            range.setEnd(node, e.endOffset - offset);
-            ranges.push(range);
-
-            // Save range for this explain id for precise click hit-test
-            const arr = explainRangesRef.current.get(e._id) ?? [];
-            arr.push(range);
-            explainRangesRef.current.set(e._id, arr);
-
-            // Collect rects for hover overlays
-            const rects = Array.from(range.getClientRects());
-            if (rects.length > 0) {
-              const existing = newOverlays.find((o) => o.id === e._id);
-              if (existing) {
-                existing.rects.push(...rects);
-              } else {
-                newOverlays.push({ id: e._id, rects: [...rects] });
-              }
+          // Collect rects for hover overlays
+          const rects = Array.from(range.getClientRects());
+          if (rects.length > 0) {
+            const existing = newOverlays.find((o) => o.id === e._id);
+            if (existing) {
+              existing.rects.push(...rects);
+            } else {
+              newOverlays.push({ id: e._id, rects: [...rects] });
             }
-
-            break;
           }
-
-          offset = end;
         }
       });
 
@@ -329,7 +316,7 @@ export function HighlightedResponseWithExplain({
         prevExplainColorsRef.current = new Set();
       }
     };
-  }, [explainKey, messageId]);
+  }, [explainKey, messageId, findTextRange]);
 
 
 
@@ -466,29 +453,31 @@ export function HighlightedResponseWithExplain({
       <Response>{text}</Response>
 
       {/* Invisible overlays for cursor pointer on explain highlights */}
-      {hoverOverlays.map((overlay) =>
-        overlay.rects.map((rect, idx) => {
-          const containerRect = containerRef.current?.getBoundingClientRect();
-          if (!containerRect) return null;
+      {hoverOverlays.length > 0 && (() => {
+        const containerRect = containerRef.current?.getBoundingClientRect();
+        if (!containerRect) return null;
 
-          const overlayStyle = {
-            left: `${rect.left - containerRect.left}px`,
-            top: `${rect.top - containerRect.top}px`,
-            width: `${rect.width}px`,
-            height: `${rect.height}px`,
-          };
+        return hoverOverlays.map((overlay) =>
+          overlay.rects.map((rect, idx) => {
+            const overlayStyle = {
+              left: `${rect.left - containerRect.left}px`,
+              top: `${rect.top - containerRect.top}px`,
+              width: `${rect.width}px`,
+              height: `${rect.height}px`,
+            };
 
-          return (
-            // eslint-disable-next-line react/forbid-dom-props
-            <div
-              key={`${overlay.id}-${idx}`}
-              className={highlightMenuStyles.explainOverlay}
-              style={overlayStyle}
-              onClick={() => onOpenExplainSideChat?.(overlay.id)}
-            />
-          );
-        })
-      )}
+            return (
+              // eslint-disable-next-line react/forbid-dom-props
+              <div
+                key={`${overlay.id}-${idx}`}
+                className={highlightMenuStyles.explainOverlay}
+                style={overlayStyle}
+                onClick={() => onOpenExplainSideChat?.(overlay.id)}
+              />
+            );
+          })
+        );
+      })()}
 
       {totalItems > 0 && (
         <div className="mt-2 mx-auto rounded-lg flex flex-col lg:flex-row items-start justify-start gap-1 lg:gap-2">
