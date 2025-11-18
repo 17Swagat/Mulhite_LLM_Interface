@@ -974,7 +974,7 @@ export default function ChatArea({
     <>
       <Authenticated>
         {/* <div className="flex flex-col h-screen bg-gray-900 text-white overflow-hidden"> */}
-        <div className="flex flex-col h-dvh bg-gray-900 text-white overflow-hidden">
+        <div className="flex flex-col h-dvh  bg-gray-900 text-white overflow-hidden">
           <Sheet open={openExplainSidebar} onOpenChange={setOpenExplainSidebar}>
             <ToolbarOnTextSelection
               availableModels={availableModels}
@@ -990,7 +990,7 @@ export default function ChatArea({
               {/* TODO: "Not sure why but the scroll-bar design is not taking place." */}
               <ConversationContent
                 // className="laptop:mx-auto laptop:w-[50%] bg-amber-300 "
-                className="laptop:mx-auto laptop:w-[1000px]"
+                className="laptop:mx-auto laptop:w-[1000px] h-full"
                 // className={`flex flex-col items-end place-content-center w-[70%] mx-auto overflow-y-auto  py-6 relative`}
               >
                 {renderedMessages}

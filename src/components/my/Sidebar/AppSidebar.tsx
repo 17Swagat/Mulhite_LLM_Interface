@@ -131,7 +131,7 @@ export function AppSidebar() {
           {/* <Link href="/" className="flex justify-center items-center"> */}
           <div className="flex justify-center items-center">
             <h1
-              className={`text-3xl font-bold text-white tracking-wider bg-linear-to-tr from-purple-700 via-teal-600 to-blue-950 px-2 py-1 rounded-lg cursor-pointer hover:bg-linear-to-tr hover:from-red-400 hover:via-gray-600 hover:to-teal-400 transition duration-700 ease-in-out `}
+              className={`text-3xl font-bold text-white tracking-wider bg-linear-to-tr from-purple-700 via-teal-600 to-blue-950 px-2 py-1 rounded-lg cursor-default hover:bg-linear-to-tr hover:from-red-400 hover:via-gray-600 hover:to-teal-400 transition duration-700 ease-in-out `}
             >
               MULHITE
             </h1>

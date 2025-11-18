@@ -396,9 +396,50 @@ export function HighlightedResponseWithExplain({
             ? range.startContainer
             : range.startContainer?.parentElement) || targetNode!.parentElement;
 
+        // Find the scrollable parent container
+        let scrollContainer = scrollTarget?.parentElement;
+        while (scrollContainer) {
+          const style = window.getComputedStyle(scrollContainer);
+          const overflowY = style.overflowY;
+          if (overflowY === 'auto' || overflowY === 'scroll') {
+            break;
+          }
+          scrollContainer = scrollContainer.parentElement;
+        }
+
+        // Determine scroll behavior based on element position
+        const targetRect = scrollTarget?.getBoundingClientRect();
+        const containerRect = scrollContainer?.getBoundingClientRect();
+        
+        let blockPosition: ScrollLogicalPosition = "nearest";
+        
+        if (targetRect && containerRect) {
+          const viewportHeight = window.innerHeight;
+          const elementTop = targetRect.top;
+          const elementBottom = targetRect.bottom;
+          
+          // Check if element is already visible
+          const isVisible = elementTop >= 0 && elementBottom <= viewportHeight;
+          
+          if (!isVisible) {
+            // If element is below viewport, scroll to start (top of element visible)
+            if (elementTop > viewportHeight) {
+              blockPosition = "start";
+            } 
+            // If element is above viewport, scroll to end (bottom of element visible)
+            else if (elementBottom < 0) {
+              blockPosition = "end";
+            }
+            // For elements partially visible, use nearest
+            else {
+              blockPosition = "nearest";
+            }
+          }
+        }
+
         scrollTarget?.scrollIntoView({
           behavior: "smooth",
-          block: "center",
+          block: blockPosition,
           inline: "nearest",
         });
 
@@ -451,92 +492,14 @@ export function HighlightedResponseWithExplain({
           {/* #[1] */}
           {/* Highlights Menu Popup Menu */}
           {highlights.length > 0 && (
-            <Popover
-              open={openHighlightsMenu}
-              onOpenChange={setOpenHighlightsMenu}
-            >
-              <PopoverTrigger className="bg-black" asChild>
-                <Button
-                  variant="outline"
-                  style={{
-                    backgroundColor: openHighlightsMenu ? "#5e055e" : "black",
-                  }}
-                >
-                  <HighlighterIcon size={14} className="text-yellow-500" />
-                  <span>{highlights.length} Highlights</span>
-                  <ChevronDown
-                    size={12}
-                    className={`transition-transform ${
-                      openHighlightsMenu ? "rotate-180" : ""
-                    }`}
-                  />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80 bg-gray-900 text-white z-50">
-                <div className="mt-2 bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
-                  <div className="px-3 py-2 bg-gray-700 border-b border-gray-600 flex items-center justify-between">
-                    <span className="text-sm font-medium text-white">
-                      Highlights & Explains
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setOpenHighlightsMenu(false)}
-                      className="p-1 hover:bg-gray-600 rounded"
-                      aria-label="Close menu"
-                    >
-                      <X size={20} className="text-gray-300" />
-                    </button>
-                  </div>
-
-                  <div
-                    className={`max-h-80 overflow-y-auto  ${highlightMenuStyles.highlight_scrollbar}`}
-                  >
-                    {highlights.length > 0 && (
-                      <>
-                        <div className="px-3 py-2 bg-gray-750 text-xs text-gray-400 font-semibold">
-                          HIGHLIGHTS
-                        </div>
-                        {highlights.map((h, idx) => (
-                          <div
-                            key={h._id}
-                            className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
-                            onClick={() => scrollToHighlight(h)}
-                          >
-                            <div
-                              className={`w-2 h-2 rounded-full mt-1 shrink-0 ${getColorClass(
-                                h.color || "yellow"
-                              )}`}
-                            />
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm text-gray-200 line-clamp-2">
-                                {h.text}
-                              </p>
-                              <p className="text-xs text-gray-500 mt-1">
-                                #{idx + 1}
-                              </p>
-                            </div>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onDeleteHighlight?.(h._id);
-                              }}
-                              className="p-1 hover:bg-red-900/40 rounded opacity-0 group-hover:opacity-100"
-                              aria-label="Delete highlight"
-                            >
-                              <Trash2
-                                size={12}
-                                className="text-gray-400 hover:text-red-400"
-                              />
-                            </button>
-                          </div>
-                        ))}
-                      </>
-                    )}
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
+            // Highlight Popover
+            <HighlightMenuPopover
+              highlights={highlights}
+              openHighlightsMenu={openHighlightsMenu}
+              setOpenHighlightsMenu={setOpenHighlightsMenu}
+              onDeleteHighlight={onDeleteHighlight}
+              scrollToHighlight={scrollToHighlight}
+            />
           )}
 
           {/* #[2] */}
@@ -603,25 +566,126 @@ export function HighlightedResponseWithExplain({
   );
 }
 
-function getColorClass(color: string): string {
-  const colorMap: Record<string, string> = {
-    yellow: "bg-yellow-200",
-    green: "bg-green-200",
-    blue: "bg-blue-200",
-    pink: "bg-pink-200",
-    orange: "bg-orange-200",
-    red: "bg-red-200",
-    purple: "bg-purple-200",
+function HighlightMenuPopover({
+  highlights,
+  openHighlightsMenu,
+  setOpenHighlightsMenu,
+  onDeleteHighlight,
+  scrollToHighlight,
+}: {
+  highlights: Highlight[];
+  openHighlightsMenu: boolean;
+  setOpenHighlightsMenu: (open: boolean) => void;
+  onDeleteHighlight?: (highlightId: string) => void;
+  scrollToHighlight: (h: Highlight) => void;
+}) {
+  const getColorClass = (color: string): string => {
+    const colorMap: Record<string, string> = {
+      yellow: "bg-yellow-200",
+      green: "bg-green-200",
+      blue: "bg-blue-200",
+      pink: "bg-pink-200",
+      orange: "bg-orange-200",
+      red: "bg-red-200",
+      purple: "bg-purple-200",
+    };
+    return colorMap[color] || colorMap.yellow;
   };
-  return colorMap[color] || colorMap.yellow;
+
+  return (
+    <Popover open={openHighlightsMenu} onOpenChange={setOpenHighlightsMenu}>
+      <PopoverTrigger className="bg-black" asChild>
+        <Button
+          variant="outline"
+          style={{
+            backgroundColor: openHighlightsMenu ? "#5e055e" : "black",
+          }}
+        >
+          <HighlighterIcon size={14} className="text-yellow-500" />
+          <span>{highlights.length} Highlights</span>
+          <ChevronDown
+            size={12}
+            className={`transition-transform ${
+              openHighlightsMenu ? "rotate-180" : ""
+            }`}
+          />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 bg-gray-900 text-white z-50">
+        <div className="mt-2 bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
+          <div className="px-3 py-2 bg-gray-700 border-b border-gray-600 flex items-center justify-between">
+            <span className="text-sm font-medium text-white">
+              Highlights & Explains
+            </span>
+            <button
+              type="button"
+              onClick={() => setOpenHighlightsMenu(false)}
+              className="p-1 hover:bg-gray-600 rounded"
+              aria-label="Close menu"
+            >
+              <X size={20} className="text-gray-300" />
+            </button>
+          </div>
+
+          <div
+            className={`max-h-80 overflow-y-auto  ${highlightMenuStyles.highlight_scrollbar}`}
+          >
+            {highlights.length > 0 && (
+              <>
+                <div className="px-3 py-2 bg-gray-750 text-xs text-gray-400 font-semibold">
+                  HIGHLIGHTS
+                </div>
+                {highlights.map((h, idx) => (
+                  <div
+                    key={h._id}
+                    className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
+                    onClick={() => scrollToHighlight(h)}
+                  >
+                    <div
+                      className={`w-2 h-2 rounded-full mt-1 shrink-0 ${getColorClass(
+                        h.color || "yellow"
+                      )}`}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-gray-200 line-clamp-2">
+                        {h.text}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">#{idx + 1}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeleteHighlight?.(h._id);
+                      }}
+                      className="p-1 hover:bg-red-900/40 rounded opacity-0 group-hover:opacity-100"
+                      aria-label="Delete highlight"
+                    >
+                      <Trash2
+                        size={12}
+                        className="text-gray-400 hover:text-red-400"
+                      />
+                    </button>
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
 }
 
-// function getExplainColorClass(color: string): string {
+// function getColorClass(color: string): string {
 //   const colorMap: Record<string, string> = {
-//     blue: "text-blue-400",
-//     purple: "text-purple-400",
-//     indigo: "text-indigo-400",
-//     cyan: "text-cyan-400",
+//     yellow: "bg-yellow-200",
+//     green: "bg-green-200",
+//     blue: "bg-blue-200",
+//     pink: "bg-pink-200",
+//     orange: "bg-orange-200",
+//     red: "bg-red-200",
+//     purple: "bg-purple-200",
 //   };
-//   return colorMap[color] || colorMap.blue;
+//   return colorMap[color] || colorMap.yellow;
 // }
