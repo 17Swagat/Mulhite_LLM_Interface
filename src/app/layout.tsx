@@ -25,9 +25,15 @@ export const font_GMonoTrustDisplay = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Nody - AI Chat & Highlighting",
+  title:
+    "Mulhite - Multimodal LLM Chat interface with Highlighting & in-chat Threads.",
   description:
-    "Chat with AI models and highlight important information in conversations",
+    "Chat with AI models and highlight important information in conversations and create in-chat threads for better context management.",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    viewportFit: "cover",
+  },
 };
 
 export default function RootLayout({

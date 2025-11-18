@@ -973,7 +973,8 @@ export default function ChatArea({
   return (
     <>
       <Authenticated>
-        <div className="flex flex-col h-screen bg-gray-900 text-white overflow-hidden">
+        {/* <div className="flex flex-col h-screen bg-gray-900 text-white overflow-hidden"> */}
+        <div className="flex flex-col h-dvh bg-gray-900 text-white overflow-hidden">
           <Sheet open={openExplainSidebar} onOpenChange={setOpenExplainSidebar}>
             <ToolbarOnTextSelection
               availableModels={availableModels}
@@ -1006,7 +1007,12 @@ export default function ChatArea({
               {/* <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-0 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md"> */}
               {/* <div className="sticky bottom-0 w-full flex  justify-center bg-amber-700 place-content-center"> */}
 
-              <div className="sticky bottom-0  px-2  lg:py-0.5 w-full flex  place-content-center">
+              {/* Old */}
+              <div
+                className="
+              sticky bottom-0  px-2  lg:py-0.5 w-full flex  
+                place-content-center "
+              >
                 <PromptInputField
                   availableModels={availableModels}
                   handleSubmit={handleSubmit}
