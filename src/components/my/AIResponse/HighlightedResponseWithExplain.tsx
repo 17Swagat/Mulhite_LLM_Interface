@@ -123,17 +123,6 @@ export function HighlightedResponseWithExplain({
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Old Colors:
-    // const colorMap: Record<string, string> = {
-    //   yellow: "#cca300",
-    //   green: "#0c7c01ff",
-    //   blue: "#0099ff",
-    //   pink: "#cc0099",
-    //   orange: "#e67300",
-    //   red: " #ff0000",
-    //   purple: "#b31aff",
-    // };
-
     // From-Deepseek:
     const colorMap: Record<string, string> = {
       yellow: "#b38f00", // Darker yellow that contrasts with white text
@@ -233,7 +222,7 @@ export function HighlightedResponseWithExplain({
         style.id = styleId;
         document.head.appendChild(style);
       }
-      const bgColor = "transparent"; //explainColorMap[color] || explainColorMap.blue;
+      const bgColor = "#063663" //"transparent"; //explainColorMap[color] || explainColorMap.blue;
       const cssRule = `::highlight(explain-${messageId}-${color}) { 
         background-color: ${bgColor};
         padding: 2px;
@@ -532,7 +521,6 @@ export function HighlightedResponseWithExplain({
           {/* #[1] */}
           {/* Highlights Menu Popup Menu */}
           {highlights.length > 0 && (
-            // Highlight Popover
             <HighlightMenuPopover
               highlights={highlights}
               openHighlightsMenu={openHighlightsMenu}
@@ -577,9 +565,6 @@ function ExplainSideChatMenuPopover({
           style={{
             backgroundColor: openExplainMenu ? "#5e055e" : "black",
           }}
-          // onClick={() => {
-          //   setOpenExplainMenu(open => !open)//(prev) => !prev);
-          // }}
         >
           <MessageSquare size={14} className="text-pink-500" />
           <span className="">{explainSideChats.length} Explains</span>

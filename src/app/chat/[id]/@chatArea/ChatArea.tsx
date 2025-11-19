@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  HoverCard,
-  HoverCardTrigger,
-  HoverCardContent,
-} from "@/components/ui/hover-card";
-
 import { CreditsLeft } from "@/components/my/CreditsLeft";
-
 import { UIMessage, useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, gateway } from "ai";
 import { useEffect, useState, useRef, useMemo, useCallback } from "react";
@@ -52,7 +45,6 @@ import { ExplainSideChatContent } from "./ExplainSideChat";
 import { LoadingScreen } from "@/components/my/LoadingScreen";
 import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 import { useUserQuestionStore } from "@/stores/userQuestionStore";
-import { CpuIcon, DollarSignIcon, MessageCircle } from "lucide-react";
 import { useVercelAICreditsLeft } from "@/stores/aiprovidersCreditsStore";
 import { useAboutDeviceInfo } from "@/stores/aboutDevice";
 import { isDeviceTouch } from "@/utils/clientfuncs/isDeviceTouch";
@@ -61,15 +53,12 @@ import { TokensConsumed } from "@/components/my/TokensConsumed";
 export default function ChatArea({
   id,
   availableModels,
-}: // children,
-{
+}: {
   id: string;
   availableModels: any[];
-  // children: React.ReactNode;
 }) {
   // 💵💵
   // Vercel-Credits-Left:
-  // const [credits, setCredits] = useState(0);
   const { vercelAiGatewayCredits, setVercelAiGatewayCredits } =
     useVercelAICreditsLeft();
 
@@ -170,7 +159,7 @@ export default function ChatArea({
           );
         }
       } catch (error: any) {
-        console.error("Failed to save messages to Convex:", error);
+        console.error("Failed to save messages to Database:", error); // convex
 
         // Show user-friendly error if message limit reached
         if (error?.message?.includes("maximum limit")) {
@@ -266,7 +255,6 @@ export default function ChatArea({
         return;
       }
 
-      // console.log(messagesData.messages)
 
       // Valid conversation, load messages
       if (messagesData.messages !== undefined) {
