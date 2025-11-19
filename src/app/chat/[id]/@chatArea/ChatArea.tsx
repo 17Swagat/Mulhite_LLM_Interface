@@ -990,10 +990,7 @@ export default function ChatArea({
                 isTouchDevice={isTouchDevice}
               />
 
-              {/* Input-Field */}
-              {/* <div className="w-[50%] lg:w-[70%] xl:w-[50%] sticky bottom-0 mx-auto rounded-2xl py-1 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md"> */}
-              {/* <div className="sticky bottom-0 w-full flex  justify-center bg-amber-700 place-content-center"> */}
-
+              {/* User-Input */}
               <div
                 className="
               sticky bottom-0  px-2  lg:py-0.5 w-full flex  
