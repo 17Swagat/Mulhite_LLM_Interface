@@ -222,7 +222,7 @@ export function HighlightedResponseWithExplain({
         style.id = styleId;
         document.head.appendChild(style);
       }
-      const bgColor = "#063663" //"transparent"; //explainColorMap[color] || explainColorMap.blue;
+      const bgColor = "#063663"; //"transparent"; //explainColorMap[color] || explainColorMap.blue;
       const cssRule = `::highlight(explain-${messageId}-${color}) { 
         background-color: ${bgColor};
         padding: 2px;
@@ -576,10 +576,10 @@ function ExplainSideChatMenuPopover({
           />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 bg-gray-900 text-white z-50 rounded-[10px]">
+      <PopoverContent className="w-80 bg-transparent  text-white z-50 ">
         {explainSideChats.length > 0 && (
-          <>
-            <div className="px-3 py-2 bg-gray-750 text-xs text-gray-400 font-semibold border-t border-gray-700">
+          <div className="bg-gray-800 rounded-[10px] border  border-gray-700 overflow-hidden">
+            <div className="px-3 py-2 bg-gray-900 text-xs text-gray-400 font-semibold">
               EXPLAIN CHATS (Click text to open)
             </div>
             {explainSideChats.map((e, idx) => (
@@ -604,7 +604,7 @@ function ExplainSideChatMenuPopover({
                 </div>
               </div>
             ))}
-          </>
+          </div>
         )}
       </PopoverContent>
     </Popover>

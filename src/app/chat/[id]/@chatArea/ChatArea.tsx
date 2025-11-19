@@ -255,7 +255,6 @@ export default function ChatArea({
         return;
       }
 
-
       // Valid conversation, load messages
       if (messagesData.messages !== undefined) {
         const convexMessages: UIMessage[] = messagesData.messages.map(
@@ -531,6 +530,7 @@ export default function ChatArea({
     null
   );
 
+  // [Text-Selection Event]
   // Adding Event Listener for text selection changes
   useEffect(() => {
     const handleSelectionChange = () => {
@@ -932,7 +932,6 @@ export default function ChatArea({
       `pendingExplainMessage_${sideChatId}`,
       `Explain "${selectedText}" based on the current conversation.`
     );
-    // sessionStorage.setItem(`pendingExplainModel_${sideChatId}`, selectedModel);
 
     setActiveSideChatId(sideChatId);
     setOpenExplainSidebar(true);
