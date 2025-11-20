@@ -101,7 +101,9 @@ export function ChatPage_ClientComponent({
      bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c] 
       text-white flex justify-center items-center"
       >
-        <CreditsLeft credits={credits} isTouchDevice={isTouchDevice} />
+        <div className="fixed top-0 right-1 lg:right-8 flex gap-2 items-center">
+          <CreditsLeft credits={credits} isTouchDevice={isTouchDevice} />
+        </div>
 
         <div className="flex flex-col items-center">
           <h1 className="text-3xl mb-2 font-semibold">

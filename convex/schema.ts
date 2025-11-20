@@ -3,19 +3,13 @@ import { v } from "convex/values";
 
 export default defineSchema({
 
-    ////////////////////////////////////////////////////////////////
-    // Learning Convex with experimentation
-    // test_table: defineTable({
-    //     message: v.string(),
-    //     user: v.string(),
-    // }).index('by_user', ['user']).searchIndex('search_message', { searchField: 'message', staged: false }),
-    ////////////////////////////////////////////////////////////////
-
     users: defineTable({
         clerkUserId: v.string(),  // Clerk's unique user ID (e.g., "user_abc123")
         email: v.string(),        // For quick lookups (optional, from Clerk)
         name: v.optional(v.string()),  // Display name
         // Add LLM keys later: apiKeys: v.array(v.object({ llm: v.string(), key: v.string() })) – encrypt keys!
+
+        apiKeys: v.optional(v.array(v.object({ llm: v.string(), key: v.string() })))
     })
         .index("by_clerkUserId", ["clerkUserId"])  // Fast auth lookups
         .index("by_email", ["email"]),

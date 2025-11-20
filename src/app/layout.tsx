@@ -18,11 +18,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const font_GMonoTrustDisplay = localFont({
-  src: "../../public/fonts/momofont.ttf", // ← Correct relative path
-  display: "swap",
-  variable: "--font-gmono-trust", // Optional: for CSS variable usage
-});
+// export const font_GMonoTrustDisplay = localFont({
+//   src: "../../public/fonts/momofont.ttf", // ← Correct relative path
+//   display: "swap",
+//   variable: "--font-gmono-trust", // Optional: for CSS variable usage
+// });
 
 export const metadata: Metadata = {
   title:

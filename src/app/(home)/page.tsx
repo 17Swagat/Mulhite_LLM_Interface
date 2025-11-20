@@ -6,7 +6,8 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
-import { font_GMonoTrustDisplay } from "../layout";
+import { font_GMonoTrustDisplay } from "@/fonts";
+
 import {
   Info,
   Highlighter,

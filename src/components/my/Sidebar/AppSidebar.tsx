@@ -23,6 +23,8 @@ import { api } from "@/../convex/_generated/api";
 import cssStyleSidebar from "./AppSidebar.module.css";
 import { UserButton, useUser } from "@clerk/nextjs";
 
+import { font_GMonoTrustDisplay } from "@/fonts";
+
 export function AppSidebar() {
   // ConvexClerk Auth
   const { isLoading: isLoadingAuth, isAuthenticated } = useConvexAuth();
@@ -131,7 +133,7 @@ export function AppSidebar() {
           {/* <Link href="/" className="flex justify-center items-center"> */}
           <div className="flex justify-center items-center">
             <h1
-              className={`text-3xl font-bold text-white tracking-wider bg-linear-to-tr from-purple-700 via-teal-600 to-blue-950 px-2 py-1 rounded-lg cursor-default hover:bg-linear-to-tr hover:from-red-400 hover:via-gray-600 hover:to-teal-400 transition duration-700 ease-in-out `}
+              className={`text-2xl font-semibold text-white tracking-wider bg-linear-to-tr from-purple-700 via-teal-600 to-blue-950 px-2 py-1 rounded-lg cursor-default hover:bg-linear-to-tr hover:from-red-400 hover:via-gray-600 hover:to-teal-400 transition duration-700 ease-in-out ${font_GMonoTrustDisplay.className}`}
             >
               MULHITE
             </h1>
@@ -208,7 +210,7 @@ export function AppSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter className="border-t border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <SidebarFooter className="border-t border-border/50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
           <div className="flex items-center justify-between p-3 w-full">
             {/* User Info */}
             <div className="flex flex-col truncate">

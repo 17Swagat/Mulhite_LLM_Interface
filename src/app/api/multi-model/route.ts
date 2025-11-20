@@ -7,8 +7,12 @@ import { streamText, UIMessage, convertToModelMessages, uiMessageChunkSchema, La
 import { createOllama } from 'ollama-ai-provider-v2';
 import { v7 as uuidv7 } from 'uuid';
 
-import { gateway } from 'ai';
-import { get } from 'http';
+// import { gateway } from 'ai';
+import { createGateway } from 'ai';
+
+const gateway = createGateway({
+    apiKey: process.env.AI_GATEWAY_API_KEY ?? '',
+});
 
 // export const maxDuration = 30;
 // const ollama = createOllama({

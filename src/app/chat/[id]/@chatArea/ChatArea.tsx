@@ -49,6 +49,7 @@ import { useVercelAICreditsLeft } from "@/stores/aiprovidersCreditsStore";
 import { useAboutDeviceInfo } from "@/stores/aboutDevice";
 import { isDeviceTouch } from "@/utils/clientfuncs/isDeviceTouch";
 import { TokensConsumed } from "@/components/my/TokensConsumed";
+import { APIKeys } from "@/components/my/APIKeys";
 
 export default function ChatArea({
   id,
@@ -977,7 +978,7 @@ export default function ChatArea({
               {/* TODO: "Not sure why but the scroll-bar design is not taking place." */}
               <ConversationContent
                 // className="laptop:mx-auto laptop:w-[50%] bg-amber-300 "
-                className="laptop:mx-auto laptop:w-[1200px] h-full"
+                className="laptop:mx-auto pt-12  laptop:w-[1200px] h-full"
                 // className={`flex flex-col items-end place-content-center w-[70%] mx-auto overflow-y-auto  py-6 relative`}
               >
                 {renderedMessages}
@@ -985,10 +986,15 @@ export default function ChatArea({
               <ConversationScrollButton className="bottom-35 bg-gray-800/55 border-0 hover:bg-gray-500 hover:text-white z-20" />
 
               {/* Credits Left */}
-              <CreditsLeft
-                credits={vercelAiGatewayCredits}
-                isTouchDevice={isTouchDevice}
-              />
+              <div className="fixed top-0 right-1 lg:right-8 flex gap-2 items-center">
+                <CreditsLeft
+                  credits={vercelAiGatewayCredits}
+                  isTouchDevice={isTouchDevice}
+                />
+
+                <APIKeys />
+
+              </div>
 
               {/* User-Input */}
               <div
