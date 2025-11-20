@@ -8,7 +8,6 @@
  * @module
  */
 
-import type * as aiAPIKeys from "../aiAPIKeys.js";
 import type * as conversations from "../conversations.js";
 import type * as explainSideChats from "../explainSideChats.js";
 import type * as highlights_db from "../highlights_db.js";
@@ -28,7 +27,6 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  aiAPIKeys: typeof aiAPIKeys;
   conversations: typeof conversations;
   explainSideChats: typeof explainSideChats;
   highlights_db: typeof highlights_db;

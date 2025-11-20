@@ -13,6 +13,7 @@ import { CreditsLeft } from "@/components/my/CreditsLeft";
 import { useAboutDeviceInfo } from "@/stores/aboutDevice";
 import { isDeviceTouch } from "@/utils/clientfuncs/isDeviceTouch";
 import { APIKeys } from "@/components/my/APIKeys";
+import { useAPIVercelGateway } from "@/stores/aiprovidersKey";
 
 export function ChatPage_ClientComponent({
   availableModels,
@@ -28,10 +29,19 @@ export function ChatPage_ClientComponent({
   const createConversation = useMutation(api.conversations.createConversation);
 
   // Convex Fetching Vercel AI API-Key
-  const convex_vercelAPIKey = useQuery(api.aiAPIKeys.getAIModelAPIKey, {
-    providerName: "vercel",
-  });
-  if (convex_vercelAPIKey )
+  // const { vercelAIGatewayAPIKey, setVercelGatewayAPIKey } =
+  //   useAPIVercelGateway();
+  // const convex_vercelAPIKey = useQuery(api.aiAPIKeys.getAIModelAPIKey, {
+  //   providerName: "vercel",
+  // });
+  // if (
+  //   convex_vercelAPIKey !== undefined &&
+  //   convex_vercelAPIKey !== null &&
+  //   convex_vercelAPIKey.trim() !== ""
+  //   // vercelAIGatewayAPIKey.trim() !== ""
+  // ) {
+  //   setVercelGatewayAPIKey(convex_vercelAPIKey);
+  // }
 
   // Clear active chat when landing on /chat page
   useEffect(() => {

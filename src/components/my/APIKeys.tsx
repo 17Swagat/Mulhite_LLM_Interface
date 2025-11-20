@@ -4,7 +4,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { KeyIcon, Info } from "lucide-react";
+import {
+  KeyIcon,
+  Info,
+  Construction,
+  EyeClosed,
+  Eye,
+  Copy,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -14,36 +21,24 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 // convex:
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/../convex/_generated/api";
-import { memo, startTransition, useCallback, useState } from "react";
+import {
+  memo,
+  startTransition,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useAPIVercelGateway } from "@/stores/aiprovidersKey";
+// import { useAPIVercelGateway } from "@/stores/aiprovidersKey";
 
 // export function APIKeys() {
 export const APIKeys = memo(function APIKeys() {
-  const convex_vercelAPIKey = useQuery(api.aiAPIKeys.getAIModelAPIKey, {
-    providerName: "vercel",
-  });
-
-  const convex_setVercelAPIKey = useMutation(
-    api.aiAPIKeys.setAIModelAPIKeyMutation
-  );
-
+  const [vercelAPIKey, setVercelAPIKey] = useState("");
   const { vercelAIGatewayAPIKey, setVercelGatewayAPIKey } =
     useAPIVercelGateway();
 
-  const [vercelAPIKey, setVercelAPIKey] = useState(() => {
-    if (convex_vercelAPIKey !== undefined && convex_vercelAPIKey !== null) {
-      return convex_vercelAPIKey;
-    } else {
-      return "";
-    }
-  });
-
-  const saveVercelAPIKey = useCallback(async () => {
-    await convex_setVercelAPIKey({
-      providerName: "vercel",
-      apiKey: vercelAPIKey,
-    });
-  }, [convex_setVercelAPIKey, vercelAPIKey]);
+  const saveVercelAPIKey = useCallback(async () => {}, [vercelAPIKey]);
 
   const iconElement = (
     <KeyIcon
@@ -51,6 +46,11 @@ export const APIKeys = memo(function APIKeys() {
       className="text-white bg-purple-800 rounded-full mt-3 hover:opacity-80 transition-opacity hover:cursor-pointer"
     />
   );
+
+  const [apikeyVisible, setApikeyVisible] = useState(false);
+  const apiKeyRef = useRef<HTMLButtonElement>(null);
+  let temporary_api_key =
+    "temporary_api_key_placeholder_for_display_purposes_only";
 
   return (
     <Popover>
@@ -61,12 +61,10 @@ export const APIKeys = memo(function APIKeys() {
       >
         {iconElement}
       </PopoverTrigger>
-      {/* <PopoverContent className="w-full z-50000 p-1! bg-linear-to-r from-[#2dd4bf] to-[#95b5e0] border-0!">
-      </PopoverContent> */}
       <PopoverContent
         side="bottom"
         align="end"
-        className="w-80 border-0 p-5 shadow-2xl"
+        className="w-80 border-0 py-4 shadow-2xl"
         style={{
           background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
         }}
@@ -98,6 +96,37 @@ export const APIKeys = memo(function APIKeys() {
                 </Link>
               </sup>
             </Label>
+
+            {temporary_api_key.trim() !== "" && (
+              <div className="flex items-center text-white">
+                <p className="truncate max-w-[calc(100%-24px)] overflow-hidden">
+                  {apikeyVisible
+                    ? "*".repeat(temporary_api_key.length)
+                    : temporary_api_key}
+                </p>
+                <Button
+                  variant={"ghost"}
+                  className="shrink-0 ml-1"
+                  onClick={() => setApikeyVisible(!apikeyVisible)}
+                >
+                  {apikeyVisible ? <Eye /> : <EyeClosed />}
+                </Button>
+                <Button
+                  variant={"ghost"}
+                  // ref={apiKeyRef}
+                  className="shrink-0 ml-1 active:brightness-50"
+                  onClick={async () => {
+                    // Use the Clipboard API to write the text to the clipboard
+                    let textToCopy = temporary_api_key;
+                    await navigator.clipboard.writeText(textToCopy);
+                    // apiKeyRef.current?.focus();
+                  }}
+                >
+                  <Copy />
+                </Button>
+              </div>
+            )}
+
             <Input
               value={vercelAPIKey}
               onChange={(e) => {
