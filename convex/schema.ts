@@ -9,7 +9,12 @@ export default defineSchema({
         name: v.optional(v.string()),  // Display name
         // Add LLM keys later: apiKeys: v.array(v.object({ llm: v.string(), key: v.string() })) – encrypt keys!
 
-        apiKeys: v.optional(v.array(v.object({ llm: v.string(), key: v.string() })))
+        apiKeys: v.optional(
+            v.array(v.object({
+                // llm: v.string(), 
+                llm: v.union(v.literal('vercel'), v.literal('openrouter')),
+                key: v.string()
+            })))
     })
         .index("by_clerkUserId", ["clerkUserId"])  // Fast auth lookups
         .index("by_email", ["email"]),

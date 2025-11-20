@@ -51,6 +51,22 @@ import { isDeviceTouch } from "@/utils/clientfuncs/isDeviceTouch";
 import { TokensConsumed } from "@/components/my/TokensConsumed";
 import { APIKeys } from "@/components/my/APIKeys";
 
+// For Error Dialog:
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircleIcon, CheckCircle2Icon, PopcornIcon } from "lucide-react";
+
 export default function ChatArea({
   id,
   availableModels,
@@ -106,16 +122,23 @@ export default function ChatArea({
   const { parentChatModel, reasoningOn } = useSelectedAIModelStore();
 
   // AI SDK chat hook
+  const [errorMsg, setErrorMsg] = useState<string>("");
   const {
     sendMessage,
     messages,
     status: chatStatus,
     stop,
     setMessages,
+    error,
+    clearError,
   } = useChat({
     id,
     transport,
-    onFinish: async ({ message: finishedMessage, messages: allMessages }) => {
+    onFinish: async ({
+      message: finishedMessage,
+      messages: allMessages,
+      isError,
+    }) => {
       if (!id) return;
 
       try {
@@ -170,7 +193,30 @@ export default function ChatArea({
         setVercelAiGatewayCredits();
       }
     },
+    onError: (err) => {
+      /**
+      (1) Invalid API Key
+       */
+      let errorOutMsg: string = "";
+      if (err.message.includes("Invalid API key")) {
+        errorOutMsg = `AI Gateway authentication failed: Invalid API key. Put correct API Key or  Create a new API key: https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai%2Fapi`;
+      }
+
+      setErrorMsg(
+        errorOutMsg
+          ? errorOutMsg
+          : err.message || "An error occurred during the chat."
+      );
+    },
   });
+
+  // Handle errors - display to user and reset state
+  const [showerror, setError] = useState(false);
+  useEffect(() => {
+    if (error) {
+      setError(true);
+    }
+  }, [error, clearError]);
 
   // User question submission handler:
   const handleSubmit = async (e: React.FormEvent) => {
@@ -972,6 +1018,27 @@ export default function ChatArea({
               onExplain={handleExplainSelectedText}
             />
 
+            {/* Error: Alert */}
+            <AlertDialog open={showerror} onOpenChange={setError}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Error Occured</AlertDialogTitle>
+                  <AlertDialogDescription>{errorMsg}</AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogAction
+                    onClick={() => {
+                      clearError();
+                      setError(false);
+                      setErrorMsg("");
+                    }}
+                  >
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+
             <Conversation
               className={`bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c] overflow-y-hidden`}
             >
@@ -993,7 +1060,6 @@ export default function ChatArea({
                 />
 
                 <APIKeys />
-
               </div>
 
               {/* User-Input */}

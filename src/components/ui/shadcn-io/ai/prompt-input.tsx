@@ -148,13 +148,15 @@ export const PromptInputSubmit = ({
   ...props
 }: PromptInputSubmitProps) => {
   let Icon = <SendIcon className="size-4" />;
+  // let buttonVariant = variant;
 
   if (status === "submitted") {
     Icon = <Loader2Icon className="size-4 animate-spin text-blue-500" />;
   } else if (status === "streaming") {
     Icon = <SquareIcon className="size-4 text-red-500" />;
   } else if (status === "error") {
-    Icon = <XIcon className="size-4" />;
+    Icon = <XIcon className="size-4 text-red-500" />;
+    // buttonVariant = "destructive";
   }
 
   return (
@@ -187,7 +189,7 @@ export const PromptInputModelSelectTrigger = ({
   <SelectTrigger
     className={cn(
       "border-none bg-transparent font-medium text-muted-foreground shadow-none transition-colors",
-      'hover:bg-accent hover:text-foreground [&[aria-expanded="true"]]:bg-accent [&[aria-expanded="true"]]:text-foreground',
+      "hover:bg-accent hover:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground",
       className
     )}
     {...props}

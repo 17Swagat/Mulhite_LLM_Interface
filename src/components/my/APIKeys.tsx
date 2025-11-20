@@ -1,3 +1,4 @@
+"use client";
 import {
   Popover,
   PopoverContent,
@@ -10,7 +11,36 @@ import { Input } from "../ui/input";
 import Link from "next/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-export function APIKeys() {
+// convex:
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/../convex/_generated/api";
+import { memo, startTransition, useCallback, useState } from "react";
+
+// export function APIKeys() {
+export const APIKeys = memo(function APIKeys() {
+  const convex_vercelAPIKey = useQuery(api.aiAPIKeys.getAIModelAPIKey, {
+    providerName: "vercel",
+  });
+
+  const convex_setVercelAPIKey = useMutation(
+    api.aiAPIKeys.setAIModelAPIKeyMutation
+  );
+
+  const [vercelAPIKey, setVercelAPIKey] = useState(() => {
+    if (convex_vercelAPIKey !== undefined && convex_vercelAPIKey !== null) {
+      return convex_vercelAPIKey;
+    } else {
+      return "";
+    }
+  });
+
+  const saveVercelAPIKey = useCallback(async () => {
+    await convex_setVercelAPIKey({
+      providerName: "vercel",
+      apiKey: vercelAPIKey,
+    });
+  }, [convex_setVercelAPIKey, vercelAPIKey]);
+
   const iconElement = (
     <KeyIcon
       size={34}
@@ -40,13 +70,10 @@ export function APIKeys() {
         <div className="space-y-5">
           <div className="text-center">
             <h3 className="text-lg font-medium text-white">Secret API Key</h3>
-            {/* <p className="mt-1 text-xs text-gray-400">
-              Stored only in your browser
-            </p> */}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="api-key" className="text-sm text-gray-300">
+            <Label htmlFor="vercel-api-key" className="text-sm text-gray-300">
               Vercel AI Gateway API Key
               <sup>
                 <Link href={"https://vercel.com/ai-gateway"} target="_blank">
@@ -68,7 +95,13 @@ export function APIKeys() {
               </sup>
             </Label>
             <Input
-              id="api-key"
+              value={vercelAPIKey}
+              onChange={(e) => {
+                startTransition(() => {
+                  setVercelAPIKey(e.target.value);
+                });
+              }}
+              id="vercel-api-key"
               type="password"
               placeholder="Put Vercel AI Gateway API Key here..."
               className="dark h-8 bg-gray-300  border-gray-600  placeholder:text-gray-600 font-semibold focus-visible:ring-1 focus-visible:ring-purple-500"
@@ -76,11 +109,21 @@ export function APIKeys() {
             />
           </div>
 
-          <Button className="w-full h-9 bg-purple-600 hover:bg-purple-700 text-white font-medium">
+          <Button
+            className="w-full h-9 bg-purple-600 
+            hover:bg-purple-700  
+            active:bg-purple-900
+            text-white font-medium"
+            onClick={() => {
+              if (vercelAPIKey.trim() !== "") {
+                saveVercelAPIKey();
+              }
+            }}
+          >
             Save Key
           </Button>
         </div>
       </PopoverContent>
     </Popover>
   );
-}
+});

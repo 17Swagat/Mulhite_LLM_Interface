@@ -10,9 +10,7 @@ import { v7 as uuidv7 } from 'uuid';
 // import { gateway } from 'ai';
 import { createGateway } from 'ai';
 
-const gateway = createGateway({
-    apiKey: process.env.AI_GATEWAY_API_KEY ?? '',
-});
+
 
 // export const maxDuration = 30;
 // const ollama = createOllama({
@@ -45,6 +43,11 @@ export async function POST(req: Request) {
             parentConversationId?: string;
             // reasoning?: boolean;
         } = req_;
+
+        // Gateway Model:
+        const gateway = createGateway({
+            apiKey: 'xyax',//? process.env.AI_GATEWAY_API_KEY ?? '',
+        });
 
 
         if (parentConversationId) {

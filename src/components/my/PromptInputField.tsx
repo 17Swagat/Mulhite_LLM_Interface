@@ -37,7 +37,8 @@ import { useUserQuestionStore } from "@/stores/userQuestionStore";
 import { HoverModelInfoCard } from "./HoverModelInfoCard";
 import { useAboutDeviceInfo } from "@/stores/aboutDevice";
 
-export const PromptInputField = memo(function PromptInputField({
+export const PromptInputField = memo(
+  function PromptInputField({
   handleSubmit,
   chatStatus,
   inConversation = false,
@@ -49,7 +50,9 @@ export const PromptInputField = memo(function PromptInputField({
   inConversation?: boolean;
   availableModels: any[];
   isSideChat?: boolean;
-}) {
+}) 
+{
+
   const {
     parentChatModel,
     setParentChatModel,
@@ -127,7 +130,8 @@ export const PromptInputField = memo(function PromptInputField({
               inConversation &&
               !question.trim() &&
               chatStatus === "ready") ||
-            // // SideChat:
+            
+              // SideChat:
             (isSideChat && sideChatQuestion.trim() === "")
             // || (isSideChat && !sideChatQuestion.trim() && chatStatus === "ready")
           }

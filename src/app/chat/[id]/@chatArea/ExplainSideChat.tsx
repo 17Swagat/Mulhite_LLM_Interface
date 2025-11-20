@@ -11,7 +11,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { PromptInputField } from "@/components/my/PromptInputField";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { v7 as uuidv7 } from "uuid";
 import { Trash2 } from "lucide-react";
 import { api } from "@/../convex/_generated/api";
@@ -38,6 +38,19 @@ import {
 } from "@/components/ui/shadcn-io/ai/reasoning";
 import { useUserQuestionStore } from "@/stores/userQuestionStore";
 import { useVercelAICreditsLeft } from "@/stores/aiprovidersCreditsStore";
+
+// For Error Dialog:
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface ExplainSideChatContentProps {
   sideChatId: string;
@@ -91,12 +104,15 @@ export function ExplainSideChatContent({
     [sideChatId, parentConversationId]
   );
 
+  const [errorMsg, setErrorMsg] = useState<string>("");
   const {
     messages,
     status: chatStatus,
     sendMessage,
     setMessages,
     stop,
+    error,
+    clearError,
   } = useChat({
     id: sideChatId,
     transport,
@@ -120,7 +136,30 @@ export function ExplainSideChatContent({
         setVercelAiGatewayCredits();
       }
     },
+    onError: (err) => {
+      /**
+      (1) Invalid API Key
+       */
+      let errorOutMsg: string = "";
+      if (err.message.includes("Invalid API key")) {
+        errorOutMsg = `AI Gateway authentication failed: Invalid API key. Put correct API Key or  Create a new API key: https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai%2Fapi`;
+      }
+
+      setErrorMsg(
+        errorOutMsg
+          ? errorOutMsg
+          : err.message || "An error occurred during the chat."
+      );
+    },
   });
+
+  // Handle errors - display to user and reset state
+  const [showerror, setError] = useState(false);
+  useEffect(() => {
+    if (error) {
+      setError(true);
+    }
+  }, [error, clearError]);
 
   // Load existing messages from Convex
   useEffect(() => {
@@ -258,10 +297,30 @@ export function ExplainSideChatContent({
             onClick={handleDeleteSideChat}
             className=" text-red-500 bg-black/95 hover:text-red-600 active:text-blue-500 hover:bg-red-900/20"
           >
-            <Trash2 size={28} strokeWidth={2}/>
+            <Trash2 size={28} strokeWidth={2} />
           </Button>
         </div>
       </SheetHeader>
+
+      <AlertDialog open={showerror} onOpenChange={setError}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Error Occured</AlertDialogTitle>
+            <AlertDialogDescription>{errorMsg}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => {
+                clearError();
+                setError(false);
+                setErrorMsg("");
+              }}
+            >
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Messages Area */}
       <Conversation

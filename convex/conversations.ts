@@ -32,6 +32,7 @@ async function getCurrentUserMutation(ctx: MutationCtx) {
     if (!identity) {
         console.warn("No user identity found; possible session issue");
         throw new Error("Unauthorized");
+        // return null;
     }
 
     let user = await ctx.db
@@ -49,6 +50,7 @@ async function getCurrentUserMutation(ctx: MutationCtx) {
         user = (await ctx.db.get(userId)) as any;
         if (!user)
             throw new Error("Failed to create user");
+        // return null;
     }
 
     return user;
