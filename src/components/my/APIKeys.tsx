@@ -15,6 +15,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { memo, startTransition, useCallback, useState } from "react";
+import { useAPIVercelGateway } from "@/stores/aiprovidersKey";
 
 // export function APIKeys() {
 export const APIKeys = memo(function APIKeys() {
@@ -25,6 +26,9 @@ export const APIKeys = memo(function APIKeys() {
   const convex_setVercelAPIKey = useMutation(
     api.aiAPIKeys.setAIModelAPIKeyMutation
   );
+
+  const { vercelAIGatewayAPIKey, setVercelGatewayAPIKey } =
+    useAPIVercelGateway();
 
   const [vercelAPIKey, setVercelAPIKey] = useState(() => {
     if (convex_vercelAPIKey !== undefined && convex_vercelAPIKey !== null) {
@@ -115,7 +119,10 @@ export const APIKeys = memo(function APIKeys() {
             active:bg-purple-900
             text-white font-medium"
             onClick={() => {
-              if (vercelAPIKey.trim() !== "") {
+              if (
+                vercelAPIKey.trim() !== ""
+                //&& convex_vercelAPIKey !== vercelAPIKey // Don't seem to be necessary, as updation for the same value is not observed to make any changes
+              ) {
                 saveVercelAPIKey();
               }
             }}

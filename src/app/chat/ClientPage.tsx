@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useChatStore } from "@/stores/chatStore";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { Id } from "@/../convex/_generated/dataModel";
 import { PromptInputField } from "@/components/my/PromptInputField";
@@ -12,6 +12,7 @@ import { useUserQuestionStore } from "@/stores/userQuestionStore";
 import { CreditsLeft } from "@/components/my/CreditsLeft";
 import { useAboutDeviceInfo } from "@/stores/aboutDevice";
 import { isDeviceTouch } from "@/utils/clientfuncs/isDeviceTouch";
+import { APIKeys } from "@/components/my/APIKeys";
 
 export function ChatPage_ClientComponent({
   availableModels,
@@ -25,6 +26,12 @@ export function ChatPage_ClientComponent({
 
   // Convex mutation
   const createConversation = useMutation(api.conversations.createConversation);
+
+  // Convex Fetching Vercel AI API-Key
+  const convex_vercelAPIKey = useQuery(api.aiAPIKeys.getAIModelAPIKey, {
+    providerName: "vercel",
+  });
+  if (convex_vercelAPIKey )
 
   // Clear active chat when landing on /chat page
   useEffect(() => {
@@ -90,6 +97,8 @@ export function ChatPage_ClientComponent({
     return () => window.removeEventListener("resize", touchValidation);
   }, []);
 
+  // Load User API-Key
+
   if (!haveMounted) {
     return <LoadingScreen />;
   }
@@ -103,6 +112,8 @@ export function ChatPage_ClientComponent({
       >
         <div className="fixed top-0 right-1 lg:right-8 flex gap-2 items-center">
           <CreditsLeft credits={credits} isTouchDevice={isTouchDevice} />
+
+          <APIKeys />
         </div>
 
         <div className="flex flex-col items-center">

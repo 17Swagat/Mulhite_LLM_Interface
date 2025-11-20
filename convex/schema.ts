@@ -14,7 +14,8 @@ export default defineSchema({
                 // llm: v.string(), 
                 llm: v.union(v.literal('vercel'), v.literal('openrouter')),
                 key: v.string()
-            })))
+            }))
+        )
     })
         .index("by_clerkUserId", ["clerkUserId"])  // Fast auth lookups
         .index("by_email", ["email"]),
