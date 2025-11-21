@@ -823,10 +823,29 @@ export default function ChatArea({
                         defaultOpen={false}
                       >
                         <ReasoningTrigger />
-                        <ReasoningContent className="bg-yellow-600 text-white p-2 rounded">
+                        <ReasoningContent className="bg-yellow-800 text-white p-2 rounded">
                           {part.text}
                         </ReasoningContent>
                       </Reasoning>
+
+                      {/* Loading - Only show during reasoning streaming */}
+                      {chatStatus === "streaming" &&
+                        isLastMessage &&
+                        part.type === "reasoning" &&
+                        part.state === "streaming" &&
+                        !message.parts.some(
+                          (p: any) =>
+                            p.type === "text" &&
+                            ((p.text && p.text.length > 0) ||
+                              p.state === "streaming")
+                        ) && (
+                          <div className="flex items-center gap-2 p-4">
+                            <Loader size={20} />
+                            <span className="text-sm text-yellow-500">
+                              Thinking..
+                            </span>
+                          </div>
+                        )}
                     </div>
                   ) : null
                 )}
@@ -860,8 +879,9 @@ export default function ChatArea({
 
                         {/* Loading  */}
                         {chatStatus === "streaming" &&
-                          message.role === "assistant" &&
-                          part.state == "streaming" && (
+                          isLastMessage &&
+                          part.type === "text" &&
+                          part.state === "streaming" && (
                             <div className="flex items-center gap-2 p-4">
                               <Loader size={20} />
                               <span className="text-muted-foreground text-sm">
