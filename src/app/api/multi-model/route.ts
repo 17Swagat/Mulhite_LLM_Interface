@@ -2,6 +2,7 @@ import { AI_MODELS } from '@/constants/models';
 import { google } from '@ai-sdk/google'
 import { deepseek } from '@ai-sdk/deepseek'
 import { mistral } from '@ai-sdk/mistral'
+import { openai } from '@ai-sdk/openai'
 // import { saveChat } from '@/utils/chat-store';
 import { streamText, UIMessage, convertToModelMessages, uiMessageChunkSchema, LanguageModel } from 'ai';
 import { createOllama } from 'ollama-ai-provider-v2';
@@ -9,6 +10,7 @@ import { v7 as uuidv7 } from 'uuid';
 
 // import { gateway } from 'ai';
 import { createGateway } from 'ai';
+import { SiOpenai } from '@icons-pack/react-simple-icons';
 
 
 
@@ -47,7 +49,7 @@ export async function POST(req: Request) {
 
         // Gateway Model:
         const gateway = createGateway({
-            apiKey: vercelAIGatewayAPIKey,//'xyax',//? process.env.AI_GATEWAY_API_KEY ?? '',
+            apiKey: vercelAIGatewayAPIKey,
         });
 
 

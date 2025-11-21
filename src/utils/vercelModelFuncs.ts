@@ -25,7 +25,7 @@ export async function getVercelAvailableModels() {
             }
         }
     }).map((model): [typeof model, string] => {
-        const termsIncludes = ['reasoning', 'thinking']
+        const termsIncludes = ['reasoning', 'thinking', 'R1', 'r1']
         if (termsIncludes.some((term) => model.description?.includes(term))) {
             return [model, 'reasoning']
         } else {

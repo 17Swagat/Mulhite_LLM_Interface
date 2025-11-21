@@ -45,7 +45,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="stylesheet" href="./highlightStuff.css" />
-        <link rel="icon" href="/Nody3.svg" sizes="any" />
+        <link rel="icon" href="/logo_02.svg" sizes="any" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -53,7 +53,7 @@ export default function RootLayout({
         <ClerkProvider
           appearance={{
             theme: dark,
-            layout: { logoImageUrl: "/Nody3.svg" },
+            layout: { logoImageUrl: "/logo_02.svg" },
           }}
         >
           <ConvexClientProvider>{children}</ConvexClientProvider>

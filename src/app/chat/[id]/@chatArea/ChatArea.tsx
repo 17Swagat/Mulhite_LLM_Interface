@@ -840,8 +840,8 @@ export default function ChatArea({
                               p.state === "streaming")
                         ) && (
                           <div className="flex items-center gap-2 p-4">
-                            <Loader size={20} />
-                            <span className="text-sm text-yellow-500">
+                            <Loader size={20} className="text-pink-600" />
+                            <span className="text-sm text-pink-500">
                               Thinking..
                             </span>
                           </div>
@@ -883,8 +883,8 @@ export default function ChatArea({
                           part.type === "text" &&
                           part.state === "streaming" && (
                             <div className="flex items-center gap-2 p-4">
-                              <Loader size={20} />
-                              <span className="text-muted-foreground text-sm">
+                              <Loader size={20} className="text-green-500" />
+                              <span className="text-sm text-blue-600">
                                 Generating Response...
                               </span>
                             </div>
