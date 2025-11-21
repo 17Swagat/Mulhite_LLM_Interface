@@ -67,6 +67,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircleIcon, CheckCircle2Icon, PopcornIcon } from "lucide-react";
 import { useAPIVercelGateway } from "@/stores/aiprovidersKey";
+import { Loader } from "@/components/ui/shadcn-io/ai/loader";
 
 export default function ChatArea({
   id,
@@ -794,7 +795,7 @@ export default function ChatArea({
               } else if (model.includes("deepseek")) {
                 avatar_logo = "/ai-models/deepseek.svg";
               } else if (model.includes("openai")) {
-                avatar_logo = "/ai-models/openai.svg";
+                avatar_logo = "/ai-models/openai_2.svg";
               }
             }
           }
@@ -812,7 +813,6 @@ export default function ChatArea({
             <Message from={message.role} key={message.id} className="mb-4 dark">
               <MessageContent className="bg-gray-800 p-3 rounded-lg">
                 {/* Reasoning Block: */}
-                {/* {reasoningOn && */}
                 {message.parts.map((part, index) =>
                   part.type === "reasoning" ? (
                     <div key={index} className="mb-2">
@@ -876,6 +876,16 @@ export default function ChatArea({
                     );
                   }
                 })}
+
+                {/* Loading  */}
+                {chatStatus === "streaming" && (
+                  <div className="flex items-center gap-2 p-4">
+                    <Loader size={20} />
+                    <span className="text-muted-foreground text-sm">
+                      Thinking...
+                    </span>
+                  </div>
+                )}
               </MessageContent>
 
               {/* Avatar */}

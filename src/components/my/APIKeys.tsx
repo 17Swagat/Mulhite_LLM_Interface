@@ -88,7 +88,7 @@ export const APIKeys = memo(function APIKeys() {
         <div className="space-y-3">
           <div className="text-center">
             <h3 className="text-lg font-medium text-white">Secret API Key</h3>
-            <p className="text-start text-pink-300">
+            <p className="text-start text-pink-300 text-sm">
               Your API Key is stored in browser&apos;s local storage only.
             </p>
           </div>
