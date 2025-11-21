@@ -858,6 +858,18 @@ export default function ChatArea({
                           onOpenExplainSideChat={handleOpenExplainSideChat}
                         />
 
+                        {/* Loading  */}
+                        {chatStatus === "streaming" &&
+                          message.role === "assistant" &&
+                          part.state == "streaming" && (
+                            <div className="flex items-center gap-2 p-4">
+                              <Loader size={20} />
+                              <span className="text-muted-foreground text-sm">
+                                Generating Response...
+                              </span>
+                            </div>
+                          )}
+
                         {/* Answer-Token-Consumption */}
                         {totalTokens !== undefined && (
                           <TokensConsumed
@@ -876,16 +888,6 @@ export default function ChatArea({
                     );
                   }
                 })}
-
-                {/* Loading  */}
-                {chatStatus === "streaming" && (
-                  <div className="flex items-center gap-2 p-4">
-                    <Loader size={20} />
-                    <span className="text-muted-foreground text-sm">
-                      Thinking...
-                    </span>
-                  </div>
-                )}
               </MessageContent>
 
               {/* Avatar */}
