@@ -126,7 +126,6 @@ export async function POST(req: Request) {
 
         const result = streamText({
             prompt,
-            // model: google("gemini-2.5-flash-lite-preview-09-2025"),
             model: gateway(ai_model),
         }
         );
