@@ -28,21 +28,6 @@ export function ChatPage_ClientComponent({
   // Convex mutation
   const createConversation = useMutation(api.conversations.createConversation);
 
-  // Convex Fetching Vercel AI API-Key
-  // const { vercelAIGatewayAPIKey, setVercelGatewayAPIKey } =
-  //   useAPIVercelGateway();
-  // const convex_vercelAPIKey = useQuery(api.aiAPIKeys.getAIModelAPIKey, {
-  //   providerName: "vercel",
-  // });
-  // if (
-  //   convex_vercelAPIKey !== undefined &&
-  //   convex_vercelAPIKey !== null &&
-  //   convex_vercelAPIKey.trim() !== ""
-  //   // vercelAIGatewayAPIKey.trim() !== ""
-  // ) {
-  //   setVercelGatewayAPIKey(convex_vercelAPIKey);
-  // }
-
   // Clear active chat when landing on /chat page
   useEffect(() => {
     setActiveChat(null);

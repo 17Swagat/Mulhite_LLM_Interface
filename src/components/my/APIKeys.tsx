@@ -11,6 +11,8 @@ import {
   EyeClosed,
   Eye,
   Copy,
+  Delete,
+  Trash,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
@@ -38,7 +40,24 @@ export const APIKeys = memo(function APIKeys() {
   const { vercelAIGatewayAPIKey, setVercelGatewayAPIKey } =
     useAPIVercelGateway();
 
-  const saveVercelAPIKey = useCallback(async () => {}, [vercelAPIKey]);
+  const apiKeyInputRef = useRef<HTMLInputElement>(null);
+  const saveVercelAPIKey = useCallback(async () => {
+    let userAPIKeyVercel = apiKeyInputRef.current?.value || "";
+    if (
+      userAPIKeyVercel === vercelAIGatewayAPIKey ||
+      userAPIKeyVercel.trim() === ""
+    ) {
+      return;
+    }
+
+    setVercelGatewayAPIKey(userAPIKeyVercel);
+    setVercelAPIKey("");
+  }, [
+    vercelAIGatewayAPIKey,
+    vercelAPIKey,
+    setVercelAPIKey,
+    setVercelGatewayAPIKey,
+  ]);
 
   const iconElement = (
     <KeyIcon
@@ -48,9 +67,6 @@ export const APIKeys = memo(function APIKeys() {
   );
 
   const [apikeyVisible, setApikeyVisible] = useState(false);
-  const apiKeyRef = useRef<HTMLButtonElement>(null);
-  let temporary_api_key =
-    "temporary_api_key_placeholder_for_display_purposes_only";
 
   return (
     <Popover>
@@ -69,9 +85,12 @@ export const APIKeys = memo(function APIKeys() {
           background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
         }}
       >
-        <div className="space-y-5">
+        <div className="space-y-3">
           <div className="text-center">
             <h3 className="text-lg font-medium text-white">Secret API Key</h3>
+            <p className="text-start text-pink-300">
+              Your API Key is stored in browser&apos;s local storage only.
+            </p>
           </div>
 
           <div className="space-y-2">
@@ -97,37 +116,54 @@ export const APIKeys = memo(function APIKeys() {
               </sup>
             </Label>
 
-            {temporary_api_key.trim() !== "" && (
+            {vercelAIGatewayAPIKey.trim() !== "" && (
               <div className="flex items-center text-white">
                 <p className="truncate max-w-[calc(100%-24px)] overflow-hidden">
-                  {apikeyVisible
-                    ? "*".repeat(temporary_api_key.length)
-                    : temporary_api_key}
+                  {!apikeyVisible
+                    ? "*".repeat(vercelAIGatewayAPIKey.length)
+                    : vercelAIGatewayAPIKey}
                 </p>
-                <Button
-                  variant={"ghost"}
-                  className="shrink-0 ml-1"
-                  onClick={() => setApikeyVisible(!apikeyVisible)}
-                >
-                  {apikeyVisible ? <Eye /> : <EyeClosed />}
-                </Button>
-                <Button
-                  variant={"ghost"}
-                  // ref={apiKeyRef}
-                  className="shrink-0 ml-1 active:brightness-50"
-                  onClick={async () => {
-                    // Use the Clipboard API to write the text to the clipboard
-                    let textToCopy = temporary_api_key;
-                    await navigator.clipboard.writeText(textToCopy);
-                    // apiKeyRef.current?.focus();
-                  }}
-                >
-                  <Copy />
-                </Button>
+
+                <div className="flex items-center gap-1 ml-1">
+                  {/* Toggle Visibility (API-Key) */}
+                  <div
+                    className=" cursor-pointer"
+                    onClick={() => setApikeyVisible(!apikeyVisible)}
+                  >
+                    {apikeyVisible ? (
+                      <Eye className="hover:bg-pink-400 rounded-[3px] p-0.5 transition duration-100 ease-in" />
+                    ) : (
+                      <EyeClosed className="hover:bg-pink-400 rounded-[2px] p-0.5 transition duration-100 ease-in active:brightness-80" />
+                    )}
+                  </div>
+
+                  {/* Copy Vercel AI Gateway API Key */}
+                  <div
+                    className=" cursor-pointer w-fit"
+                    onClick={async () => {
+                      // Use the Clipboard API to write the text to the clipboard
+                      let textToCopy = vercelAIGatewayAPIKey;
+                      await navigator.clipboard.writeText(textToCopy);
+                    }}
+                  >
+                    <Copy className="hover:bg-pink-400 rounded-[3px] p-[3px] transition duration-100 ease-in active:brightness-80" />
+                  </div>
+
+                  {/* Remove API Key */}
+                  <div
+                    className=" cursor-pointer"
+                    onClick={() => {
+                      setVercelGatewayAPIKey("");
+                    }}
+                  >
+                    <Trash className="hover:bg-red-400 rounded-[3px] p-0.5 transition duration-100 ease-in active:brightness-80" />
+                  </div>
+                </div>
               </div>
             )}
 
             <Input
+              ref={apiKeyInputRef}
               value={vercelAPIKey}
               onChange={(e) => {
                 startTransition(() => {

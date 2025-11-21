@@ -51,6 +51,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useAPIVercelGateway } from "@/stores/aiprovidersKey";
 
 interface ExplainSideChatContentProps {
   sideChatId: string;
@@ -105,6 +106,7 @@ export function ExplainSideChatContent({
   );
 
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const { vercelAIGatewayAPIKey } = useAPIVercelGateway();
   const {
     messages,
     status: chatStatus,
@@ -201,6 +203,7 @@ export function ExplainSideChatContent({
         {
           body: {
             model: explainSideChatModel,
+            apiKey: vercelAIGatewayAPIKey,
           },
         }
       );
@@ -244,6 +247,7 @@ export function ExplainSideChatContent({
       {
         body: {
           model: explainSideChatModel,
+          apiKey: vercelAIGatewayAPIKey,
         },
       }
     );

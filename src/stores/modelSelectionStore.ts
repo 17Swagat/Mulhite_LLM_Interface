@@ -8,9 +8,6 @@ export const useSelectedAIModelStore = create<{
     parentChatModel: string;
     setParentChatModel: (model: string) => void;
 
-    // TODO: "Need to Remove this value. Does not seem necessary now. As AISDK does not allow <ReasoningButton> token to control whether a model should perform reasoning or not."
-    reasoningOn: boolean;
-    setReasoningOn: (on: boolean) => void;
 
     explainSideChatModel: string;
     setExplainSideChatModel?: (model: string) => void;
@@ -20,11 +17,6 @@ export const useSelectedAIModelStore = create<{
         (set) => ({
             parentChatModel: 'deepseek/deepseek-v3.1', //AI_MODELS[0].id,
             setParentChatModel: (model) => set({ parentChatModel: model }),
-
-            // TODO: "Need to Remove this value. Does not seem necessary now. As AISDK does not allow <ReasoningButton> token to control whether a model should perform reasoning or not."
-            // Reasoning toggle
-            reasoningOn: false,
-            setReasoningOn: (value) => set({ reasoningOn: value }),
 
             explainSideChatModel: 'deepseek/deepseek-v3.1',//AI_MODELS[0].id,
             setExplainSideChatModel: (model) => set({ explainSideChatModel: model }),

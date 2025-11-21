@@ -7,7 +7,6 @@ export default defineSchema({
         clerkUserId: v.string(),  // Clerk's unique user ID (e.g., "user_abc123")
         email: v.string(),        // For quick lookups (optional, from Clerk)
         name: v.optional(v.string()),  // Display name
-        // Add LLM keys later: apiKeys: v.array(v.object({ llm: v.string(), key: v.string() })) – encrypt keys!
     })
         .index("by_clerkUserId", ["clerkUserId"])  // Fast auth lookups
         .index("by_email", ["email"]),

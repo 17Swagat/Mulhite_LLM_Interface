@@ -66,6 +66,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircleIcon, CheckCircle2Icon, PopcornIcon } from "lucide-react";
+import { useAPIVercelGateway } from "@/stores/aiprovidersKey";
 
 export default function ChatArea({
   id,
@@ -118,10 +119,9 @@ export default function ChatArea({
       }),
     [id]
   );
-
-  const { parentChatModel, reasoningOn } = useSelectedAIModelStore();
-
   // AI SDK chat hook
+  const { vercelAIGatewayAPIKey } = useAPIVercelGateway();
+  const { parentChatModel } = useSelectedAIModelStore();
   const [errorMsg, setErrorMsg] = useState<string>("");
   const {
     sendMessage,
@@ -258,7 +258,7 @@ export default function ChatArea({
         {
           body: {
             model: parentChatModel,
-            reasoning: reasoningOn,
+            apiKey: vercelAIGatewayAPIKey,
           },
         }
       );
@@ -390,6 +390,7 @@ export default function ChatArea({
           {
             body: {
               model: parentChatModel,
+              apiKey: vercelAIGatewayAPIKey,
               // reasoningOn: reasoningOn,
             },
           }
@@ -1050,7 +1051,7 @@ export default function ChatArea({
               >
                 {renderedMessages}
               </ConversationContent>
-              <ConversationScrollButton className="bottom-35 bg-gray-800/55 border-0 hover:bg-gray-500 hover:text-white z-20" />
+              <ConversationScrollButton className="bottom-35 bg-white text-black border-0 hover:bg-gray-300  z-20" />
 
               {/* Credits Left */}
               <div className="fixed top-0 right-1 lg:right-8 flex gap-2 items-center">

@@ -34,19 +34,20 @@ export async function POST(req: Request) {
             model: ai_model,
             parentMessages,
             parentConversationId,
-            // reasoning
+            apiKey: vercelAIGatewayAPIKey
         }: {
             messages: ExtendedUIMessage[];
             chatId?: string
             model: string
             parentMessages?: ExtendedUIMessage[];
             parentConversationId?: string;
+            apiKey: string;
             // reasoning?: boolean;
         } = req_;
 
         // Gateway Model:
         const gateway = createGateway({
-            apiKey: 'xyax',//? process.env.AI_GATEWAY_API_KEY ?? '',
+            apiKey: vercelAIGatewayAPIKey,//'xyax',//? process.env.AI_GATEWAY_API_KEY ?? '',
         });
 
 
