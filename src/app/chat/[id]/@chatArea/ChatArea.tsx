@@ -1073,7 +1073,7 @@ export default function ChatArea({
             </AlertDialog>
 
             <Conversation
-              className={`bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c] overflow-y-hidden`}
+              className={`bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#f17815] overflow-y-hidden`}
             >
               {/* TODO: "Not sure why but the scroll-bar design is not taking place." */}
               <ConversationContent

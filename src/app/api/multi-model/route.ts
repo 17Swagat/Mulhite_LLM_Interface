@@ -149,7 +149,6 @@ export async function POST(req: Request) {
         const stream = result.toUIMessageStreamResponse({
             originalMessages: messages,
             sendReasoning: true, //REVIEW:
-
             messageMetadata: ({ part }): Record<string, string> | undefined => {
                 if (part.type === 'start') {
                     return { model: ai_model }
