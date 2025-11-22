@@ -30,7 +30,7 @@ export function CreditsLeft({
       <span className="underline">Credits-Left:</span>
       <span className="text-green-500 font-semibold">
         <span className="text-white">$</span>
-        {credits ?? 0}{" "}
+        {credits ?? 0}
         {/* THIS FIXED THE ISSUE of getting nothing when putting an Invalid API KEY & showing 0 when API-KEY is removed.!! Now, for invalid and empty API Key it will show 0.*/}
       </span>
     </div>
