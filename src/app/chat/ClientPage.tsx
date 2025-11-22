@@ -75,7 +75,7 @@ export function ChatPage_ClientComponent({
 
   // Component Mount Check [Otherwise Zustand store has hydration issues]
   const [haveMounted, setHaveMounted] = useState(false);
-  const [credits, setCredits] = useState(-1);
+  const [credits, setCredits] = useState(0);
   const { isTouchDevice, setIsTouchDevice } = useAboutDeviceInfo(); // "For, touch device Check"
   const { vercelAIGatewayAPIKey, hydrated } = useAPIVercelGateway();
 
