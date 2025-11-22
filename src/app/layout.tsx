@@ -37,7 +37,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="stylesheet" href="./highlightStuff.css" />
-        <link rel="icon" href="/logo_02.ico" sizes="any" />
+        <link rel="icon" href="/logo_02.svg" sizes="any" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -54,4 +54,3 @@ export default function RootLayout({
     </html>
   );
 }
-  
