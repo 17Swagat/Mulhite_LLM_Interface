@@ -80,7 +80,7 @@ export default function ChatArea({
 
   useEffect(() => {
     setVercelAiGatewayCredits();
-  }, []);
+  }, [vercelAiGatewayCredits]);
 
   // const [input, setInput] = useState("");
   const [hasProcessedPendingMessage, setHasProcessedPendingMessage] =
