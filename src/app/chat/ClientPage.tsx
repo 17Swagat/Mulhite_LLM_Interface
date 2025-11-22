@@ -44,6 +44,8 @@ export function ChatPage_ClientComponent({
         const title =
           question.substring(0, 50) + (question.length > 50 ? "..." : "");
         const result = await createConversation({ title });
+        if (!result) return;
+
         const conversationId = result._id;
         const now = Date.now();
         // Add the new chat to Zustand store

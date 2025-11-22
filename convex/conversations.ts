@@ -2,7 +2,6 @@ import { query, mutation, QueryCtx, MutationCtx } from "./_generated/server";
 import { v } from "convex/values";
 import { Id } from "./_generated/dataModel"; // ✅ correct import
 import { api } from "./_generated/api";
-import { userInfo } from "os";
 import { paginationOptsValidator } from "convex/server";
 
 async function getCurrentUserQuery(ctx: QueryCtx) {
@@ -31,7 +30,7 @@ async function getCurrentUserMutation(ctx: MutationCtx) {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
         console.warn("No user identity found; possible session issue");
-        throw new Error("Unauthorized");
+        return null; // throw new Error("Unauthorized");
         // return null;
     }
 
@@ -49,7 +48,7 @@ async function getCurrentUserMutation(ctx: MutationCtx) {
         });
         user = (await ctx.db.get(userId)) as any;
         if (!user)
-            throw new Error("Failed to create user");
+            return null;//throw new Error("Failed to create user");
         // return null;
     }
 
@@ -81,9 +80,12 @@ async function ensureUserOwnsConvoMutation(
     { conversationId }: { conversationId: Id<"conversations"> }
 ) {
     const user = await getCurrentUserMutation(ctx);
+    if (!user)
+        return null;
+
     const convo = await ctx.db.get<"conversations">(conversationId);
     if (!convo || convo.userId !== user._id)
-        throw new Error("Unauthorized");
+        return null;//throw new Error("Unauthorized");
 }
 
 export const listConversations = query({
@@ -232,6 +234,8 @@ export const createConversation = mutation({
     },
     handler: async (ctx, { title }) => {
         const user = await getCurrentUserMutation(ctx);
+        if (!user)
+            return null;
         const now = Date.now();
         const convoId = await ctx.db.insert("conversations", {
             userId: user._id,
@@ -323,6 +327,8 @@ export const deleteConversation = mutation({
 export const ensureUser = mutation({
     handler: async (ctx) => {
         const user = await getCurrentUserMutation(ctx);
+        if (!user)
+            return null;
         return { userId: user._id };
     },
 });
