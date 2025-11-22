@@ -9,7 +9,7 @@ export const useAPIVercelGateway = create<{
     setHydrated: () => void;
 }>()(
     persist((set) => ({
-        vercelAIGatewayAPIKey: '',
+        vercelAIGatewayAPIKey: ' ', // NOTE: IMPORTANT TO KEEP IT AS SPACE INSTEAD OF EMPTY STRING ""
         setVercelGatewayAPIKey(key: string) {
             set({ vercelAIGatewayAPIKey: key });
         },
