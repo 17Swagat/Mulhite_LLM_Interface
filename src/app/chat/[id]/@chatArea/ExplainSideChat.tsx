@@ -51,7 +51,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useAPIVercelGateway } from "@/stores/aiprovidersKey";
+import { useAPIVercelGateway } from "@/stores/aiprovidersKeyStore";
 
 interface ExplainSideChatContentProps {
   sideChatId: string;

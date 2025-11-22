@@ -63,10 +63,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircleIcon, CheckCircle2Icon, PopcornIcon } from "lucide-react";
-import { useAPIVercelGateway } from "@/stores/aiprovidersKey";
+import { useAPIVercelGateway } from "@/stores/aiprovidersKeyStore";
 import { Loader } from "@/components/ui/shadcn-io/ai/loader";
 
 export default function ChatArea({
@@ -448,8 +445,6 @@ export default function ChatArea({
 
   const { isTouchDevice, setIsTouchDevice } = useAboutDeviceInfo();
   useEffect(() => {
-    setVercelAiGatewayCredits(); // Vercel Credits
-
     // Check if device supports touch (runs once on mount)
     setIsTouchDevice(isDeviceTouch());
   }, []);
@@ -802,7 +797,6 @@ export default function ChatArea({
 
           // Retrive-> [Cost of the Answer]
           const totalTokens = (message.metadata as any).totalTokens;
-          // console.log("Total Tokens: " + answerCost);
 
           // Only consider streaming if it's the last message
           const isLastMessage = messageIndex === messages.length - 1;
@@ -897,6 +891,8 @@ export default function ChatArea({
                             isTouchDevice={isTouchDevice}
                           />
                         )}
+
+                        <div className="bg-pink-400 text-white w-fit">{}</div>
                       </div>
                     );
                   } else {
@@ -1073,7 +1069,7 @@ export default function ChatArea({
             </AlertDialog>
 
             <Conversation
-              className={`bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#f17815] overflow-y-hidden`}
+              className={`bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#bd5f33] overflow-y-hidden`}
             >
               {/* TODO: "Not sure why but the scroll-bar design is not taking place." */}
               <ConversationContent

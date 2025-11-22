@@ -1,16 +1,15 @@
-import { AI_MODELS } from '@/constants/models';
-import { google } from '@ai-sdk/google'
-import { deepseek } from '@ai-sdk/deepseek'
-import { mistral } from '@ai-sdk/mistral'
-import { openai } from '@ai-sdk/openai'
+// import { AI_MODELS } from '@/constants/models';
+// import { google } from '@ai-sdk/google'
+// import { deepseek } from '@ai-sdk/deepseek'
+// import { mistral } from '@ai-sdk/mistral'
+// import { openai } from '@ai-sdk/openai'
 // import { saveChat } from '@/utils/chat-store';
 import { streamText, UIMessage, convertToModelMessages, uiMessageChunkSchema, LanguageModel } from 'ai';
-import { createOllama } from 'ollama-ai-provider-v2';
+// import { createOllama } from 'ollama-ai-provider-v2';
 import { v7 as uuidv7 } from 'uuid';
 
 // import { gateway } from 'ai';
 import { createGateway } from 'ai';
-import { SiOpenai } from '@icons-pack/react-simple-icons';
 
 
 
@@ -140,6 +139,9 @@ export async function POST(req: Request) {
         // ==> Currently, abandoning the idea of providing the answer cost (For now) as it deals to either choosing between <Having proper streaming [where we can't get the final cost]> OR <Getting the cost [but losing streaming]>.
         // #1
         // const providerMetadataPromise = result.providerMetadata;
+        // providerMetadataPromise.then((data) => {
+        //     console.log("Provider Metadata fetched:\n", data);
+        // })
         // const data = await providerMetadataPromise;
         // const cost = (data!.gateway as any).cost
 
@@ -155,7 +157,7 @@ export async function POST(req: Request) {
                 }
 
                 if (part.type === 'finish') {
-                    part.totalUsage.cachedInputTokens
+                    // part.totalUsage.cachedInputTokens
                     return {
                         model: ai_model,
                         totalTokens: part.totalUsage.totalTokens?.toString() || '0',

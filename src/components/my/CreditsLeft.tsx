@@ -38,14 +38,7 @@ export function CreditsLeft({
   if (isTouchDevice) {
     return (
       <Popover>
-        <PopoverTrigger
-          // className="fixed top-0 right-1 lg:right-8"
-          asChild
-        >
-          {/* <button type="button"> */}
-          {iconElement}
-          {/* </button> */}
-        </PopoverTrigger>
+        <PopoverTrigger asChild>{iconElement}</PopoverTrigger>
         <PopoverContent className="w-full z-50000 p-1! bg-linear-to-r from-[#2dd4bf] to-[#95b5e0] border-0!">
           {contentElement}
         </PopoverContent>

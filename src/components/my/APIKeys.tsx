@@ -31,7 +31,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { useAPIVercelGateway } from "@/stores/aiprovidersKey";
+import { useAPIVercelGateway } from "@/stores/aiprovidersKeyStore";
 // import { useAPIVercelGateway } from "@/stores/aiprovidersKey";
 
 // export function APIKeys() {

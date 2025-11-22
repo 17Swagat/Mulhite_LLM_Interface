@@ -13,7 +13,8 @@ import { CreditsLeft } from "@/components/my/CreditsLeft";
 import { useAboutDeviceInfo } from "@/stores/aboutDevice";
 import { isDeviceTouch } from "@/utils/clientfuncs/isDeviceTouch";
 import { APIKeys } from "@/components/my/APIKeys";
-import { useAPIVercelGateway } from "@/stores/aiprovidersKey";
+import { useAPIVercelGateway } from "@/stores/aiprovidersKeyStore";
+import { useVercelAICreditsLeft } from "@/stores/aiprovidersCreditsStore";
 
 export function ChatPage_ClientComponent({
   availableModels,
@@ -72,16 +73,21 @@ export function ChatPage_ClientComponent({
 
   // Component Mount Check [Otherwise Zustand store has hydration issues]
   const [haveMounted, setHaveMounted] = useState(false);
-  const [credits, setCredits] = useState(0);
+  const [credits, setCredits] = useState(-1);
   const { isTouchDevice, setIsTouchDevice } = useAboutDeviceInfo(); // "For, touch device Check"
+  const { vercelAIGatewayAPIKey, hydrated } = useAPIVercelGateway();
+
   useEffect(() => {
+    if (!hydrated) return;
     setHaveMounted(true);
-    // Get credits left:
-    fetch("/api/vercel-models/credits_left/")
+    fetch(`/api/vercel-models/credits_left/${vercelAIGatewayAPIKey}`, {
+      method: "GET",
+    })
       .then((res) => res.json())
       .then((data) => {
         setCredits(data.creditsLeft);
-      });
+      })
+      .catch((err) => {});
 
     // is Touch Device Check:
     const touchValidation = () => {
@@ -90,9 +96,7 @@ export function ChatPage_ClientComponent({
     touchValidation();
     window.addEventListener("resize", touchValidation); // CHECK: "Whether this is necessary or not"
     return () => window.removeEventListener("resize", touchValidation);
-  }, []);
-
-  // Load User API-Key
+  }, [vercelAIGatewayAPIKey, hydrated]);
 
   if (!haveMounted) {
     return <LoadingScreen />;
@@ -107,7 +111,6 @@ export function ChatPage_ClientComponent({
       >
         <div className="fixed top-0 right-1 lg:right-8 flex gap-2 items-center">
           <CreditsLeft credits={credits} isTouchDevice={isTouchDevice} />
-
           <APIKeys />
         </div>
 
