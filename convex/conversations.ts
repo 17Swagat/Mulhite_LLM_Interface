@@ -29,6 +29,7 @@ async function getCurrentUserQuery(ctx: QueryCtx) {
 async function getCurrentUserMutation(ctx: MutationCtx) {
     const identity = await ctx.auth.getUserIdentity();
     console.log(identity)
+    console.log(identity)
     if (!identity) {
         console.warn("No user identity found; possible session issue");
         throw new Error("Unauthorized");
