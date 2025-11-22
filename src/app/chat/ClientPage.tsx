@@ -110,9 +110,10 @@ export function ChatPage_ClientComponent({
     haveMounted && (
       <div
         className="w-full h-screen 
-     bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c] 
+     bg-gray-700
       text-white flex justify-center items-center"
       >
+     {/* bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c]  */}
         <div className="fixed top-0 right-1 lg:right-8 flex gap-2 items-center">
           <CreditsLeft credits={credits} isTouchDevice={isTouchDevice} />
           <APIKeys />
