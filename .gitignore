@@ -60,8 +60,8 @@ AGENT_WORK/
 
 
 # Images
-public/ai-models/
-public/*.png
-public/*.svg
-public/landing/
-public/fonts/
+# public/ai-models/
+# public/*.png
+# public/*.svg
+# public/landing/
+# public/fonts/
