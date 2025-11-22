@@ -106,6 +106,7 @@ export function ChatPage_ClientComponent({
     return <LoadingScreen />;
   }
 
+  // Testing
   return (
     haveMounted && (
       <div
