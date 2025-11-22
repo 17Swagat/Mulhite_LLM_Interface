@@ -43,7 +43,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ClerkProvider
-          appearance={{
+          appearance={ {
             theme: dark,
             layout: { logoImageUrl: "/logo_02.svg" },
           }}
