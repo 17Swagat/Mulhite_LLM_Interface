@@ -143,7 +143,8 @@ export const APIKeys = memo(function APIKeys() {
                   <div
                     className=" cursor-pointer"
                     onClick={() => {
-                      setVercelGatewayAPIKey(""); // checking
+                      // NOTE: IMPORTANT
+                      setVercelGatewayAPIKey(" "); // NOTE: Important!!! If I keep it as empty string "", then it will fallback to the internal API Key of Vercel Gateway [I don't know why & how?] , but if I set it without spaces, then the Response generate from the API will keep happening even though the API Key is removed.
                     }}
                   >
                     <Trash className="hover:bg-red-400 rounded-[3px] p-0.5 transition duration-100 ease-in active:brightness-80" />
