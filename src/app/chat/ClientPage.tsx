@@ -14,7 +14,7 @@ import { useAboutDeviceInfo } from "@/stores/aboutDevice";
 import { isDeviceTouch } from "@/utils/clientfuncs/isDeviceTouch";
 import { APIKeys } from "@/components/my/APIKeys";
 import { useAPIVercelGateway } from "@/stores/aiprovidersKeyStore";
-import { useVercelAICreditsLeft } from "@/stores/aiprovidersCreditsStore";
+// import { useVercelAICreditsLeft } from "@/stores/aiprovidersCreditsStore";
 
 export function ChatPage_ClientComponent({
   availableModels,
@@ -110,10 +110,9 @@ export function ChatPage_ClientComponent({
     haveMounted && (
       <div
         className="w-full h-screen 
-     bg-gray-700
+        bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c] 
       text-white flex justify-center items-center"
       >
-     {/* bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c]  */}
         <div className="fixed top-0 right-1 lg:right-8 flex gap-2 items-center">
           <CreditsLeft credits={credits} isTouchDevice={isTouchDevice} />
           <APIKeys />
