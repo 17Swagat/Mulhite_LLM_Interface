@@ -143,7 +143,7 @@ export const APIKeys = memo(function APIKeys() {
                   <div
                     className=" cursor-pointer"
                     onClick={() => {
-                      setVercelGatewayAPIKey(" ");
+                      setVercelGatewayAPIKey(""); // checking
                     }}
                   >
                     <Trash className="hover:bg-red-400 rounded-[3px] p-0.5 transition duration-100 ease-in active:brightness-80" />
