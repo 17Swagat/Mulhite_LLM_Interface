@@ -28,9 +28,10 @@ async function getCurrentUserQuery(ctx: QueryCtx) {
 
 async function getCurrentUserMutation(ctx: MutationCtx) {
     const identity = await ctx.auth.getUserIdentity();
+    console.log(identity)
     if (!identity) {
         console.warn("No user identity found; possible session issue");
-        return null; // throw new Error("Unauthorized");
+        throw new Error("Unauthorized");
         // return null;
     }
 
@@ -48,7 +49,7 @@ async function getCurrentUserMutation(ctx: MutationCtx) {
         });
         user = (await ctx.db.get(userId)) as any;
         if (!user)
-            return null;//throw new Error("Failed to create user");
+            throw new Error("Failed to create user");
         // return null;
     }
 
@@ -80,12 +81,12 @@ async function ensureUserOwnsConvoMutation(
     { conversationId }: { conversationId: Id<"conversations"> }
 ) {
     const user = await getCurrentUserMutation(ctx);
-    if (!user)
-        return null;
+    // if (!user)
+    //     return null;
 
     const convo = await ctx.db.get<"conversations">(conversationId);
     if (!convo || convo.userId !== user._id)
-        return null;//throw new Error("Unauthorized");
+        throw new Error("Unauthorized");
 }
 
 export const listConversations = query({
@@ -105,34 +106,6 @@ export const listConversations = query({
     },
 });
 
-
-// export const getAIReplyModelName = query({
-//     args: {
-//         conversationId: v.string(),
-//         messageId: v.string()
-//     }, handler: async (ctx, args) => {
-//         const user = await getCurrentUserQuery(ctx);
-//         if (!user) {
-//             return null;
-//         }
-//         try {
-//             const conversationId = args.conversationId as Id<"conversations">;
-//             const result = await ctx.db.query('messages').withIndex("by_conversationId", (q) => q.eq("conversationId", conversationId))
-//                 .filter((q) => q.eq(q.field('_id'), args.messageId)).first()
-//             return result?.ai_model ?? null;
-//             // .then((msg) => {
-//             //     let modelName: string = msg?.ai_model ?? '';
-//             //     if (!modelName) {
-//             //         return null;
-//             //     }
-//             //     return modelName;
-//             // });
-
-//         } catch (error) {
-//             return null;
-//         }
-//     }
-// })
 
 export const listConversationsPaginate = query({
     args: {
@@ -234,8 +207,6 @@ export const createConversation = mutation({
     },
     handler: async (ctx, { title }) => {
         const user = await getCurrentUserMutation(ctx);
-        if (!user)
-            return null;
         const now = Date.now();
         const convoId = await ctx.db.insert("conversations", {
             userId: user._id,
@@ -327,8 +298,8 @@ export const deleteConversation = mutation({
 export const ensureUser = mutation({
     handler: async (ctx) => {
         const user = await getCurrentUserMutation(ctx);
-        if (!user)
-            return null;
+        // if (!user)
+        //     return null;
         return { userId: user._id };
     },
 });
