@@ -30,7 +30,7 @@ export function CreditsLeft({
       <span className="underline">Credits-Left:</span>
       <span className="text-green-500 font-semibold">
         <span className="text-white">$</span>
-        {credits}
+        {credits ?? 0}
       </span>
     </div>
   );
