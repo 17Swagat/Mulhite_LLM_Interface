@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import localFont from "next/font/local";
 import "./globals.css";
 import { dark } from "@clerk/themes";
 
@@ -18,22 +17,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// export const font_GMonoTrustDisplay = localFont({
-//   src: "../../public/fonts/momofont.ttf", // ← Correct relative path
-//   display: "swap",
-//   variable: "--font-gmono-trust", // Optional: for CSS variable usage
-// });
-
 export const metadata: Metadata = {
+  icons: {
+    icon: "/logo_02.svg",
+    apple: "/logo_02.svg",
+  },
   title:
     "Mulhite - Multimodal LLM Chat interface with Highlighting & in-chat Threads.",
   description:
     "Chat with AI models and highlight important information in conversations and create in-chat threads for better context management.",
-  // viewport: {
-  //   width: "device-width",
-  //   initialScale: 1,
-  //   viewportFit: "cover",
-  // },
 };
 
 export default function RootLayout({
