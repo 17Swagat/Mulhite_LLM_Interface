@@ -18,10 +18,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  icons: {
-    icon: "/logo_02.svg",
-    apple: "/logo_02.svg",
-  },
+  // icons: {
+  //   icon: "/logo_02.svg",
+  //   apple: "/logo_02.svg",
+  // },
   title:
     "Mulhite - Multimodal LLM Chat interface with Highlighting & in-chat Threads.",
   description:
@@ -37,7 +37,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="stylesheet" href="./highlightStuff.css" />
-        <link rel="icon" href="/logo_02.svg" sizes="any" />
+        <link rel="icon" href="/logo_02.ico" sizes="any" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
