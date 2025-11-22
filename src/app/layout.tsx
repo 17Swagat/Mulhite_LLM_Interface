@@ -37,13 +37,13 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="stylesheet" href="./highlightStuff.css" />
-        <link rel="icon" href="/logo_02.svg" sizes="any" />
+        <link rel="icon" href="/logo_03.ico" sizes="any" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ClerkProvider
-          appearance={ {
+          appearance={{
             theme: dark,
             layout: { logoImageUrl: "/logo_02.svg" },
           }}
