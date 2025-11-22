@@ -46,6 +46,21 @@ export async function POST(req: Request) {
             // reasoning?: boolean;
         } = req_;
 
+        // Validate API Key before proceeding
+        /*if (!vercelAIGatewayAPIKey || vercelAIGatewayAPIKey.trim() === "") {
+            console.error("Missing or invalid API key in request");
+            return new Response(
+                JSON.stringify({
+                    error: "Unauthorized",
+                    message: "API key is required to access this endpoint",
+                }),
+                {
+                    status: 401,
+                    headers: { "Content-Type": "application/json" },
+                }
+            );
+        }*/
+
         // Gateway Model:
         const gateway = createGateway({
             apiKey: vercelAIGatewayAPIKey,

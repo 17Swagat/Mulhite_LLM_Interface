@@ -109,14 +109,14 @@ export default function ChatArea({
   );
 
   // Memoize transport to avoid recreating it on re-renders
-  const transport = useMemo(
-    () =>
-      new DefaultChatTransport({
-        api: "/api/multi-model",
-        body: { chatId: id },
-      }),
-    [id]
-  );
+  // const transport = useMemo(
+  //   () =>
+  //     new DefaultChatTransport({
+  //       api: "/api/multi-model",
+  //       body: { chatId: id },
+  //     }),
+  //   [id]
+  // );
   // AI SDK chat hook
   const { vercelAIGatewayAPIKey } = useAPIVercelGateway();
   const { parentChatModel } = useSelectedAIModelStore();
@@ -131,7 +131,11 @@ export default function ChatArea({
     clearError,
   } = useChat({
     id,
-    transport,
+    // transport,
+    transport: new DefaultChatTransport({
+      api: "/api/multi-model",
+      body: { chatId: id },
+    }),
     onFinish: async ({
       message: finishedMessage,
       messages: allMessages,
@@ -223,6 +227,17 @@ export default function ChatArea({
       stop();
       return;
     }
+
+    // Validate API key before attempting to send message
+    /*
+    if (!vercelAIGatewayAPIKey || vercelAIGatewayAPIKey.trim() === "") {
+      setErrorMsg(
+        "API Key is missing or has been removed. Please add your Vercel AI Gateway API Key to continue."
+      );
+      setError(true);
+      return;
+    }
+      */
 
     if (question.trim() && chatStatus === "ready" && id) {
       const userMessage = question.trim();
@@ -380,6 +395,16 @@ export default function ChatArea({
       const pendingMessage = sessionStorage.getItem(pendingMessageKey);
 
       if (pendingMessage) {
+        // Validate API key before sending pending message
+        /*if (!vercelAIGatewayAPIKey || vercelAIGatewayAPIKey.trim() === "") {
+          console.warn(
+            "Cannot send pending message: API Key is missing or has been removed."
+          );
+          sessionStorage.removeItem(pendingMessageKey);
+          setHasProcessedPendingMessage(true);
+          return;
+        }*/
+
         sendMessage(
           {
             text: pendingMessage,
@@ -403,6 +428,7 @@ export default function ChatArea({
     chatStatus,
     sendMessage,
     messages.length,
+    vercelAIGatewayAPIKey,
   ]);
 
   // Intersection observer for auto-loading older messages
