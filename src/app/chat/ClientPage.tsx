@@ -106,7 +106,6 @@ export function ChatPage_ClientComponent({
     return <LoadingScreen />;
   }
 
-  // Testing Vercel: regarding is it rebuilding master branch or not.
   return (
     haveMounted && (
       <div
