@@ -48,10 +48,7 @@ export function CreditsLeft({
 
   return (
     <HoverCard openDelay={100} closeDelay={100}>
-      <HoverCardTrigger
-        // className="fixed top-0 right-8"
-        asChild
-      >
+      <HoverCardTrigger asChild>
         <div>{iconElement}</div>
       </HoverCardTrigger>
       <HoverCardContent className="w-full z-50000 p-1! bg-linear-to-r from-[#2dd4bf] to-[#95b5e0] border-0!">

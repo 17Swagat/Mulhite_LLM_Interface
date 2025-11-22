@@ -20,17 +20,7 @@ import { Input } from "../ui/input";
 import Link from "next/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-// convex:
-import { useMutation, useQuery } from "convex/react";
-import { api } from "@/../convex/_generated/api";
-import {
-  memo,
-  startTransition,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { memo, startTransition, useCallback, useRef, useState } from "react";
 import { useAPIVercelGateway } from "@/stores/aiprovidersKeyStore";
 // import { useAPIVercelGateway } from "@/stores/aiprovidersKey";
 

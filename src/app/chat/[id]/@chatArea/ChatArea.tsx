@@ -229,7 +229,7 @@ export default function ChatArea({
     }
 
     // Validate API key before attempting to send message
-    /*
+    // NOTE:
     if (!vercelAIGatewayAPIKey || vercelAIGatewayAPIKey.trim() === "") {
       setErrorMsg(
         "API Key is missing or has been removed. Please add your Vercel AI Gateway API Key to continue."
@@ -237,7 +237,6 @@ export default function ChatArea({
       setError(true);
       return;
     }
-      */
 
     if (question.trim() && chatStatus === "ready" && id) {
       const userMessage = question.trim();
