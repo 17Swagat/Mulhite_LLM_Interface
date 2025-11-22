@@ -12,17 +12,21 @@ export const useVercelAICreditsLeft = create<{
         (set) => ({
             vercelAiGatewayCredits: 0,
             setVercelAiGatewayCredits() {
-                fetch(`/api/vercel-models/credits_left/${useAPIVercelGateway.getState().vercelAIGatewayAPIKey}`,
-                    {
-                        method: "GET",
-                    }
-                )
-                    .then((res) => res.json())
-                    .then((data) => {
-                        set({ vercelAiGatewayCredits: data.creditsLeft });
-                    }).catch((err) => {
-                        set({ vercelAiGatewayCredits: 0 });
-                    });
+                try {
+                    fetch(`/api/vercel-models/credits_left/${useAPIVercelGateway.getState().vercelAIGatewayAPIKey}`,
+                        {
+                            method: "GET",
+                        }
+                    )
+                        .then((res) => res.json())
+                        .then((data) => {
+                            set({ vercelAiGatewayCredits: data.creditsLeft });
+                        }).catch((err) => {
+                            set({ vercelAiGatewayCredits: 0 });
+                        });
+                } catch (error) {
+                    set({ vercelAiGatewayCredits: 0 });
+                }
             },
         }),
         {

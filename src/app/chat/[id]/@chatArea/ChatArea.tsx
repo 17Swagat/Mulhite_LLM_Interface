@@ -73,11 +73,6 @@ export default function ChatArea({
   id: string;
   availableModels: any[];
 }) {
-  // 💵💵
-  // Vercel-Credits-Left:
-  const { vercelAiGatewayCredits, setVercelAiGatewayCredits } =
-    useVercelAICreditsLeft();
-
   // const [input, setInput] = useState("");
   const [hasProcessedPendingMessage, setHasProcessedPendingMessage] =
     useState(false);
@@ -119,6 +114,10 @@ export default function ChatArea({
   // );
   // AI SDK chat hook
   const { vercelAIGatewayAPIKey, hydrated } = useAPIVercelGateway();
+  // 💵💵
+  // Vercel-Credits-Left:
+  const { vercelAiGatewayCredits, setVercelAiGatewayCredits } =
+    useVercelAICreditsLeft();
   useEffect(() => {
     if (!hydrated) return;
     setVercelAiGatewayCredits();
