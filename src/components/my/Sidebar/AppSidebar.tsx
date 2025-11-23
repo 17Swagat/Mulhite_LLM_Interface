@@ -259,7 +259,7 @@ export function AppSidebar() {
                   </DropdownMenuItem> */}
 
                   <DropdownMenuItem className="">
-                    <SignOutButton>
+                    <SignOutButton redirectUrl="/">
                       <Button className="w-full ">Log-out</Button>
                     </SignOutButton>
                   </DropdownMenuItem>
