@@ -21,9 +21,23 @@ import { useMutation, usePaginatedQuery, useConvexAuth } from "convex/react";
 // import { api } from "../../../convex/_generated/api";
 import { api } from "@/../convex/_generated/api";
 import cssStyleSidebar from "./AppSidebar.module.css";
-import { UserButton, useUser } from "@clerk/nextjs";
+import {
+  SignedOut,
+  SignIn,
+  SignOutButton,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
 
 import { font_GMonoTrustDisplay } from "@/fonts";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronUp, User2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function AppSidebar() {
   // ConvexClerk Auth
@@ -33,8 +47,8 @@ export function AppSidebar() {
   // 📌
   // Get current user Info
   const { user } = useUser();
-  const userName = user?.fullName || "Unknown User";
-  const userEmail = user?.primaryEmailAddress?.emailAddress || "No Email";
+  const userName = user?.fullName || "Loading..."; //"Unknown User";
+  // const userEmail = user?.primaryEmailAddress?.emailAddress || "No Email";
   // const userAvatar = user?.imageUrl || "";
 
   // Ensure user exists in Convex on mount
@@ -210,9 +224,54 @@ export function AppSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
+
+        <SidebarFooter className="bg-gray-800 text-white">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton className="hover:bg-white hover:text-black">
+                    {/* // className="bg-gray-300 text-black"> */}
+                    {/* <User2 />  */}
+                    <UserButton />
+                    {userName}
+                    {/* Username */}
+                    <ChevronUp className="ml-auto" />
+                    {/* <div className="flex flex-col truncate">
+                      <p className="text-sm font-medium text-foreground truncate">
+                        {userName}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {userEmail}
+                      </p>
+                    </div> */}
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  side="top"
+                  className="w-[--radix-popper-anchor-width] dark"
+                >
+                  {/* <DropdownMenuItem>
+                    <span>Account</span>
+                  </DropdownMenuItem> */}
+                  {/* <DropdownMenuItem>
+                    <span>Billing</span>
+                  </DropdownMenuItem> */}
+
+                  <DropdownMenuItem className="">
+                    <SignOutButton>
+                      <Button className="w-full ">Log-out</Button>
+                    </SignOutButton>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+
+        {/* 
         <SidebarFooter className="border-t border-border/50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
           <div className="flex items-center justify-between p-3 w-full">
-            {/* User Info */}
             <div className="flex flex-col truncate">
               <p className="text-sm font-medium text-foreground truncate">
                 {userName}
@@ -222,7 +281,6 @@ export function AppSidebar() {
               </p>
             </div>
 
-            {/* User Button with Gradient Hover Ring */}
             <div className="shrink-0">
               <UserButton
                 userProfileMode="modal"
@@ -248,6 +306,7 @@ export function AppSidebar() {
             </div>
           </div>
         </SidebarFooter>
+        */}
       </Sidebar>
     </>
   );
