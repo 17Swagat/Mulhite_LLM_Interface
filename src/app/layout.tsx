@@ -45,7 +45,7 @@ export default function RootLayout({
         <ClerkProvider
           appearance={{
             theme: dark,
-            layout: { logoImageUrl: "/logo_02.svg" },
+            layout: { logoImageUrl: "/logo_04.svg" },
           }}
         >
           <ConvexClientProvider>{children}</ConvexClientProvider>
