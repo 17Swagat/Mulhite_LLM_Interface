@@ -16,6 +16,19 @@ import { APIKeys } from "@/components/my/APIKeys";
 import { useAPIVercelGateway } from "@/stores/aiprovidersKeyStore";
 import { useVercelAICreditsLeft } from "@/stores/aiprovidersCreditsStore";
 
+// For Error Dialog:
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 export function ChatPage_ClientComponent({
   availableModels,
 }: {
@@ -36,6 +49,17 @@ export function ChatPage_ClientComponent({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // if (credits ==)
+    console.log("Credits Left:", credits);
+
+    // Case: Vercel API Key Error Check
+    // #1 API KEY NOT PROVIDED.
+    if (vercelAIGatewayAPIKey.trim() === "" || credits === 0) {
+      setOnVercelAPIKeyError(true);
+      return;
+    }
+
     if (question.trim() && !isSubmitting) {
       setIsSubmitting(true);
 
@@ -87,9 +111,16 @@ export function ChatPage_ClientComponent({
     })
       .then((res) => res.json())
       .then((data) => {
-        setCredits(data.creditsLeft);
+        if (Object.keys(data).length === 0) {
+          /* Case, got no credits information regarding the set API Key. Implying its most probably Incorrect.*/
+          setCredits(0);
+        } else {
+          // For Valid API Key
+          setCredits(data.creditsLeft);
+        }
       })
       .catch((err) => {
+        console.log("Error fetching Vercel AI Gateway credits:");
         setCredits(0);
       });
 
@@ -102,6 +133,17 @@ export function ChatPage_ClientComponent({
     return () => window.removeEventListener("resize", touchValidation);
   }, [vercelAIGatewayAPIKey, hydrated]);
 
+  // On Error Related to Vercel API Key, to toggle Alert Dialog
+  const [onVercelAPIKey_error, setOnVercelAPIKeyError] =
+    useState<boolean>(false);
+  // useEffect(() => {
+  //   if (vercelAIGatewayAPIKey.trim() === "" || credits === 0) {
+  //     setOnVercelAPIKeyError(true);
+  //   } else {
+  //     setOnVercelAPIKeyError(false);
+  //   }
+  // }, [vercelAIGatewayAPIKey, credits]);
+
   if (!haveMounted) {
     return <LoadingScreen />;
   }
@@ -113,11 +155,37 @@ export function ChatPage_ClientComponent({
      bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c] 
       text-white flex justify-center items-center"
       >
+        {/* Error: Alert On Passing with A Empty API Key */}
+
+        <AlertDialog
+          open={onVercelAPIKey_error}
+          onOpenChange={setOnVercelAPIKeyError}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Error Occured</AlertDialogTitle>
+              <AlertDialogDescription>
+                {vercelAIGatewayAPIKey.trim() === ""
+                  ? "Put Your Vercel AI GATEWAY API Key."
+                  : `AI Gateway authentication failed: Invalid API key. Put correct API Key or  Create a new API key: https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai%2Fapi`}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction
+                onClick={() => {
+                  setOnVercelAPIKeyError(false);
+                }}
+              >
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
         <div className="fixed top-0 right-1 lg:right-8 flex gap-2 items-center">
           <CreditsLeft credits={credits} isTouchDevice={isTouchDevice} />
           <APIKeys />
         </div>
-
         <div className="flex flex-col items-center">
           <h1 className="text-3xl mb-2 font-semibold">
             Let's Start Learning 😊
