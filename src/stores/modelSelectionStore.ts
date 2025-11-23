@@ -15,10 +15,10 @@ export const useSelectedAIModelStore = create<{
 
     persist(
         (set) => ({
-            parentChatModel: 'deepseek/deepseek-v3.1', //AI_MODELS[0].id,
+            parentChatModel: 'mistral/ministral-3b',
             setParentChatModel: (model) => set({ parentChatModel: model }),
 
-            explainSideChatModel: 'deepseek/deepseek-v3.1',//AI_MODELS[0].id,
+            explainSideChatModel: 'mistral/ministral-3b',
             setExplainSideChatModel: (model) => set({ explainSideChatModel: model }),
         }),
 
