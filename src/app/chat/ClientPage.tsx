@@ -50,13 +50,11 @@ export function ChatPage_ClientComponent({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // if (credits ==)
-    console.log("Credits Left:", credits);
-
     // Case: Vercel API Key Error Check
-    // #1 API KEY NOT PROVIDED.
+    // API-KEY NOT PROVIDED or INVALID KEY
     if (vercelAIGatewayAPIKey.trim() === "" || credits === 0) {
       setOnVercelAPIKeyError(true);
+      setIsBouncing(true);
       return;
     }
 
@@ -133,16 +131,18 @@ export function ChatPage_ClientComponent({
     return () => window.removeEventListener("resize", touchValidation);
   }, [vercelAIGatewayAPIKey, hydrated]);
 
-  // On Error Related to Vercel API Key, to toggle Alert Dialog
+  // [Error-Trigger]: On Errors Related to Vercel API Key, to Popup Alert Dialog.
   const [onVercelAPIKey_error, setOnVercelAPIKeyError] =
     useState<boolean>(false);
-  // useEffect(() => {
-  //   if (vercelAIGatewayAPIKey.trim() === "" || credits === 0) {
-  //     setOnVercelAPIKeyError(true);
-  //   } else {
-  //     setOnVercelAPIKeyError(false);
-  //   }
-  // }, [vercelAIGatewayAPIKey, credits]);
+  // Animating bounce state
+  const [isBouncing, setIsBouncing] = useState(false);
+  useEffect(() => {
+    if (isBouncing) {
+      // stop after 5 seconds
+      const timer = setTimeout(() => setIsBouncing(false), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [isBouncing]);
 
   if (!haveMounted) {
     return <LoadingScreen />;
@@ -184,7 +184,9 @@ export function ChatPage_ClientComponent({
 
         <div className="fixed top-0 right-1 lg:right-8 flex gap-2 items-center">
           <CreditsLeft credits={credits} isTouchDevice={isTouchDevice} />
-          <APIKeys />
+          <div className={`${isBouncing ? "animate-bounce" : ""}`}>
+            <APIKeys />
+          </div>
         </div>
         <div className="flex flex-col items-center">
           <h1 className="text-3xl mb-2 font-semibold">
