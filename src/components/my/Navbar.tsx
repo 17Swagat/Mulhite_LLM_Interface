@@ -30,9 +30,9 @@ export default function Navbar() {
           <Link href="#features" className="hover:text-white transition">
             Features
           </Link>
-          <Link href="#pricing" className="hover:text-white transition">
+          {/* <Link href="#pricing" className="hover:text-white transition">
             Pricing
-          </Link>
+          </Link> */}
         </div>
 
         {/* Mobile Menu Toggle */}
