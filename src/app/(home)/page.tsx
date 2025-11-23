@@ -373,16 +373,79 @@ export default function Home() {
       */}
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-6 sm:py-8">
+      {/* <footer className="bg-gray-800 text-white py-6 sm:py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm sm:text-base">
             &copy; 2025 Mulhite. All rights reserved. Created by 17Swagat with
             ❤️.
           </p>
         </div>
-      </footer>
+      </footer> */}
+      <Footer />
     </>
     // </div>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="bg-gradient-to-br from-gray-900 via-black to-gray-900 text-gray-400 border-t border-gray-800">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-8">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 text-sm">
+          {/* Left: Brand */}
+          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-8">
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              MULHITE
+            </h3>
+            <p className="text-gray-500 text-xs sm:text-sm hidden xs:block">
+              Building amazing experiences with passion and precision.
+            </p>
+          </div>
+
+          <div>
+            {/* Copyright */}
+            <p className="text-sm text-gray-400 leading-relaxed text-center">
+              © 2025 <span className="text-gray-300 font-bold">MULHITE</span>.
+              All rights reserved. <br/> 
+              <br className="sm:hidden" />
+              Built with ❤️{" "}
+              <span className="text-gray-300 font-medium">by 17Swagat</span>
+            </p>
+          </div>
+
+          {/* Center/Right: Social + Copyright (stacked on mobile, side-by-side on larger) */}
+          <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10 text-center sm:text-right">
+            {/* Social */}
+            <div className="flex items-center gap-4">
+              <span className="text-gray-500 text-xs uppercase tracking-wider hidden sm:block">
+                Social
+              </span>
+              <Link
+                href="https://x.com/SwagatKB17"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2.5 bg-gray-800/60 rounded-full hover:bg-gray-700/80 hover:text-white transition-all duration-300 hover:scale-110"
+                aria-label="Follow on X"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="text-gray-400"
+                >
+                  <path d="M18.244 2h3.308l-7.227 8.26L22 22h-6.558l-4.63-6.078L5.64 22H2.332l7.73-8.836L2 2h6.642l4.247 5.662L18.244 2zm-1.161 17.52h1.833L8.084 4.39H6.117l10.966 15.13z" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Optional subtle accent line */}
+      <div className="h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
+    </footer>
   );
 }
 
