@@ -303,6 +303,7 @@ export default function Home() {
       </section>
 
       {/* Pricing Section */}
+      {/*
       <section
         id="pricing"
         className="bg-black text-white py-8 sm:py-12 md:py-16"
@@ -369,12 +370,14 @@ export default function Home() {
           </div>
         </div>
       </section>
+      */}
 
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-6 sm:py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm sm:text-base">
-            &copy; 2025 Mulhite. All rights reserved.
+            &copy; 2025 Mulhite. All rights reserved. Created by 17Swagat with
+            ❤️.
           </p>
         </div>
       </footer>
