@@ -138,7 +138,7 @@ export function ChatPage_ClientComponent({
   const [isBouncing, setIsBouncing] = useState(false);
   useEffect(() => {
     if (isBouncing) {
-      // stop after 5 seconds
+      // stop after 4 seconds
       const timer = setTimeout(() => setIsBouncing(false), 4000);
       return () => clearTimeout(timer);
     }
