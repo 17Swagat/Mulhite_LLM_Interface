@@ -820,6 +820,8 @@ export default function ChatArea({
                 avatar_logo = "/ai-models/deepseek.svg";
               } else if (model.includes("openai")) {
                 avatar_logo = "/ai-models/openai_2.svg";
+              } else if (model.includes("gemini")) {
+                avatar_logo = "/ai-models/gemini.svg";
               }
             }
           }
