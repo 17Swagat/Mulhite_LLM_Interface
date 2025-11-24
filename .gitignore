@@ -65,3 +65,9 @@ AGENT_WORK/
 # public/*.svg
 # public/landing/
 # public/fonts/
+# next-video
+videos/*
+!videos/*.json
+!videos/*.js
+!videos/*.ts
+public/_next-video
