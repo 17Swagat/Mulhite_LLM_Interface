@@ -1,6 +1,6 @@
 import NextVideo from "next-video";
 // import productDemoVideoPath from "@/videos/MULHITE_DEMO_01.mp4";
-import productDemoVideoPath from "../../../videos/MULHITE_DEMO_01.mp4.json";
+import productDemoVideoPath from "../../../videos/MULHITE_DEMO_03.mp4.json";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/hover-card";
 
 import { font_GMonoTrustDisplay } from "@/fonts";
-
 import {
   Info,
   Highlighter,
@@ -91,7 +90,7 @@ export default function Home() {
         {/* Temporary Test Div for Text-Selection and showing a PopupOver Context Menu on Text Highlight */}
         <div className="mt-8 sm:mt-12">
           {/* Placeholder for Hero Image */}
-          <div className="w-full aspect-video bg-transparent rounded-lg flex items-center justify-center p-1">
+          <div className="w-full aspect-video bg-gray-800 rounded-lg flex items-center justify-center p-1">
             {/* Youtube Dummy */}
             {/* <iframe
               src="https://www.youtube.com/embed/jX4dLxiso6A?si=130UNzeK5VFA8vAx"
@@ -106,7 +105,7 @@ export default function Home() {
               // NOTE: Without this link feature gives TS error. As productDemoVideoPath is of type json and src expects a string:
               // @ts-ignore
               src={productDemoVideoPath}
-              className="w-full h-full rounded-lg"
+              className="w-full h-full rounded-lg bg-amber-300"
               // controls
               // autoplay={false}
               // muted={false}
