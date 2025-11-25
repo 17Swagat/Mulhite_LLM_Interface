@@ -75,7 +75,7 @@ export default function Home() {
           SOMETHING!!
         </h2>
 
-        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 mb-6 sm:mb-8 px-4">
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 mb-6 sm:mb-8 px-4">
           Use LLMs to help you study and learn better!
         </p>
 
