@@ -28,7 +28,7 @@ import {
 import img_textHighlighting from "@/../public/landing/compressed/text-highlighting.png";
 import img_explainSideChat from "@/../public/landing/compressed/explainsidechat.png";
 import img_creditsLeft from "@/../public/landing/compressed/credits_left2.png";
-import img_multiLLMs from "@/../public/landing/compressed/multiple-llms.png";
+// import img_multiLLMs from "@/../public/landing/compressed/multiple-llms.png";
 
 const available_models = [
   {
@@ -215,7 +215,7 @@ export default function Home() {
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 md:gap-8 w-full">
               <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 transition-transform duration-300 ease-in-out hover:cursor-pointer">
                 <ImageModalCard
-                  imageSrc={img_textHighlighting} //"/landing/text-highlighting.png"
+                  image={img_textHighlighting} //"/landing/text-highlighting.png"
                   altText="Highlight Text in AI Responses"
                 />
               </div>
@@ -281,7 +281,7 @@ export default function Home() {
 
               <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 transition-transform duration-300 ease-in-out hover:cursor-pointer">
                 <ImageModalCard
-                  imageSrc= {img_explainSideChat} //"/landing/explainsidechat.png"
+                  image={img_explainSideChat} //"/landing/explainsidechat.png"
                   altText="Explain Sidechat Thread"
                 />
               </div>
@@ -291,7 +291,7 @@ export default function Home() {
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 md:gap-8 w-full">
               <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 transition-transform duration-300 ease-in-out">
                 <ImageModalCard
-                  imageSrc= {img_creditsLeft} //"/landing/credits_left2.png"
+                  image={img_creditsLeft} //"/landing/credits_left2.png"
                   altText="Credits-Left"
                 />
               </div>
@@ -471,20 +471,23 @@ function Footer() {
 }
 
 function ImageModalCard({
-  imageSrc,
+  image,
   altText,
 }: {
-  imageSrc: StaticImageData;
+  image: StaticImageData;
   altText: string;
 }) {
+  const width = image.width;
+  const height = image.height;
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Image
-          src={imageSrc}
+          src={image}
           alt={altText}
-          width={800}
-          height={800}
+          width={width}
+          height={height}
           className="rounded-lg w-full h-auto "
         />
       </DialogTrigger>
@@ -498,10 +501,10 @@ function ImageModalCard({
 
         <div className="w-full flex items-center justify-center p-2! border-0! sm:p-4 md:p-6 ">
           <Image
-            src={imageSrc}
+            src={image}
             alt={altText}
-            width={1800}
-            height={1800}
+            width={width}
+            height={height}
             className="rounded-lg w-full h-auto max-w-full object-contain"
           />
         </div>
