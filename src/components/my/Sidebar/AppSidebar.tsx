@@ -25,6 +25,7 @@ import {
   SignedOut,
   SignIn,
   SignOutButton,
+  useClerk,
   UserButton,
   useUser,
 } from "@clerk/nextjs";
@@ -38,6 +39,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronUp, User2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { redirect } from "next/navigation";
 
 export function AppSidebar() {
   // ConvexClerk Auth
@@ -50,6 +52,8 @@ export function AppSidebar() {
   const userName = user?.fullName || "Loading..."; //"Unknown User";
   // const userEmail = user?.primaryEmailAddress?.emailAddress || "No Email";
   // const userAvatar = user?.imageUrl || "";
+
+  const { signOut } = useClerk();
 
   // Ensure user exists in Convex on mount
   const ensureUser = useMutation(api.conversations.ensureUser);
@@ -259,9 +263,17 @@ export function AppSidebar() {
                   </DropdownMenuItem> */}
 
                   <DropdownMenuItem className="">
-                    <SignOutButton redirectUrl="/">
+                    {/* <SignOutButton redirectUrl="/">
                       <Button className="w-full ">Log-out</Button>
-                    </SignOutButton>
+                    </SignOutButton> */}
+                    <Button
+                      className="w-full "
+                      onClick={() => {
+                        signOut({ redirectUrl: "/" });
+                      }}
+                    >
+                      Log-out
+                    </Button>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
