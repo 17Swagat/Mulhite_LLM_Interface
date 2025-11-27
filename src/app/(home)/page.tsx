@@ -1,6 +1,6 @@
 import NextVideo from "next-video";
 // import productDemoVideoPath from "@/videos/MULHITE_DEMO_01.mp4";
-import productDemoVideoPath from "../../../videos/MULHITE_DEMO_03.mp4.json";
+import productDemoVideoPath from "../../../videos/MULHITE_DEMO_04.mp4.json";
 import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
 import {
@@ -106,7 +106,7 @@ export default function Home() {
             /> */}
 
             {/* NextVideo -Mux */}
-            <NextVideo
+            {/*<NextVideo
               // NOTE: Without this link feature gives TS error. As productDemoVideoPath is of type json and src expects a string:
               // @ts-ignore
               src={productDemoVideoPath}
@@ -116,7 +116,14 @@ export default function Home() {
               // muted={false}
               // loop={false}
               // preload="metadata"
-            />
+            />*/}
+            <iframe
+              src="https://player.mux.com/KXQAtd01jJGwdxfgEEUW5BpJ6xvadEubOBnHAdxCD5U00?accent-color=%23000000&primary-color=%237c33a3"
+              style={{ width: "100%", border: "none", aspectRatio: "16/9" }} //"width: 100%; border: none; aspect-ratio: 16/9;"
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+              allowFullScreen
+              // allowfullscreen
+            ></iframe>
           </div>
         </div>
       </section>
