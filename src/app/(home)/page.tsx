@@ -289,7 +289,7 @@ export default function Home() {
 
             {/* Credits-Left */}
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 md:gap-8 w-full">
-              <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 transition-transform duration-300 ease-in-out">
+              <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 cursor-pointer transition-transform duration-300 ease-in-out">
                 <ImageModalCard
                   image={img_creditsLeft} //"/landing/credits_left2.png"
                   altText="Credits-Left"
@@ -499,7 +499,8 @@ function ImageModalCard({
           <DialogTitle></DialogTitle>
         </DialogHeader>
 
-        <div className="w-full flex items-center justify-center p-2! border-0! sm:p-4 md:p-6 ">
+        {/* <div className="w-full flex items-center justify-center p-2! border-0! sm:p-4 md:p-6 "> */}
+        <div className="w-full flex items-center justify-center p-0!  sm:p-0 md:p-0 border-none!">
           <Image
             src={image}
             alt={altText}
