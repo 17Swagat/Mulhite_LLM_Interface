@@ -14,7 +14,7 @@ import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import { useAboutDeviceInfo } from "@/stores/aboutDevice";
 
-import svg_aiProviderIcon from "@/public/assets/ai_provider3.svg";
+import svg_aiProviderIcon from '@/../public/assets/ai_provider3.svg'
 
 import {
   Popover,
