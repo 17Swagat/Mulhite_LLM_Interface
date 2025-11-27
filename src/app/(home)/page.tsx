@@ -2,7 +2,7 @@ import NextVideo from "next-video";
 // import productDemoVideoPath from "@/videos/MULHITE_DEMO_01.mp4";
 import productDemoVideoPath from "../../../videos/MULHITE_DEMO_03.mp4.json";
 import Link from "next/link";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import {
   HoverCard,
   HoverCardContent,
@@ -24,6 +24,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
+import img_textHighlighting from "@/../public/landing/compressed/text-highlighting.png";
+import img_explainSideChat from "@/../public/landing/compressed/explainsidechat.png";
+import img_creditsLeft from "@/../public/landing/compressed/credits_left2.png";
+import img_multiLLMs from "@/../public/landing/compressed/multiple-llms.png";
 
 const available_models = [
   {
@@ -210,7 +215,7 @@ export default function Home() {
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 md:gap-8 w-full">
               <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 transition-transform duration-300 ease-in-out hover:cursor-pointer">
                 <ImageModalCard
-                  imageSrc="/landing/text-highlighting.png"
+                  imageSrc={img_textHighlighting} //"/landing/text-highlighting.png"
                   altText="Highlight Text in AI Responses"
                 />
               </div>
@@ -276,7 +281,7 @@ export default function Home() {
 
               <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 transition-transform duration-300 ease-in-out hover:cursor-pointer">
                 <ImageModalCard
-                  imageSrc="/landing/explainsidechat.png"
+                  imageSrc= {img_explainSideChat} //"/landing/explainsidechat.png"
                   altText="Explain Sidechat Thread"
                 />
               </div>
@@ -286,7 +291,7 @@ export default function Home() {
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 md:gap-8 w-full">
               <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 transition-transform duration-300 ease-in-out">
                 <ImageModalCard
-                  imageSrc="/landing/credits_left2.png"
+                  imageSrc= {img_creditsLeft} //"/landing/credits_left2.png"
                   altText="Credits-Left"
                 />
               </div>
@@ -469,7 +474,7 @@ function ImageModalCard({
   imageSrc,
   altText,
 }: {
-  imageSrc: string;
+  imageSrc: StaticImageData;
   altText: string;
 }) {
   return (
