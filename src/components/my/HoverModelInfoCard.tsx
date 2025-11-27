@@ -14,6 +14,8 @@ import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import { useAboutDeviceInfo } from "@/stores/aboutDevice";
 
+import svg_aiProviderIcon from "@/public/assets/ai_provider3.svg";
+
 import {
   Popover,
   PopoverContent,
@@ -91,8 +93,8 @@ function PopupCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Image
-              src="/assets/ai_provider3.svg"
-              alt=""
+              src={svg_aiProviderIcon}
+              alt="Provider"
               width={16}
               height={16}
               className="w-16 h-16"
