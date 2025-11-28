@@ -150,10 +150,11 @@ export function ChatPage_ClientComponent({
 
   return (
     haveMounted && (
+      //  bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c]
       <div
         className="w-full h-screen 
-     bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c] 
-      text-white flex justify-center items-center"
+          bg-linear-to-r from-gray-800 via-purple-900 to-pink-900
+        text-white flex justify-center items-center"
       >
         {/* Error: Alert On Passing with A Empty API Key */}
 

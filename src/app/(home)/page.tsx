@@ -164,46 +164,6 @@ export default function Home() {
                     <span className="text-yellow-200 font-bold underline underline-offset-2 sm:underline-offset-4 hover:text-pink-300">
                       VERCEL AI GATEWAY API KEY
                       <sup>
-                        {/* <HoverCard openDelay={200} closeDelay={200}>
-                      <HoverCardTrigger asChild>
-                        <Info
-                          className="text-green-300 inline-block ml-1 mr-2 size-4 lg:size-5"
-                          strokeWidth={3}
-                        />
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80">
-                        <div className="flex justify-between gap-4">
-                          <div className="space-y-1">
-                            <h4 className="text-sm font-semibold">
-                              Vercel AI Gateway
-                            </h4>
-                            <ul className=" text-sm flex flex-col gap-0.5">
-                              <li className="font-semibold text-purple-500">
-                                Get one endpoint to access multiple LLMs.
-                              </li>
-                              <li className="text-blue-500 font-semibold">
-                                Offers tokens at list price from the upstream
-                                providers with{" "}
-                                <span className="text-yellow-500">
-                                  no markup.
-                                </span>
-                              </li>
-                            </ul>
-                            <div className="text-xs mt-2">
-                              <Link
-                                href={"https://vercel.com/ai-gateway"}
-                                target="_blank"
-                                className="font-semibold text-blue-500 hover:text-green-800 bg-blue-200 p-1 hover:brightness-90  rounded-lg transition duration-200 ease-in"
-                              >
-                                More information on Vercel AI Gateway{" "}
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                      </HoverCardContent>
-                    </HoverCard> */}
-
-                        {/* <button className="inline-flex items-center justify-center"> */}
                         <Info
                           className="text-green-300 inline-block ml-1 mr-2 size-4 lg:size-5 active:text-red-300 hover:text-pink-300 transition duration-200 ease-in"
                           strokeWidth={3}
