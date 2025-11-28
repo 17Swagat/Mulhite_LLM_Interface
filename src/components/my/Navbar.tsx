@@ -59,13 +59,13 @@ export default function Navbar() {
           >
             Features
           </Link>
-          <Link
+          {/* <Link
             href="/pricing"
             className="hover:text-white transition"
             onClick={() => setIsOpen(false)}
           >
             Pricing
-          </Link>
+          </Link> */}
         </div>
       </div>
     </header>
