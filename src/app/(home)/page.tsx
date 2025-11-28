@@ -1,6 +1,6 @@
-import NextVideo from "next-video";
-// import productDemoVideoPath from "@/videos/MULHITE_DEMO_01.mp4";
-import productDemoVideoPath from "../../../videos/MULHITE_DEMO_04.mp4.json";
+// import NextVideo from "next-video";
+// import productDemoVideoPath from "../../../videos/MULHITE_DEMO_04.mp4.json";
+
 import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
 import {
@@ -28,6 +28,11 @@ import {
 import img_textHighlighting from "@/../public/landing/compressed/text-highlighting.png";
 import img_explainSideChat from "@/../public/landing/compressed/explainsidechat.png";
 import img_creditsLeft from "@/../public/landing/compressed/credits_left2.png";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@radix-ui/react-popover";
 // import img_multiLLMs from "@/../public/landing/compressed/multiple-llms.png";
 
 const available_models = [
@@ -150,10 +155,15 @@ export default function Home() {
               </h3>
               <p className="text-center text-base sm:text-lg md:text-xl lg:text-2xl mb-4 sm:mb-2 max-w-4xl mx-auto font-semibold px-2">
                 Simply put your{" "}
-                <span className="text-yellow-200 font-bold underline underline-offset-2 sm:underline-offset-4">
-                  VERCEL AI GATEWAY API KEY
-                  <sup>
-                    <HoverCard openDelay={200} closeDelay={200}>
+                <Popover>
+                  <PopoverTrigger
+                    className="active:text-red-300 hover:cursor-pointer transition duration-200 ease-in"
+                    asChild
+                  >
+                    <span className="text-yellow-200 font-bold underline underline-offset-2 sm:underline-offset-4 hover:text-pink-300">
+                      VERCEL AI GATEWAY API KEY
+                      <sup>
+                        {/* <HoverCard openDelay={200} closeDelay={200}>
                       <HoverCardTrigger asChild>
                         <Info
                           className="text-green-300 inline-block ml-1 mr-2 size-4 lg:size-5"
@@ -190,9 +200,46 @@ export default function Home() {
                           </div>
                         </div>
                       </HoverCardContent>
-                    </HoverCard>
-                  </sup>
-                </span>
+                    </HoverCard> */}
+
+                        {/* <button className="inline-flex items-center justify-center"> */}
+                        <Info
+                          className="text-green-300 inline-block ml-1 mr-2 size-4 lg:size-5 active:text-red-300 hover:text-pink-300 transition duration-200 ease-in"
+                          strokeWidth={3}
+                        />
+                      </sup>
+                    </span>
+                    {/* </button> */}
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80 " sideOffset={5}>
+                    <div className="flex justify-between gap-4 bg-gray-800 p-2 rounded-2xl">
+                      <div className="space-y-1">
+                        <h4 className="text-sm font-semibold text-white underline">
+                          Vercel AI Gateway
+                        </h4>
+                        <ul className="text-sm flex flex-col gap-0.5">
+                          <li className="font-semibold text-purple-200">
+                            Get one endpoint to access multiple LLMs.
+                          </li>
+                          <li className="text-blue-300 font-semibold">
+                            Offers tokens at list price from the upstream
+                            providers with{" "}
+                            <span className="text-yellow-500">no markup.</span>
+                          </li>
+                        </ul>
+                        <div className="text-xs mt-2">
+                          <Link
+                            href="https://vercel.com/ai-gateway"
+                            target="_blank"
+                            className="font-semibold text-blue-200 hover:white bg-blue-500 p-1 hover:brightness-110 rounded-lg transition duration-200 ease-in inline-block"
+                          >
+                            More information on Vercel AI Gateway →
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
                 and use multiple LLMs.
               </p>
 
