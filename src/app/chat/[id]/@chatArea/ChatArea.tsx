@@ -1101,9 +1101,7 @@ export default function ChatArea({
 
             <Conversation
               className={`
-          bg-linear-to-r from-gray-800 via-purple-900 to-pink-900
-          overflow-y-hidden`}
-              // className={`bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#bd5f33] overflow-y-hidden`}
+          bg-linear-to-r from-gray-800 via-purple-900 to-pink-900 overflow-y-hidden`}
             >
               {/* TODO: "Not sure why but the scroll-bar design is not taking place." */}
               <ConversationContent
