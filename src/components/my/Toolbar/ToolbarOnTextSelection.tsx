@@ -248,7 +248,8 @@ export function ToolbarOnTextSelection({
             className={`border-0! 
             border-transparent! 
             ${
-              explainSideChatModel.includes("openai")
+              explainSideChatModel.includes("openai") ||
+              explainSideChatModel.includes("grok")
                 ? "bg-white!"
                 : "bg-transparent!"
             }
@@ -257,11 +258,6 @@ export function ToolbarOnTextSelection({
             <SelectValue>
               <span>
                 {explainSideChatModel.includes("deepseek") && (
-                  // <img
-                  //   src="/ai-models/deepseek.svg"
-                  //   alt="DeepSeek"
-                  //   sizes="18"
-                  // />
                   <Image
                     src={LOGOS_AI_MODELS.deepseek}
                     alt="DeepSeek"
@@ -290,10 +286,10 @@ export function ToolbarOnTextSelection({
 
                 {explainSideChatModel.includes("openai") && (
                   <Image
-                    src={LOGOS_AI_MODELS.openai}
+                    src={LOGOS_AI_MODELS.openai2}
                     alt="OpenAI"
-                    width={18}
-                    height={18}
+                    width={20}
+                    height={20}
                   />
                 )}
 
@@ -301,6 +297,15 @@ export function ToolbarOnTextSelection({
                   <Image
                     src={LOGOS_AI_MODELS.claude}
                     alt="Claude"
+                    width={18}
+                    height={18}
+                  />
+                )}
+
+                {explainSideChatModel.includes("grok") && (
+                  <Image
+                    src={LOGOS_AI_MODELS.grok}
+                    alt="Grok"
                     width={18}
                     height={18}
                   />
