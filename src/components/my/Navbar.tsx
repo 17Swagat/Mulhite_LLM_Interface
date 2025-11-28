@@ -53,7 +53,7 @@ export default function Navbar() {
       >
         <div className="flex flex-col space-y-4 text-lg text-gray-300 mt-2">
           <Link
-            href="/features"
+            href="#features"
             className="hover:text-white transition"
             onClick={() => setIsOpen(false)}
           >
