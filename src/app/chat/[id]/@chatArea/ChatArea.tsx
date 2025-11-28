@@ -2,7 +2,7 @@
 
 import { CreditsLeft } from "@/components/my/CreditsLeft";
 import { UIMessage, useChat } from "@ai-sdk/react";
-import { DefaultChatTransport, gateway } from "ai";
+import { DefaultChatTransport } from "ai";
 import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { Response } from "@/components/ui/shadcn-io/ai/response";
 import {
@@ -55,13 +55,13 @@ import { APIKeys } from "@/components/my/APIKeys";
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
+  // AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
+  // AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useAPIVercelGateway } from "@/stores/aiprovidersKeyStore";
 import { Loader } from "@/components/ui/shadcn-io/ai/loader";

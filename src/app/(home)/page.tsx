@@ -3,11 +3,11 @@
 
 import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+// import {
+//   HoverCard,
+//   HoverCardContent,
+//   HoverCardTrigger,
+// } from "@/components/ui/hover-card";
 
 import { font_GMonoTrustDisplay } from "@/fonts";
 import {
@@ -127,7 +127,7 @@ export default function Home() {
               style={{ width: "100%", border: "none", aspectRatio: "16/9" }} //"width: 100%; border: none; aspect-ratio: 16/9;"
               allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
               allowFullScreen
-            ></iframe>
+            />
           </div>
         </div>
       </section>
