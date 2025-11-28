@@ -160,6 +160,7 @@ export default function Home() {
                     className="active:text-red-300 hover:cursor-pointer transition duration-200 ease-in"
                     asChild
                   >
+                    {/* From merging from the Temp branch */}
                     <span className="text-yellow-200 font-bold underline underline-offset-2 sm:underline-offset-4 hover:text-pink-300">
                       VERCEL AI GATEWAY API KEY
                       <sup>
