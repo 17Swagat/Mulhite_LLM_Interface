@@ -342,16 +342,20 @@ export function ExplainSideChatContent({
               chatStatus === "streaming" && isLastMessage;
 
             // Avatar
-            let avatar_logo: string = "/ai-models/claude.svg";
+            let avatar_logo = "/ai-models/claude.svg"; //claude_avatar; //LOGOS_AI_MODELS.claude;
             if (msg.role === "assistant" && msg.metadata) {
               const model = (msg.metadata as any).model; // NOTE: TYPE-Error
               if (model) {
                 if (model.includes("mistral")) {
-                  avatar_logo = "/ai-models/mistral.svg";
+                  avatar_logo = "/ai-models/mistral.svg"; //"/ai-models/mistral.svg";
                 } else if (model.includes("deepseek")) {
                   avatar_logo = "/ai-models/deepseek.svg";
                 } else if (model.includes("openai")) {
                   avatar_logo = "/ai-models/openai.svg";
+                } else if (model.includes("gemini")) {
+                  avatar_logo = "/ai-models/gemini.svg";
+                } else if (model.includes("grok")) {
+                  avatar_logo = "/ai-models/grok.svg";
                 }
               }
             }
