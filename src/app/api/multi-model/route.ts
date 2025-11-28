@@ -67,9 +67,9 @@ export async function POST(req: Request) {
         });
 
 
-        if (parentConversationId) {
+        /*if (parentConversationId) {
             console.log('ExplainSideChat with parent conversation:', parentConversationId);
-        }
+        }*/
 
         // Use provided chatId or generate a new one
         const chatId = providedChatId ?? messages?.[0]?.metadata?.chatId ?? uuidv7();

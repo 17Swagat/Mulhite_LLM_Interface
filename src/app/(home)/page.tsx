@@ -28,6 +28,7 @@ import {
 import img_textHighlighting from "@/../public/landing/compressed/text-highlighting.png";
 import img_explainSideChat from "@/../public/landing/compressed/explainsidechat.png";
 import img_creditsLeft from "@/../public/landing/compressed/credits_left2.png";
+
 import {
   Popover,
   PopoverContent,

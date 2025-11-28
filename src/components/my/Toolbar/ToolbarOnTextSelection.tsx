@@ -18,6 +18,16 @@ import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 import { HighlighterIcon, ChevronDown, BrainIcon } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
+import Image from "next/image";
+
+// AI-Logos
+import logo_deepseek from "@/../public/ai-models/deepseek.svg";
+import logo_gemini from "@/../public/ai-models/gemini.svg";
+import logo_claude from "@/../public/ai-models/claude.svg";
+import logo_openai from "@/../public/ai-models/openai.svg";
+import logo_mistral from "@/../public/ai-models/mistral.svg";
+import logo_grok from "@/../public/ai-models/grok.svg";
+
 const HIGHLIGHT_COLORS = [
   {
     name: "Red",
@@ -246,23 +256,44 @@ export function ToolbarOnTextSelection({
             <SelectValue>
               <span>
                 {explainSideChatModel.includes("deepseek") && (
-                  <img
-                    src="/ai-models/deepseek.svg"
+                  // <img
+                  //   src="/ai-models/deepseek.svg"
+                  //   alt="DeepSeek"
+                  //   sizes="18"
+                  // />
+                  <Image
+                    src={logo_deepseek}
                     alt="DeepSeek"
-                    sizes="18"
+                    width={18}
+                    height={18}
                   />
                 )}
 
                 {explainSideChatModel.includes("gemini") && (
-                  <img src="/ai-models/gemini.svg" alt="Gemini" sizes="18" />
+                  <Image
+                    src={logo_gemini}
+                    alt="Gemini"
+                    width={18}
+                    height={18}
+                  />
                 )}
 
                 {explainSideChatModel.includes("mistral") && (
-                  <img src="/ai-models/mistral.svg" alt="Mistral" sizes="18" />
+                  <Image
+                    src={logo_mistral}
+                    alt="Mistral"
+                    width={18}
+                    height={18}
+                  />
                 )}
 
                 {explainSideChatModel.includes("openai") && (
-                  <img src="/ai-models/openai.svg" alt="OpenAI" sizes="18" />
+                  <Image
+                    src={logo_openai}
+                    alt="OpenAI"
+                    width={18}
+                    height={18}
+                  />
                 )}
               </span>
             </SelectValue>
@@ -281,13 +312,55 @@ export function ToolbarOnTextSelection({
                     {/******************/}
                     <span className="mr-1">
                       {model[0].id.includes("deepseek") && (
-                        <img src="/ai-models/deepseek.svg" alt="" sizes="18" />
+                        // <img src="/ai-models/deepseek.svg" alt="" sizes="18" />
+                        <Image
+                          src={logo_deepseek}
+                          alt="DeepSeek"
+                          width={18}
+                          height={18}
+                        />
                       )}
                       {model[0].id.includes("mistral") && (
-                        <img src="/ai-models/mistral.svg" alt="" sizes="18" />
+                        <Image
+                          src={logo_mistral}
+                          alt="Mistral"
+                          width={18}
+                          height={18}
+                        />
                       )}
                       {model[0].id.includes("openai") && (
-                        <img src="/ai-models/openai.svg" alt="" sizes="18" />
+                        <Image
+                          src={logo_openai}
+                          alt="OpenAI"
+                          width={18}
+                          height={18}
+                        />
+                      )}
+                      {model[0].id.includes("claude") && (
+                        <Image
+                          src={logo_claude}
+                          alt="Claude"
+                          width={18}
+                          height={18}
+                        />
+                      )}
+                      {model[0].id.includes("grok") && (
+                        <div className="bg-white rounded-full">
+                          <Image
+                            src={logo_grok}
+                            alt="Grok"
+                            width={18}
+                            height={18}
+                          />
+                        </div>
+                      )}
+                      {model[0].id.includes("gemini") && (
+                        <Image
+                          src={logo_gemini}
+                          alt="Gemini"
+                          width={18}
+                          height={18}
+                        />
                       )}
                     </span>
 
