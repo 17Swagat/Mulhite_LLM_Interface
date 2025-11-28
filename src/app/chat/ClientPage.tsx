@@ -6,7 +6,6 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { Id } from "@/../convex/_generated/dataModel";
 import { PromptInputField } from "@/components/my/PromptInputField";
-// import { useSelectedAIModelStore } from "@/stores/modelSelectionStore";
 import { LoadingScreen } from "@/components/my/LoadingScreen";
 import { useUserQuestionStore } from "@/stores/userQuestionStore";
 import { CreditsLeft } from "@/components/my/CreditsLeft";
@@ -14,7 +13,8 @@ import { useAboutDeviceInfo } from "@/stores/aboutDevice";
 import { isDeviceTouch } from "@/utils/clientfuncs/isDeviceTouch";
 import { APIKeys } from "@/components/my/APIKeys";
 import { useAPIVercelGateway } from "@/stores/aiprovidersKeyStore";
-import { useVercelAICreditsLeft } from "@/stores/aiprovidersCreditsStore";
+
+import { font_GMonoTrustDisplay } from "@/fonts";
 
 // For Error Dialog:
 import {
@@ -190,7 +190,9 @@ export function ChatPage_ClientComponent({
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <h1 className="text-3xl mb-2 font-semibold">
+          <h1
+            className={`text-2xl mb-2 tracking-wide ${font_GMonoTrustDisplay.className}`}
+          >
             Let's Start Learning 😊
           </h1>
 
