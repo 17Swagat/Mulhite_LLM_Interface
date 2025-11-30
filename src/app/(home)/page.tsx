@@ -155,86 +155,95 @@ export default function Home() {
             {/* ************* */}
 
             {/* Modified LLM Support Block - Optimized for Small Screens */}
-            <div className="flex justify-center p-4">
-              {/* The main card container */}
-              <div className="bg-gray-800 text-gray-200 p-6 rounded-2xl sm:p-8 sm:rounded-3xl  max-w-5xl w-full">
-                {/* 1. Header Section */}
-                <div className="text-center mb-4 sm:mb-6">
+            <div className="flex justify-center px-2 py-4">
+              <div className="relative w-full max-w-6xl rounded-2xl sm:rounded-3xl bg-linear-to-r from-[#212f42] to-[#0f172a] p-5 sm:p-8 text-gray-200 shadow-[0_0_0_1px_rgba(255,255,255,0.05)]">
+                {/* Accent ring */}
+                <div className="pointer-events-none absolute inset-0 rounded-2xl sm:rounded-3xl ring-1 ring-white/5" />
+
+                {/* Header */}
+                <div className="text-center mb-6">
                   <h2
-                    className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-1 ${font_GMonoTrustDisplay.className}`}
+                    className={`text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-2 ${font_GMonoTrustDisplay.className}`}
                   >
                     Unified AI Gateway
                   </h2>
-                  <p className="text-gray-400 text-sm sm:text-xl font-medium">
-                    Access Multiple AI Models Through Single API
+                  <p className="text-gray-400 text-sm sm:text-lg font-medium">
+                    Multiple Leading Models • Single API Key
                   </p>
                 </div>
 
-                {/* 2. AI Model Icons - CRITICAL FIX FOR ICON SIZE AND SPACING */}
-                {/* Changed p-4 mb-8 to p-2 mb-6 for slightly less vertical space */}
-                <div className="flex items-center justify-center p-2 mb-6">
-                  {/* Reduced space-x-6 to space-x-4 for better fit on narrow screens */}
-                  <ul className="flex space-x-4 sm:space-x-8 md:space-x-16 lg:space-x-24">
-                    {/* max-w-3xl */}
-                    {available_models.map((model, index) => (
-                      <li key={model.name + index} className="p-1">
-                        <Image
-                          src={model.imgSrc}
-                          alt={model.name}
-                          // Base size set for small screens (w-10 h-10). Scales up at 'sm' breakpoint.
-                          width={80}
-                          height={80}
-                          className="w-10 h-10 sm:w-16 sm:h-16 md:w-20 md:h-20  object-contain drop-shadow-lg"
-                        />
+                {/* Models */}
+                <div className="mb-8">
+                  <ul className="flex flex-wrap justify-center items-center gap-5 sm:gap-7 md:gap-10 lg:gap-14">
+                    {available_models.map((m) => (
+                      <li
+                        key={m.name}
+                        className="flex flex-col items-center group"
+                      >
+                        <div className="rounded-xl bg-[#1b2738] p-3 sm:p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.06)] group-hover:shadow-[0_0_0_1px_rgba(156,64,255,0.5)] transition-shadow duration-300">
+                          <Image
+                            src={m.imgSrc}
+                            alt={m.name}
+                            width={120}
+                            height={120}
+                            className="w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain drop-shadow-lg transition-transform duration-300 group-hover:scale-110"
+                          />
+                        </div>
+                        <span className="mt-2 text-[11px] sm:text-xs font-semibold text-gray-400 tracking-wide">
+                          {m.name}
+                        </span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                {/* 3. Button and Bullet Points - Layout (Side-by-Side on large, Stacked on small) */}
-                <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center gap-6 sm:gap-8 p-0">
-                  {/* Action Button (Full width on mobile) */}
-                  <div className="w-full sm:w-auto shrink-0">
+                {/* CTA + Points */}
+                <div className="flex flex-col sm:flex-row gap-6 sm:gap-8  items-center sm:items-start">
+                  {/* CTA */}
+                  <div className="w-full sm:w-auto flex">
                     <Link
                       target="_blank"
                       href="https://vercel.com/ai-gateway"
-                      className={`m-2.5 px-[45px] py-[15px] text-center uppercase transition-all duration-500 bg-linear-to-r from-[#1D2B64] via-[#ad214b] to-[#1D2B64] bg-size-[200%_auto]  text-white shadow-[0_0_5px_#eee] 
-                      rounded-[10px] block hover:bg-position-[right_center] hover:text-white hover:no-underline  ${font_GMonoTrustDisplay.className}`}
+                      className={`px-8 py-4 text-sm sm:text-base uppercase font-semibold rounded-xl bg-linear-to-r from-[#1D2B64] via-[#ad214b] to-[#1D2B64] bg-size-[220%_auto] text-gray-200 shadow-[0_0_10px_-2px_rgba(255,255,255,0.25)] hover:bg-position-[right_center] hover:shadow-[0_0_16px_-2px_rgba(172,33,75,0.6)] transition-all duration-500 ${font_GMonoTrustDisplay.className}`}
                     >
                       G e t &nbsp; A P I &nbsp; K e y
                     </Link>
                   </div>
 
-                  {/* Benefits List - CRITICAL FIX FOR TEXT SIZE */}
-                  <div className="w-full sm:w-3/5">
-                    {/* Text size reduced from text-xl to text-base (mobile) / text-lg (tablet) */}
-                    <ul className="space-y-3 text-base sm:text-lg">
+                  {/* Benefits */}
+                  <div className="w-full sm:flex-1">
+                    <ul className="space-y-4 text-sm sm:text-base md:text-lg font-semibold">
                       <li className="flex items-start">
-                        {/* Reduced bullet size slightly */}
-                        <span className="text-green-500 text-xl mr-2 mt-[-1px]">
+                        <span className="text-green-500 text-xl mr-2 leading-none">
                           •
                         </span>
-                        <p className="text-gray-400 font-semibold">
+                        <p className="text-gray-300">
                           <span className="font-bold text-purple-400">
-                            Single Vercel AI Gateway API key
+                            One gateway
                           </span>{" "}
-                          simplifies access.
+                          for Grok, Claude, GPT, Mistral, Gemini, Deepseek.
                         </p>
                       </li>
                       <li className="flex items-start">
-                        <span className="text-green-500 text-xl mr-2 mt-[-1px]">
+                        <span className="text-green-500 text-xl mr-2 leading-none">
                           •
                         </span>
-                        <p className="text-gray-400 font-semibold">
+                        <p className="text-gray-300">
                           <span className="font-bold text-red-400">
-                            Pay For What You Use
+                            Pay only for usage
                           </span>{" "}
-                          — zero overhead, zero extra costs.
-                          {/* No overhead cost or extra associated cost. */}
+                          — no platform overhead.
                         </p>
                       </li>
                     </ul>
                   </div>
+                </div>
+
+                {/* Subtext */}
+                <div className="mt-8 text-center">
+                  <p className="text-[11px] sm:text-xs text-gray-500 tracking-wide">
+                    Access these models through • VERCEL AI GATEWAY API KEY
+                  </p>
                 </div>
               </div>
             </div>
