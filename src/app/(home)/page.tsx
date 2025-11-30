@@ -204,7 +204,7 @@ export default function Home() {
                     <Link
                       target="_blank"
                       href="https://vercel.com/ai-gateway"
-                      className={`px-8 py-4 text-sm sm:text-base uppercase font-semibold rounded-xl bg-linear-to-r from-[#1D2B64] via-[#ad214b] to-[#1D2B64] bg-size-[220%_auto] text-gray-200 shadow-[0_0_10px_-2px_rgba(255,255,255,0.25)] hover:bg-position-[right_center] hover:shadow-[0_0_16px_-2px_rgba(172,33,75,0.6)] transition-all duration-500 ${font_GMonoTrustDisplay.className}`}
+                      className={`px-8 py-4 text-sm sm:text-base uppercase font-semibold rounded-xl bg-linear-to-r from-[#6202c3] via-[#ad214b] to-[#1D2B64] bg-size-[220%_auto] text-gray-200 shadow-[0_0_10px_-2px_rgba(255,255,255,0.25)] hover:bg-position-[right_center] hover:shadow-[0_0_16px_-2px_rgba(172,33,75,0.6)] transition-all duration-500 ${font_GMonoTrustDisplay.className}`}
                     >
                       G e t &nbsp; A P I &nbsp; K e y
                     </Link>
