@@ -1,5 +1,6 @@
-// import NextVideo from "next-video";
+import NextVideo from "next-video";
 // import productDemoVideoPath from "../../../videos/MULHITE_DEMO_04.mp4.json";
+import productDemoVideoPath from "@/../videos/MULHITE_DEMO_05_COMPRESSED.mp4.json";
 
 import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
@@ -29,11 +30,6 @@ import img_textHighlighting from "@/../public/landing/compressed/text-highlighti
 import img_explainSideChat from "@/../public/landing/compressed/explainsidechat.png";
 import img_creditsLeft from "@/../public/landing/compressed/credits_left2.png";
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@radix-ui/react-popover";
 // import img_multiLLMs from "@/../public/landing/compressed/multiple-llms.png";
 
 const available_models = [
@@ -114,24 +110,24 @@ export default function Home() {
             /> */}
 
             {/* NextVideo -Mux */}
-            {/*<NextVideo
+            <NextVideo
               // NOTE: Without this link feature gives TS error. As productDemoVideoPath is of type json and src expects a string:
               // @ts-ignore
               src={productDemoVideoPath}
               className="w-full h-full rounded-lg bg-amber-300"
-              // controls
-              // autoplay={false}
-              // muted={false}
-              // loop={false}
-              // preload="metadata"
-            />*/}
-            <iframe
+              controls
+              autoplay={false}
+              muted={false}
+              loop={false}
+              preload="metadata"
+            />
+            {/* <iframe
               src="https://player.mux.com/LZZ00U1tAEVIqcgnDa2NLcXbhwbp5QMo00JWQRvPiXwKw?accent-color=%23000000&primary-color=%237c33a3"
               // src="https://player.mux.com/aYZiRoLkUUlx8btbf700yXJ3J2io6SzOelvJcCVF9orQ?accent-color=%23000000&primary-color=%237c33a3"
               style={{ width: "100%", border: "none", aspectRatio: "16/9" }} //"width: 100%; border: none; aspect-ratio: 16/9;"
               allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
               allowFullScreen
-            />
+            /> */}
           </div>
         </div>
       </section>
@@ -163,12 +159,13 @@ export default function Home() {
                 {/* Header */}
                 <div className="text-center mb-6">
                   <h2
-                    className={`text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-2 ${font_GMonoTrustDisplay.className}`}
+                    className={`text-2xl sm:text-4xl md:text-5xl font-bold tracking-normal mb-2 ${font_GMonoTrustDisplay.className}`}
                   >
-                    Unified AI Gateway
+                    Unified AI Interface
                   </h2>
                   <p className="text-gray-400 text-sm sm:text-lg font-medium">
-                    Multiple Leading Models • Single API Key
+                    {/* Multiple Leading Models • Through a Single API Key */}
+                    Choose models according to your wish.
                   </p>
                 </div>
 
@@ -212,22 +209,23 @@ export default function Home() {
 
                   {/* Benefits */}
                   <div className="w-full sm:flex-1">
-                    <ul className="space-y-4 text-sm sm:text-base md:text-lg font-semibold">
+                    <ul className="space-y-4 text-sm sm:text-base md:text-lg font-semibold ">
                       <li className="flex items-start">
-                        <span className="text-green-500 text-xl mr-2 leading-none">
+                        {/* <span className="text-green-500 text-xl mr-2 leading-none">
                           •
-                        </span>
+                        </span> */}
                         <p className="text-gray-300">
                           <span className="font-bold text-purple-400">
-                            One gateway
+                            One <span className="text-red-200">API-KEY</span> to
+                            access multiple AI models
                           </span>{" "}
-                          for Grok, Claude, GPT, Mistral, Gemini, Deepseek.
+                          . Grok, Claude, GPT, Mistral, Gemini, Deepseek.
                         </p>
                       </li>
                       <li className="flex items-start">
-                        <span className="text-green-500 text-xl mr-2 leading-none">
+                        {/* <span className="text-green-500 text-xl mr-2 leading-none">
                           •
-                        </span>
+                        </span> */}
                         <p className="text-gray-300">
                           <span className="font-bold text-red-400">
                             Pay only for usage
@@ -241,8 +239,11 @@ export default function Home() {
 
                 {/* Subtext */}
                 <div className="mt-8 text-center">
-                  <p className="text-[11px] sm:text-xs text-gray-500 tracking-wide">
-                    Access these models through • VERCEL AI GATEWAY API KEY
+                  <p className="text-[11px] sm:text-xs text-gray-400 tracking-wide">
+                    Access these models through •{" "}
+                    <span className="text-gray-200 font-semibold">
+                      VERCEL AI GATEWAY API KEY
+                    </span>
                   </p>
                 </div>
               </div>
