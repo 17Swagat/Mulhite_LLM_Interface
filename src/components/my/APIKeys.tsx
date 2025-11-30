@@ -51,8 +51,8 @@ export const APIKeys = memo(function APIKeys() {
 
   const iconElement = (
     <KeyIcon
-      size={34}
-      className="text-white bg-[#5d04c3ff] rounded-full mt-3 hover:brightness-120 active:brightness-90 transition duration-200 ease-in  hover:cursor-pointer"
+      size={38}
+      className="font-bold text-white bg-[#5d04c3ff] rounded-full mt-3 hover:brightness-120 active:brightness-90 transition duration-200 ease-in  hover:cursor-pointer"
     />
   );
 

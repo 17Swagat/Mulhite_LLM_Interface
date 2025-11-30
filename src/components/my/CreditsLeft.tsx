@@ -40,7 +40,8 @@ export function CreditsLeft({
     return (
       <Popover>
         <PopoverTrigger asChild>{iconElement}</PopoverTrigger>
-        <PopoverContent className="w-full z-50000 p-1! bg-linear-to-r from-[#2dd4bf] to-[#95b5e0] border-0!">
+        {/* <PopoverContent className="w-full z-50000 p-1! bg-linear-to-r from-[#2dd4bf] to-[#95b5e0] border-0!"> */}
+        <PopoverContent className="w-full z-50000 p-1! bg-linear-to-r from-[#8e2dd4] to-[#95b5e0] border-0!">
           {contentElement}
         </PopoverContent>
       </Popover>
@@ -52,7 +53,8 @@ export function CreditsLeft({
       <HoverCardTrigger asChild>
         <div>{iconElement}</div>
       </HoverCardTrigger>
-      <HoverCardContent className="w-full z-50000 p-1! bg-linear-to-r from-[#2dd4bf] to-[#95b5e0] border-0!">
+      {/* <HoverCardContent className="w-full z-50000 p-1! bg-linear-to-r from-[#2dd4bf] to-[#95b5e0] border-0!"> */}
+      <HoverCardContent className="w-full z-50000 p-1! bg-linear-to-r  from-[#8e2dd4] to-[#95b5e0] border-0!">
         {contentElement}
       </HoverCardContent>
     </HoverCard>
