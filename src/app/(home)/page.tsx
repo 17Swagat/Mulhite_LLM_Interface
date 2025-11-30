@@ -38,6 +38,11 @@ import {
 
 const available_models = [
   {
+    name: "Grok",
+    imgSrc: "/ai-models/grok2.svg",
+  },
+
+  {
     name: "Claude",
     imgSrc: "/ai-models/claude.svg",
   },
@@ -49,10 +54,7 @@ const available_models = [
     name: "GPT",
     imgSrc: "/ai-models/openai.svg",
   },
-  {
-    name: "Grok",
-    imgSrc: "/ai-models/grok.svg",
-  },
+
   {
     name: "Mistral",
     imgSrc: "/ai-models/mistral.svg",
@@ -149,81 +151,91 @@ export default function Home() {
             className={`flex flex-col gap-8 sm:gap-12 md:gap-16 lg:gap-20 items-center`}
           >
             {/* Multiple LLM Support */}
-            <div className="text-white justify-center items-center p-4 sm:p-6 md:p-8 mb-8 sm:mb-12 md:mb-16 bg-linear-to-r bg-green-600 via-purple-900 from-purple-700 rounded-2xl sm:rounded-3xl shadow-2xl w-full">
-              <h3
-                className={`text-sm text-center sm:text-2xl md:text-3xl text-white  mb-3 sm:mb-4 leading-relaxed ${font_GMonoTrustDisplay.className}`}
-              >
-                Support for Multiple LLMs
-              </h3>
-              <p className="text-center text-base sm:text-lg md:text-xl lg:text-2xl mb-4 sm:mb-2 max-w-4xl mx-auto font-semibold px-2">
-                Simply put your{" "}
-                <Popover>
-                  <PopoverTrigger
-                    className="active:text-red-300 hover:cursor-pointer transition duration-200 ease-in"
-                    asChild
+
+            {/* ************* */}
+
+            {/* Modified LLM Support Block - Optimized for Small Screens */}
+            <div className="flex justify-center p-4">
+              {/* The main card container */}
+              <div className="bg-gray-800 text-gray-200 p-6 rounded-2xl sm:p-8 sm:rounded-3xl  max-w-5xl w-full">
+                {/* 1. Header Section */}
+                <div className="text-center mb-4 sm:mb-6">
+                  <h2
+                    className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-1 ${font_GMonoTrustDisplay.className}`}
                   >
-                    {/* From merging from the Temp branch */}
-                    <span className="text-yellow-200 font-bold underline underline-offset-2 sm:underline-offset-4 hover:text-pink-300">
-                      VERCEL AI GATEWAY API KEY
-                      <sup>
-                        <Info
-                          className="text-green-300 inline-block ml-1 mr-2 size-4 lg:size-5 active:text-red-300 hover:text-pink-300 transition duration-200 ease-in"
-                          strokeWidth={3}
+                    Unified AI Gateway
+                  </h2>
+                  <p className="text-gray-400 text-sm sm:text-xl font-medium">
+                    Access Multiple AI Models Through Single API
+                  </p>
+                </div>
+
+                {/* 2. AI Model Icons - CRITICAL FIX FOR ICON SIZE AND SPACING */}
+                {/* Changed p-4 mb-8 to p-2 mb-6 for slightly less vertical space */}
+                <div className="flex items-center justify-center p-2 mb-6">
+                  {/* Reduced space-x-6 to space-x-4 for better fit on narrow screens */}
+                  <ul className="flex space-x-4 sm:space-x-8 md:space-x-16 lg:space-x-24">
+                    {/* max-w-3xl */}
+                    {available_models.map((model, index) => (
+                      <li key={model.name + index} className="p-1">
+                        <Image
+                          src={model.imgSrc}
+                          alt={model.name}
+                          // Base size set for small screens (w-10 h-10). Scales up at 'sm' breakpoint.
+                          width={80}
+                          height={80}
+                          className="w-10 h-10 sm:w-16 sm:h-16 md:w-20 md:h-20  object-contain drop-shadow-lg"
                         />
-                      </sup>
-                    </span>
-                    {/* </button> */}
-                  </PopoverTrigger>
-                  <PopoverContent className="w-80 " sideOffset={5}>
-                    <div className="flex justify-between gap-4 bg-gray-800 p-2 rounded-2xl">
-                      <div className="space-y-1">
-                        <h4 className="text-sm font-semibold text-white underline">
-                          Vercel AI Gateway
-                        </h4>
-                        <ul className="text-sm flex flex-col gap-0.5">
-                          <li className="font-semibold text-purple-200">
-                            Get one endpoint to access multiple LLMs.
-                          </li>
-                          <li className="text-blue-300 font-semibold">
-                            Offers tokens at list price from the upstream
-                            providers with{" "}
-                            <span className="text-yellow-500">no markup.</span>
-                          </li>
-                        </ul>
-                        <div className="text-xs mt-2">
-                          <Link
-                            href="https://vercel.com/ai-gateway"
-                            target="_blank"
-                            className="font-semibold text-blue-200 hover:white bg-blue-500 p-1 hover:brightness-110 rounded-lg transition duration-200 ease-in inline-block"
-                          >
-                            More information on Vercel AI Gateway →
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
-                and use multiple LLMs.
-              </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
-              <p className="text-center text-base sm:text-lg md:text-xl lg:text-2xl mb-4 sm:mb-6 max-w-4xl mx-auto font-semibold px-2">
-                Pay credits for what you use. No overhead cost for using LLMs.
-              </p>
+                {/* 3. Button and Bullet Points - Layout (Side-by-Side on large, Stacked on small) */}
+                <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center gap-6 sm:gap-8 p-0">
+                  {/* Action Button (Full width on mobile) */}
+                  <div className="w-full sm:w-auto shrink-0">
+                    <Link
+                      target="_blank"
+                      href="https://vercel.com/ai-gateway"
+                      className={`m-2.5 px-[45px] py-[15px] text-center uppercase transition-all duration-500 bg-linear-to-r from-[#1D2B64] via-[#ad214b] to-[#1D2B64] bg-size-[200%_auto]  text-white shadow-[0_0_5px_#eee] 
+                      rounded-[10px] block hover:bg-position-[right_center] hover:text-white hover:no-underline  ${font_GMonoTrustDisplay.className}`}
+                    >
+                      G e t &nbsp; A P I &nbsp; K e y
+                    </Link>
+                  </div>
 
-              <div className="flex items-center justify-center p-1.5 sm:p-2 rounded-xl sm:rounded-2xl bg-linear-to-r from-slate-300 via-purple-200 to-slate-200">
-                <ul className="flex space-x-8 sm:space-x-12 md:space-x-16 max-w-3xl p-1.5 sm:p-2">
-                  {available_models.map((model, index) => (
-                    <li key={model.name + index}>
-                      <Image
-                        src={model.imgSrc}
-                        alt={model.name}
-                        width={80}
-                        height={80}
-                        className="rounded-lg w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20"
-                      />
-                    </li>
-                  ))}
-                </ul>
+                  {/* Benefits List - CRITICAL FIX FOR TEXT SIZE */}
+                  <div className="w-full sm:w-3/5">
+                    {/* Text size reduced from text-xl to text-base (mobile) / text-lg (tablet) */}
+                    <ul className="space-y-3 text-base sm:text-lg">
+                      <li className="flex items-start">
+                        {/* Reduced bullet size slightly */}
+                        <span className="text-green-500 text-xl mr-2 mt-[-1px]">
+                          •
+                        </span>
+                        <p className="text-gray-400 font-semibold">
+                          <span className="font-bold text-purple-400">
+                            Single Vercel AI Gateway API key
+                          </span>{" "}
+                          simplifies access.
+                        </p>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-green-500 text-xl mr-2 mt-[-1px]">
+                          •
+                        </span>
+                        <p className="text-gray-400 font-semibold">
+                          <span className="font-bold text-red-400">
+                            Pay For What You Use
+                          </span>{" "}
+                          — zero overhead, zero extra costs.
+                          {/* No overhead cost or extra associated cost. */}
+                        </p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
 
