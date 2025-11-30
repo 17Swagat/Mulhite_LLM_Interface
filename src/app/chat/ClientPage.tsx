@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useChatStore } from "@/stores/chatStore";
@@ -15,6 +16,8 @@ import { APIKeys } from "@/components/my/APIKeys";
 import { useAPIVercelGateway } from "@/stores/aiprovidersKeyStore";
 
 import { font_GMonoTrustDisplay } from "@/fonts";
+
+import svg_PenPencil from "@/../public/assets/pencilpen.svg";
 
 // For Error Dialog:
 import {
@@ -190,11 +193,22 @@ export function ChatPage_ClientComponent({
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <h1
-            className={`text-2xl mb-2 tracking-wide ${font_GMonoTrustDisplay.className}`}
-          >
-            Let's Start Learning 😊
-          </h1>
+          <div className="flex gap-2 mb-2 px-2 laptop:px-0 laptop:mb-3 items-end">
+            <h1
+              className={`text-2xl laptop:text-3xl text-gray-200 tracking-wide leading-none ${font_GMonoTrustDisplay.className} `}
+            >
+              Let's Start Learning
+            </h1>
+            <div className="self-end">
+              <Image
+                src={svg_PenPencil}
+                width={60}
+                height={60}
+                alt="✏️"
+                className=""
+              />
+            </div>
+          </div>
 
           {/* <div className="w-sm mx-auto   max-w-3xl md:w-2xl py-2 px-1 md:px-2 bg-linear-to-r from-blue-500 via-green-400 to-purple-500 shadow-md rounded-2xl "> */}
           <PromptInputField
