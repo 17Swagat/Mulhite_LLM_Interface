@@ -271,7 +271,7 @@ export function AppSidebar() {
                       className="w-full "
                       onClick={() => {
                         signOut();
-                        router.push("/");
+                        router.push("/loading_screen");
                       }}
                     >
                       Log-out
