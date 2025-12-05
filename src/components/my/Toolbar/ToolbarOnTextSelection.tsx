@@ -253,7 +253,7 @@ export function ToolbarOnTextSelection({
                 : "bg-transparent!"*/
               ""
             }
-             hover:bg-gray-200! p-0! mx-0! my-0! rounded-sm!`}
+             hover:bg-gray-600! p-0! mx-0! my-0! rounded-sm!`}
           >
             <SelectValue>
               <span>
