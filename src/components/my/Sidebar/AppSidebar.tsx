@@ -39,9 +39,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronUp, User2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 export function AppSidebar() {
+  const router = useRouter();
   // ConvexClerk Auth
   const { isLoading: isLoadingAuth, isAuthenticated } = useConvexAuth();
   const { chats, setActiveChat, setChats } = useChatStore();
@@ -269,7 +270,8 @@ export function AppSidebar() {
                     <Button
                       className="w-full "
                       onClick={() => {
-                        signOut({ redirectUrl: "/" });
+                        signOut();
+                        router.push("/");
                       }}
                     >
                       Log-out
