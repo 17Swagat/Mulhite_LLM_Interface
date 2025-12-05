@@ -5,6 +5,7 @@ import logo_openai from "@/../public/ai-models/openai.svg";
 import logo_openai2 from "@/../public/ai-models/openai_2.svg";
 import logo_mistral from "@/../public/ai-models/mistral.svg";
 import logo_grok from "@/../public/ai-models/grok.svg";
+import logo_grok2 from "@/../public/ai-models/grok2.svg";
 
 export const LOGOS_AI_MODELS = {
     deepseek: logo_deepseek,
@@ -14,4 +15,5 @@ export const LOGOS_AI_MODELS = {
     openai2: logo_openai2,
     mistral: logo_mistral,
     grok: logo_grok,
+    grok2: logo_grok2
 }

@@ -248,10 +248,10 @@ export function ToolbarOnTextSelection({
             className={`border-0! 
             border-transparent! 
             ${
-              explainSideChatModel.includes("openai") ||
-              explainSideChatModel.includes("grok")
+              /*explainSideChatModel.includes("openai") 
                 ? "bg-white!"
-                : "bg-transparent!"
+                : "bg-transparent!"*/
+              ""
             }
              hover:bg-gray-200! p-0! mx-0! my-0! rounded-sm!`}
           >
@@ -286,7 +286,7 @@ export function ToolbarOnTextSelection({
 
                 {explainSideChatModel.includes("openai") && (
                   <Image
-                    src={LOGOS_AI_MODELS.openai2}
+                    src={LOGOS_AI_MODELS.openai}
                     alt="OpenAI"
                     width={20}
                     height={20}
@@ -304,7 +304,7 @@ export function ToolbarOnTextSelection({
 
                 {explainSideChatModel.includes("grok") && (
                   <Image
-                    src={LOGOS_AI_MODELS.grok}
+                    src={LOGOS_AI_MODELS.grok2}
                     alt="Grok"
                     width={18}
                     height={18}
@@ -360,14 +360,12 @@ export function ToolbarOnTextSelection({
                         />
                       )}
                       {model[0].id.includes("grok") && (
-                        <div className="bg-white rounded-full">
-                          <Image
-                            src={LOGOS_AI_MODELS.grok}
-                            alt="Grok"
-                            width={18}
-                            height={18}
-                          />
-                        </div>
+                        <Image
+                          src={LOGOS_AI_MODELS.grok2}
+                          alt="Grok"
+                          width={18}
+                          height={18}
+                        />
                       )}
                       {model[0].id.includes("gemini") && (
                         <Image
