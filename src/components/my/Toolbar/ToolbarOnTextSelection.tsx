@@ -21,12 +21,6 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
 // AI-Logos
-// import logo_deepseek from "@/../public/ai-models/deepseek.svg";
-// import logo_gemini from "@/../public/ai-models/gemini.svg";
-// import logo_claude from "@/../public/ai-models/claude.svg";
-// import logo_openai from "@/../public/ai-models/openai.svg";
-// import logo_mistral from "@/../public/ai-models/mistral.svg";
-// import logo_grok from "@/../public/ai-models/grok.svg";
 import { LOGOS_AI_MODELS } from "@/logos/ai_models";
 
 const HIGHLIGHT_COLORS = [

@@ -835,8 +835,8 @@ export default function ChatArea({
             chatStatus === "streaming" && isLastMessage;
 
           return (
-            <Message from={message.role} key={message.id} className="mb-4 dark">
-              <MessageContent className="bg-gray-800 p-3 rounded-lg">
+            <Message from={message.role} key={message.id} className="mb-2 md:mb-4 dark">
+              <MessageContent className="bg-gray-800 p-2 md:p-3 rounded-lg">
                 {/* Reasoning Block: */}
                 {message.parts.map((part, index) =>
                   part.type === "reasoning" ? (
