@@ -1,6 +1,7 @@
 import NextVideo from "next-video";
 // import productDemoVideoPath from "../../../videos/MULHITE_DEMO_04.mp4.json";
-import productDemoVideoPath from "@/../videos/MULHITE_DEMO_05_COMPRESSED.mp4.json";
+// import productDemoVideoPath from "@/../videos/MULHITE_DEMO_05_COMPRESSED.mp4.json";
+import productDemoVideoPath from "@/../videos/mulhite_demo_06_compressed.mp4.json";
 
 import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
