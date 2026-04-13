@@ -134,7 +134,7 @@ export default function SidebarItem({
             ${
               isActive
                 ? "brightness-125 text-black bg-blue-900"
-                : "brightness-125 bg-gray-700"
+                : "brightness-125 bg-gray-900"
             } flex items-center gap-1 rounded-xl transition-colors duration-500 group relative`}
     >
       <Link
