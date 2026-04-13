@@ -130,7 +130,7 @@ export default function SidebarItem({
       //           ? "brightness-125 text-black bg-linear-to-r from-[#001f3f] via-[#083358] to-[#0da574]"
       //           : "brightness-125 bg-linear-to-tl from-[#8719ee] via-[#3c0753] to-[#720455]"
       //       } flex items-center gap-1 rounded-xl transition-colors duration-500 group relative`}
-      className={`text-white font-semibold hover:bg-linear-to-br hover:from-[#6b46c1] hover:to-[#b83280] bg-black w-full h-full 
+      className={`text-white font-semibold hover:bg-linear-to-br hover:from-[#4663c1] hover:to-[#5036c4] bg-black w-full h-full 
             ${
               isActive
                 ? "brightness-125 text-black bg-blue-900"
