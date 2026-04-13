@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🎉 Mulhite
 
 **Mulhite** is an Multi-AI models chat application with AI models like GPT, Gemini, Claude, Perplexity, Deepseek, Mistral and Grok in one place. The 2 key features that **Mulhite** provides are:
@@ -180,29 +181,31 @@ See [LICENSE](LICENSE) for full details.
 </div>
 
 <!-- This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+=======
+# 🤖 Mulhite
+>>>>>>> d7fc0954841f93d5e80fa2773d8bc5bac45a5bc3
 
-## Getting Started
+**Mulhite** is an Multi-AI models chat application with AI models like GPT, Gemini, Claude, Perplexity, Deepseek, Mistral and Grok in one place. The 2 key features that **Mulhite** provides are:
 
-First, run the development server:
+1. Text-Highlighting
+2. Open a side-chat thread to explore details around **selected text** or ask follow-ups without cluttering the main conversation.”
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Features (Planned & In Progress)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- [ ] Light Theme
+- [ ] Providing **Open-router** & **AIMLAPI** support.
+- [ ] Providing **file-upload** support for context-aware chats.
+- [ ] (Future) Shareable chats / export as Markdown or PDF
+- [ ] Chat AI model settings like temperature, top-p, frequency penalty, etc.
+- [ ] **Multi-model chat** in parallel, for comparing responses across models.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🛠️ Tech Stack
 
+<<<<<<< HEAD
 To learn more about Next.js, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
@@ -215,3 +218,13 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details. -->
+=======
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Shadcn UI
+- Vercel AI SDK
+- Vercel AI Gateway
+- Convex (Database & Backend)
+- Clerk (Authentication)
+>>>>>>> d7fc0954841f93d5e80fa2773d8bc5bac45a5bc3
