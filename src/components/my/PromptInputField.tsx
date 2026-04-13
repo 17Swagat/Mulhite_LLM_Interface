@@ -65,7 +65,9 @@ export const PromptInputField = memo(
   const { isTouchDevice } = useAboutDeviceInfo();
 
   return (
-    <PromptInput onSubmit={handleSubmit} className=" tablet:w-xl lg:w-3xl border-t-purple-500 border-l-purple-700 border-r-purple-700 border-b-purple-600">
+    <PromptInput onSubmit={handleSubmit} className=" tablet:w-xl lg:w-3xl 
+    border-blue-800">
+    {/* border-t-purple-500 border-l-purple-700 border-r-purple-700 border-b-purple-600"> */}
       <PromptInputTextarea
         className={`max-h-[16lh] ${scrollbarStyle.promptInput_Scrollbar}`}
         value={isSideChat ? sideChatQuestion : question}

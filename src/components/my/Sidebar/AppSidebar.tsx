@@ -180,7 +180,8 @@ export function AppSidebar() {
                 {isLoading && conversPagiStatus == "LoadingFirstPage" ? (
                   // Loading Spinner:
                   <SidebarMenuItem className="w-full flex justify-center items-center">
-                    <div className="w-8 h-8 animate-spin border-3 border-purple-800 rounded-full border-t-transparent"></div>
+                    {/* <div className="w-8 h-8 animate-spin border-3 border-purple-800 rounded-full border-t-transparent"></div> */}
+                    <div className="w-8 h-8 animate-spin border-3 border-blue-800 rounded-full border-t-transparent"></div>
                   </SidebarMenuItem>
                 ) : chats.length === 0 ? (
                   <SidebarMenuItem>
@@ -204,7 +205,8 @@ export function AppSidebar() {
                 {/* Loading-more spinner (for subsequent pages) */}
                 {isLoading && conversPagiStatus === "LoadingMore" && (
                   <SidebarMenuItem className="w-full flex justify-center items-center py-2">
-                    <div className="w-6 h-6 animate-spin border-2 border-purple-800 rounded-full border-t-transparent"></div>
+                    {/* <div className="w-6 h-6 animate-spin border-2 border-purple-800 rounded-full border-t-transparent"></div> */}
+                    <div className="w-6 h-6 animate-spin border-2 border-blue-800 rounded-full border-t-transparent"></div>
                   </SidebarMenuItem>
                 )}
 
