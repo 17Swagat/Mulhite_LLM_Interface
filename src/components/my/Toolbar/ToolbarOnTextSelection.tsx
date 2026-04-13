@@ -1,6 +1,8 @@
 // Toolbar component for highlighting text in assistant messages
 /* eslint-disable @next/next/no-inline-styles -- Positioning requires dynamic styles */
 
+'use client';
+
 import { HoverModelInfoCard } from "../HoverModelInfoCard";
 import {
   Select,

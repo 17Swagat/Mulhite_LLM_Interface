@@ -1,15 +1,8 @@
 import NextVideo from "next-video";
-// import productDemoVideoPath from "../../../videos/MULHITE_DEMO_04.mp4.json";
-// import productDemoVideoPath from "@/../videos/MULHITE_DEMO_05_COMPRESSED.mp4.json";
 import productDemoVideoPath from "@/../videos/mulhite_demo_06_compressed.mp4.json";
 
 import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
-// import {
-//   HoverCard,
-//   HoverCardContent,
-//   HoverCardTrigger,
-// } from "@/components/ui/hover-card";
 
 import { font_GMonoTrustDisplay } from "@/fonts";
 import {
@@ -31,7 +24,6 @@ import img_textHighlighting from "@/../public/landing/compressed/text-highlighti
 import img_explainSideChat from "@/../public/landing/compressed/explainsidechat.png";
 import img_creditsLeft from "@/../public/landing/compressed/credits_left2.png";
 
-// import img_multiLLMs from "@/../public/landing/compressed/multiple-llms.png";
 
 const available_models = [
   {
@@ -386,9 +378,6 @@ export default function Home() {
               </p>
               <ul className="text-sm sm:text-base text-gray-600 space-y-2 mb-4 sm:mb-6">
                 <li>Manage 1 Project</li>
-                <li>Access to Work Items</li>
-                <li>Access to Finances</li>
-                <li>In-app Messaging</li>
               </ul>
               <Link
                 href="/signin"
@@ -412,10 +401,6 @@ export default function Home() {
               </p>
               <ul className="text-sm sm:text-base text-gray-600 space-y-2 mb-4 sm:mb-6">
                 <li>Manage Many Projects</li>
-                <li>Access to Work Items</li>
-                <li>Access to Finances</li>
-                <li>In-app Messaging</li>
-                <li>Access to AI Features</li>
               </ul>
               <Link
                 href="/subscribe"
