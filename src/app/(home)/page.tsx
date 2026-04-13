@@ -1,5 +1,6 @@
 import NextVideo from "next-video";
-import productDemoVideoPath from "@/../videos/mulhite_demo_06_compressed.mp4.json";
+// import productDemoVideoPath from "@/../videos/mulhite_demo_06_compressed.mp4.json";
+import productDemoVideoPath from "@/../videos/mulhite_new_ui.mp4.json";
 
 import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
@@ -23,7 +24,6 @@ import {
 import img_textHighlighting from "@/../public/landing/compressed/text-highlighting.png";
 import img_explainSideChat from "@/../public/landing/compressed/explainsidechat.png";
 import img_creditsLeft from "@/../public/landing/compressed/credits_left2.png";
-
 
 const available_models = [
   {
@@ -103,7 +103,7 @@ export default function Home() {
             /> */}
 
             {/* NextVideo -Mux */}
-            <NextVideo
+            {/*<NextVideo
               // NOTE: Without this link feature gives TS error. As productDemoVideoPath is of type json and src expects a string:
               // @ts-ignore
               src={productDemoVideoPath}
@@ -113,7 +113,15 @@ export default function Home() {
               muted={false}
               loop={false}
               preload="metadata"
-            />
+            />*/}
+
+            <iframe
+              src="https://player.mux.com/gtznRPYZcJfKXjujpF00Kt9hTKWUaOT9iqaKl01DoHQFU"
+              style={{ width: "100%", border: "none", aspectRatio: "16/9" }}
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+              allowFullScreen
+            ></iframe>
+
             {/* <iframe
               src="https://player.mux.com/LZZ00U1tAEVIqcgnDa2NLcXbhwbp5QMo00JWQRvPiXwKw?accent-color=%23000000&primary-color=%237c33a3"
               // src="https://player.mux.com/aYZiRoLkUUlx8btbf700yXJ3J2io6SzOelvJcCVF9orQ?accent-color=%23000000&primary-color=%237c33a3"
@@ -209,8 +217,8 @@ export default function Home() {
                         </span> */}
                         <p className="text-gray-300">
                           <span className="font-bold text-indigo-400">
-                            One <span className="text-rose-300">API-KEY</span> to
-                            access multiple AI models
+                            One <span className="text-rose-300">API-KEY</span>{" "}
+                            to access multiple AI models
                           </span>{" "}
                           . Grok, Claude, GPT, Mistral, Gemini, Deepseek.
                         </p>
