@@ -20,16 +20,16 @@ export function TokensConsumed({
 }) {
   const iconElement = (
     <CpuIcon
-      size={24}
-      className="text-blue-500 bg-transparent rounded-full mt-3"
+      size={22}
+      className="text-indigo-400 bg-transparent rounded-full mt-3 hover:text-indigo-300 transition-colors duration-200"
     />
   );
 
   const displayContentHoverCard = (
-    <HoverCardContent className="w-full z-50000 p-1! bg-linear-to-r from-[#2dd4bf]  to-[#95b5e0] border-0!">
-      <div className="flex items-center gap-1 bg-black text-white text-[18px] p-2 rounded-sm">
+    <HoverCardContent className="w-full z-50000 p-1! bg-slate-900 border border-white/10!">
+      <div className="flex items-center gap-1 bg-slate-900 text-white text-[16px] p-2 rounded-lg">
         Total-Tokens:
-        <span className="text-green-600 font-semibold">
+        <span className="text-emerald-400 font-semibold">
           {totalTokensConsumed}
         </span>
       </div>
@@ -37,10 +37,10 @@ export function TokensConsumed({
   );
 
   const displayContentPopover = (
-    <PopoverContent className="w-full z-50000 p-1! bg-linear-to-r from-[#2dd4bf] to-[#95b5e0] border-0!">
-      <div className="flex items-center gap-1 bg-black text-white text-[18px] p-2 rounded-sm">
+    <PopoverContent className="w-full z-50000 p-1! bg-slate-900 border border-white/10!">
+      <div className="flex items-center gap-1 bg-slate-900 text-white text-[16px] p-2 rounded-lg">
         Total-Tokens:
-        <span className="text-green-600 font-semibold">
+        <span className="text-emerald-400 font-semibold">
           {totalTokensConsumed}
         </span>
       </div>

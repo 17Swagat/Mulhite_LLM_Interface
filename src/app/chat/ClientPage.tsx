@@ -156,11 +156,8 @@ export function ChatPage_ClientComponent({
       //  bg-linear-to-r from-[#374151] via-[#f43f5e] to-[#fb923c]
       <div
         className="w-full h-screen 
-        bg-[#1e232b]
+        bg-[#0f1117]
         text-white flex justify-center items-center"
-        // bg-linear-to-r from-gray-800 via-purple-900 to-pink-900
-        // bg-[#2c394d]
-        // 302f2f
       >
         {/* Error: Alert On Passing with A Empty API Key */}
 
@@ -198,7 +195,7 @@ export function ChatPage_ClientComponent({
         <div className="flex flex-col items-center">
           <div className="flex gap-2 mb-2 px-2 laptop:px-0 laptop:mb-3 items-end">
             <h1
-              className={`text-2xl laptop:text-3xl text-gray-200 tracking-wide leading-none ${font_GMonoTrustDisplay.className} `}
+              className={`text-2xl laptop:text-3xl text-slate-200 tracking-wide leading-none ${font_GMonoTrustDisplay.className} `}
             >
               Let's Start Learning
             </h1>

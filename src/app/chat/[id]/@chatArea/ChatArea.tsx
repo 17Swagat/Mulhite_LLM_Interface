@@ -836,7 +836,7 @@ export default function ChatArea({
 
           return (
             <Message from={message.role} key={message.id} className="mb-2 md:mb-4 dark">
-              <MessageContent className="bg-gray-800 p-2 md:p-3 rounded-lg">
+              <MessageContent className="bg-slate-800/60 border border-white/[0.04] p-2 md:p-3 rounded-xl">
                 {/* Reasoning Block: */}
                 {message.parts.map((part, index) =>
                   part.type === "reasoning" ? (
@@ -848,7 +848,7 @@ export default function ChatArea({
                         defaultOpen={false}
                       >
                         <ReasoningTrigger />
-                        <ReasoningContent className="bg-yellow-800 text-white p-2 rounded">
+                        <ReasoningContent className="bg-amber-900/40 border border-amber-700/20 text-slate-200 p-3 rounded-lg">
                           {part.text}
                         </ReasoningContent>
                       </Reasoning>
@@ -864,9 +864,9 @@ export default function ChatArea({
                             ((p.text && p.text.length > 0) ||
                               p.state === "streaming")
                         ) && (
-                          <div className="flex items-center gap-2 p-4">
-                            <Loader size={20} className="text-pink-600" />
-                            <span className="text-sm text-pink-500">
+                            <div className="flex items-center gap-2 p-4">
+                              <Loader size={20} className="text-indigo-400" />
+                              <span className="text-sm text-indigo-300">
                               Thinking..
                             </span>
                           </div>
@@ -908,8 +908,8 @@ export default function ChatArea({
                           part.type === "text" &&
                           part.state === "streaming" && (
                             <div className="flex items-center gap-2 p-4">
-                              <Loader size={20} className="text-green-500" />
-                              <span className="text-sm text-blue-600">
+                              <Loader size={20} className="text-emerald-400" />
+                              <span className="text-sm text-emerald-300">
                                 Generating Response...
                               </span>
                             </div>
@@ -923,7 +923,7 @@ export default function ChatArea({
                           />
                         )}
 
-                        <div className="bg-pink-400 text-white w-fit">{}</div>
+                        <div className="hidden">{}</div>
                       </div>
                     );
                   } else {
@@ -1068,7 +1068,7 @@ export default function ChatArea({
     <>
       <Authenticated>
         {/* <div className="flex flex-col h-screen bg-gray-900 text-white overflow-hidden"> */}
-        <div className="flex flex-col h-dvh  bg-gray-900 text-white overflow-hidden">
+        <div className="flex flex-col h-dvh bg-[#0f1117] text-white overflow-hidden">
           <Sheet open={openExplainSidebar} onOpenChange={setOpenExplainSidebar}>
             <ToolbarOnTextSelection
               availableModels={availableModels}
@@ -1100,7 +1100,7 @@ export default function ChatArea({
             </AlertDialog>
 
             <Conversation
-              className={`bg-[#1e232b] overflow-hidden`}
+              className={`bg-[#0f1117] overflow-hidden`}
 
         // style={{
         //   background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
@@ -1116,7 +1116,7 @@ export default function ChatArea({
               >
                 {renderedMessages}
               </ConversationContent>
-              <ConversationScrollButton className="bottom-35 bg-white text-black border-0 hover:bg-gray-300  z-20" />
+              <ConversationScrollButton className="bottom-35 bg-slate-800/90 backdrop-blur-sm text-slate-200 border border-white/10 hover:bg-slate-700/90 z-20" />
 
               {/* Credits Left */}
               <div className="fixed top-0 right-1 lg:right-8 flex gap-2 items-center">

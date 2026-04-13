@@ -60,10 +60,10 @@ export default function Home() {
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16 text-center">
         <h2
-          className={`text-2xl leading-snug sm:text-3xl md:text-4xl lg:text-5xl font-extralight bg-linear-to-r from-purple-400 via-blue-500 to-purple-500 bg-clip-text text-transparent
+          className={`text-2xl leading-snug sm:text-3xl md:text-4xl lg:text-5xl font-extralight bg-gradient-to-r from-indigo-400 via-violet-400 to-indigo-300 bg-clip-text text-transparent
         mb-4 px-2 ${font_GMonoTrustDisplay.className} `}
         >
-          <span className="bg-linear-to-tr from-purple-900 via-teal-800 to-pink-700 rounded-xl sm:rounded-2xl p-1 sm:p-1.5 hover:cursor-pointer  hover:bg-linear-to-r hover:bg-green-500 hover:via-purple-500 hover:from-red-500 transition duration-500 ease-in-out decoration-purple-600 decoration-6  text-white inline-block">
+          <span className="bg-gradient-to-tr from-indigo-600 via-violet-600 to-indigo-500 rounded-xl sm:rounded-2xl p-1 sm:p-1.5 hover:cursor-pointer hover:from-indigo-500 hover:via-violet-500 hover:to-indigo-400 transition duration-500 ease-in-out text-white inline-block shadow-lg shadow-indigo-500/20">
             LLM INTERFACE
           </span>{" "}
           FOR{" "}
@@ -77,14 +77,14 @@ export default function Home() {
           SOMETHING!!
         </h2>
 
-        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 mb-6 sm:mb-8 px-4">
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-400 mb-6 sm:mb-8 px-4">
           Use LLMs to help you study and learn better!
         </p>
 
         {/* Get-Started -> [Login] -> [/chat Area] */}
         <Link
           href="/chat"
-          className="inline-block bg-purple-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-base sm:text-lg font-medium hover:brightness-85 active:brightness-110 transition duration-300 ease-in-out"
+          className="inline-block bg-indigo-500 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-base sm:text-lg font-medium hover:bg-indigo-400 active:bg-indigo-600 transition-all duration-200 shadow-lg shadow-indigo-500/25"
         >
           Get Started
         </Link>
@@ -125,10 +125,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="features" className="bg-black py-8 sm:py-12 md:py-16">
+      <section id="features" className="bg-[#0a0b10] py-8 sm:py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2
-            className={`text-3xl sm:text-4xl md:text-5xl font-semibold text-purple-400 text-center mb-8 sm:mb-12 
+            className={`text-3xl sm:text-4xl md:text-5xl font-semibold text-indigo-400 text-center mb-8 sm:mb-12 
              ${font_GMonoTrustDisplay.className}
               `}
           >
@@ -145,7 +145,7 @@ export default function Home() {
 
             {/* Modified LLM Support Block - Optimized for Small Screens */}
             <div className="flex justify-center px-2 py-4">
-              <div className="relative w-full max-w-6xl rounded-2xl sm:rounded-3xl bg-linear-to-r from-[#212f42] to-[#0f172a] p-5 sm:p-8 text-gray-200 shadow-[0_0_0_1px_rgba(255,255,255,0.05)]">
+              <div className="relative w-full max-w-6xl rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#151a2b] to-[#0f1520] p-5 sm:p-8 text-slate-200 shadow-[0_0_0_1px_rgba(255,255,255,0.05)]">
                 {/* Accent ring */}
                 <div className="pointer-events-none absolute inset-0 rounded-2xl sm:rounded-3xl ring-1 ring-white/5" />
 
@@ -156,7 +156,7 @@ export default function Home() {
                   >
                     Unified AI Interface
                   </h2>
-                  <p className="text-gray-400 text-sm sm:text-lg font-medium">
+                  <p className="text-slate-400 text-sm sm:text-lg font-medium">
                     {/* Multiple Leading Models • Through a Single API Key */}
                     Choose models according to your wish.
                   </p>
@@ -170,7 +170,7 @@ export default function Home() {
                         key={m.name}
                         className="flex flex-col items-center group"
                       >
-                        <div className="rounded-xl bg-[#1b2738] p-3 sm:p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.06)] group-hover:shadow-[0_0_0_1px_rgba(156,64,255,0.5)] transition-shadow duration-300">
+                        <div className="rounded-xl bg-[#161c2d] p-3 sm:p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.06)] group-hover:shadow-[0_0_0_1px_rgba(99,102,241,0.4)] transition-shadow duration-300">
                           <Image
                             src={m.imgSrc}
                             alt={m.name}
@@ -179,7 +179,7 @@ export default function Home() {
                             className="w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain drop-shadow-lg transition-transform duration-300 group-hover:scale-110"
                           />
                         </div>
-                        <span className="mt-2 text-[11px] sm:text-xs font-semibold text-gray-400 tracking-wide">
+                        <span className="mt-2 text-[11px] sm:text-xs font-semibold text-slate-400 tracking-wide">
                           {m.name}
                         </span>
                       </li>
@@ -194,7 +194,7 @@ export default function Home() {
                     <Link
                       target="_blank"
                       href="https://vercel.com/ai-gateway"
-                      className={`px-8 py-4 text-sm sm:text-base uppercase font-semibold rounded-xl bg-linear-to-r from-[#6202c3] via-[#ad214b] to-[#1D2B64] bg-size-[220%_auto] text-gray-200 shadow-[0_0_10px_-2px_rgba(255,255,255,0.25)] hover:bg-position-[right_center] hover:shadow-[0_0_16px_-2px_rgba(172,33,75,0.6)] transition-all duration-500 ${font_GMonoTrustDisplay.className}`}
+                      className={`px-8 py-4 text-sm sm:text-base uppercase font-semibold rounded-xl bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-500 bg-size-[220%_auto] text-white shadow-lg shadow-indigo-500/20 hover:bg-position-[right_center] hover:shadow-indigo-500/30 transition-all duration-500 ${font_GMonoTrustDisplay.className}`}
                     >
                       G e t &nbsp; A P I &nbsp; K e y
                     </Link>
@@ -208,8 +208,8 @@ export default function Home() {
                           •
                         </span> */}
                         <p className="text-gray-300">
-                          <span className="font-bold text-purple-400">
-                            One <span className="text-red-200">API-KEY</span> to
+                          <span className="font-bold text-indigo-400">
+                            One <span className="text-rose-300">API-KEY</span> to
                             access multiple AI models
                           </span>{" "}
                           . Grok, Claude, GPT, Mistral, Gemini, Deepseek.
@@ -220,7 +220,7 @@ export default function Home() {
                           •
                         </span> */}
                         <p className="text-gray-300">
-                          <span className="font-bold text-red-400">
+                          <span className="font-bold text-rose-400">
                             Pay only for usage
                           </span>{" "}
                           — no platform overhead.
@@ -232,9 +232,9 @@ export default function Home() {
 
                 {/* Subtext */}
                 <div className="mt-8 text-center">
-                  <p className="text-[11px] sm:text-xs text-gray-400 tracking-wide">
+                  <p className="text-[11px] sm:text-xs text-slate-400 tracking-wide">
                     Access these models through •{" "}
-                    <span className="text-gray-200 font-semibold">
+                    <span className="text-slate-200 font-semibold">
                       VERCEL AI GATEWAY API KEY
                     </span>
                   </p>
@@ -244,7 +244,7 @@ export default function Home() {
 
             {/* Highlighting */}
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 md:gap-8 w-full">
-              <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 transition-transform duration-300 ease-in-out hover:cursor-pointer">
+              <div className="bg-slate-800/50 border border-white/5 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 transition-transform duration-300 ease-in-out hover:cursor-pointer">
                 <ImageModalCard
                   image={img_textHighlighting} //"/landing/text-highlighting.png"
                   altText="Highlight Text in AI Responses"
@@ -257,15 +257,15 @@ export default function Home() {
                     strokeWidth={1.5}
                   />
                   <h3
-                    className={`text-xl sm:text-2xl md:text-3xl font-light text-blue-500 mb-2 sm:mb-4 leading-relaxed text-center md:text-left ${font_GMonoTrustDisplay.className}`}
+                    className={`text-xl sm:text-2xl md:text-3xl font-light text-indigo-400 mb-2 sm:mb-4 leading-relaxed text-center md:text-left ${font_GMonoTrustDisplay.className}`}
                   >
-                    <span className="bg-[#ffe606] rounded-[5px] p-[3px]">
+                    <span className="bg-amber-400/90 text-slate-900 rounded-[5px] p-[3px]">
                       Highlight Text
                     </span>{" "}
                     in AI Responses
                   </h3>
                 </div>
-                <p className="text-gray-200 text-md font-semibold mt-4">
+                <p className="text-slate-200 text-md font-semibold mt-4">
                   <span className="underline decoration-2 underline-offset-2 text-yellow-400">
                     Highlight Text
                   </span>{" "}
@@ -289,12 +289,12 @@ export default function Home() {
                     strokeWidth={2.5}
                   />
                   <h3
-                    className={`bg-blue-200 w-fit text-xl sm:text-2xl md:text-3xl font-light text-blue-500 mb-2 sm:mb-4 text-center md:text-left rounded-[5px] p-[3px] ${font_GMonoTrustDisplay.className}`}
+                    className={`bg-indigo-200 w-fit text-xl sm:text-2xl md:text-3xl font-light text-indigo-600 mb-2 sm:mb-4 text-center md:text-left rounded-[5px] p-[3px] ${font_GMonoTrustDisplay.className}`}
                   >
                     Explain Sidechat Thread
                   </h3>
                 </div>
-                <p className="text-gray-200 text-md font-semibold mt-4">
+                <p className="text-slate-200 text-md font-semibold mt-4">
                   Unable to understand a certain part of the response? <br />{" "}
                   <span className="text-amber-500">
                     Just{" "}
@@ -310,7 +310,7 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 transition-transform duration-300 ease-in-out hover:cursor-pointer">
+              <div className="bg-slate-800/50 border border-white/5 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 transition-transform duration-300 ease-in-out hover:cursor-pointer">
                 <ImageModalCard
                   image={img_explainSideChat} //"/landing/explainsidechat.png"
                   altText="Explain Sidechat Thread"
@@ -320,7 +320,7 @@ export default function Home() {
 
             {/* Credits-Left */}
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 md:gap-8 w-full">
-              <div className="bg-gray-800 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 cursor-pointer transition-transform duration-300 ease-in-out">
+              <div className="bg-slate-800/50 border border-white/5 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl w-full md:w-1/2 max-w-2xl hover:scale-130 cursor-pointer transition-transform duration-300 ease-in-out">
                 <ImageModalCard
                   image={img_creditsLeft} //"/landing/credits_left2.png"
                   altText="Credits-Left"
@@ -333,15 +333,15 @@ export default function Home() {
                     strokeWidth={2.3}
                   />
                   <h3
-                    className={`text-xl sm:text-2xl md:text-3xl font-light text-blue-500 mb-2 sm:mb-4 leading-relaxed text-center md:text-left ${font_GMonoTrustDisplay.className}`}
+                    className={`text-xl sm:text-2xl md:text-3xl font-light text-indigo-400 mb-2 sm:mb-4 leading-relaxed text-center md:text-left ${font_GMonoTrustDisplay.className}`}
                   >
-                    <span className="bg-[#96ff34] rounded-[5px] p-[3px]">
+                    <span className="bg-emerald-400/90 text-slate-900 rounded-[5px] p-[3px]">
                       Credits-Left
                     </span>{" "}
                     {/* in AI Responses */}
                   </h3>
                 </div>
-                <p className="text-gray-200 text-md font-semibold mt-4">
+                <p className="text-slate-200 text-md font-semibold mt-4">
                   View{"  "}
                   <span className="underline decoration-2 underline-offset-2 text-green-400">
                     Credits-Left
@@ -434,12 +434,12 @@ export default function Home() {
 
 function Footer() {
   return (
-    <footer className="bg-gradient-to-br from-gray-900 via-black to-gray-900 text-gray-400 border-t border-gray-800">
+    <footer className="bg-gradient-to-br from-[#0c0d14] via-[#0a0b10] to-[#0c0d14] text-slate-400 border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-8">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6 text-sm">
           {/* Left: Brand */}
           <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-8">
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 via-violet-400 to-indigo-300 bg-clip-text text-transparent">
               MULHITE
             </h3>
             <p className="text-gray-500 text-xs sm:text-sm hidden xs:block">

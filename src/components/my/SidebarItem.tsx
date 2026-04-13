@@ -98,8 +98,8 @@ export default function SidebarItem({
     return (
       <div
         className={`text-white w-full h-full ${
-          isActive ? "bg-teal-800 brightness-125" : "bg-yellow-700"
-        } flex items-center gap-1 p-1 rounded-2xl`}
+          isActive ? "bg-indigo-500/20" : "bg-slate-700/50"
+        } flex items-center gap-1 p-1 rounded-xl`}
       >
         <input
           type="text"
@@ -116,7 +116,7 @@ export default function SidebarItem({
           autoFocus
           placeholder="Enter chat title"
           aria-label="Rename chat"
-          className="flex-1 bg-pink-500 text-white outline-none border-b border-white px-1"
+          className="flex-1 bg-slate-800 text-white outline-none border-b border-indigo-400/40 rounded px-2 py-0.5 focus:border-indigo-400 transition-colors"
         />
       </div>
     );
@@ -130,12 +130,12 @@ export default function SidebarItem({
       //           ? "brightness-125 text-black bg-linear-to-r from-[#001f3f] via-[#083358] to-[#0da574]"
       //           : "brightness-125 bg-linear-to-tl from-[#8719ee] via-[#3c0753] to-[#720455]"
       //       } flex items-center gap-1 rounded-xl transition-colors duration-500 group relative`}
-      className={`text-white font-semibold hover:bg-linear-to-br hover:from-[#4663c1] hover:to-[#5036c4] bg-black w-full h-full 
+      className={`text-slate-300 font-medium w-full h-full 
             ${
               isActive
-                ? "brightness-125 text-black bg-blue-900"
-                : "brightness-125 bg-gray-900"
-            } flex items-center gap-1 rounded-xl transition-colors duration-500 group relative`}
+                ? "bg-indigo-500/15 text-white border border-indigo-500/20"
+                : "bg-transparent hover:bg-white/5"
+            } flex items-center gap-1 rounded-xl transition-all duration-200 group relative`}
     >
       <Link
         href={`${navLink}`}
@@ -151,12 +151,12 @@ export default function SidebarItem({
         <DropdownMenuTrigger asChild>
           <button
             type="button"
-            className="p-2 hover:bg-pink-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"
+            className="p-1.5 hover:bg-white/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
             onClick={(e) => e.stopPropagation()}
             aria-label="Chat options"
             title="Chat options"
           >
-            <MoreVertical className="w-4 h-4" />
+            <MoreVertical className="w-4 h-4 text-slate-400" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">

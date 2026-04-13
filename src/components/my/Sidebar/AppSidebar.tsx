@@ -152,7 +152,7 @@ export function AppSidebar() {
           {/* <Link href="/" className="flex justify-center items-center"> */}
           <div className="flex justify-center items-center">
             <h1
-              className={`text-2xl  text-white tracking-wider bg-linear-to-tr from-purple-700 via-teal-600 to-blue-950 px-2 py-1 rounded-lg cursor-default hover:bg-linear-to-tr hover:from-red-400 hover:via-gray-600 hover:to-teal-400 transition duration-700 ease-in-out ${font_GMonoTrustDisplay.className}`}
+              className={`text-2xl text-white tracking-wider bg-gradient-to-r from-indigo-500 via-violet-500 to-indigo-400 px-3 py-1.5 rounded-lg cursor-default transition duration-500 ease-in-out hover:from-indigo-400 hover:via-violet-400 hover:to-indigo-500 shadow-lg shadow-indigo-500/20 ${font_GMonoTrustDisplay.className}`}
             >
               MULHITE
             </h1>
@@ -166,7 +166,7 @@ export function AppSidebar() {
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     asChild
-                    className="bg-gray-800/80 hover:bg-gray-600 hover:brightness-125 hover:text-white text-white"
+                    className="bg-indigo-500/10 border border-indigo-500/20 hover:bg-indigo-500/20 hover:border-indigo-500/30 text-indigo-300 hover:text-indigo-200 transition-all duration-200"
                   >
                     <Link href={`/chat/`} onClick={() => setActiveChat(null)}>
                       + New Chat
@@ -180,8 +180,7 @@ export function AppSidebar() {
                 {isLoading && conversPagiStatus == "LoadingFirstPage" ? (
                   // Loading Spinner:
                   <SidebarMenuItem className="w-full flex justify-center items-center">
-                    {/* <div className="w-8 h-8 animate-spin border-3 border-purple-800 rounded-full border-t-transparent"></div> */}
-                    <div className="w-8 h-8 animate-spin border-3 border-blue-800 rounded-full border-t-transparent"></div>
+                    <div className="w-7 h-7 animate-spin border-2 border-indigo-500/30 rounded-full border-t-indigo-400"></div>
                   </SidebarMenuItem>
                 ) : chats.length === 0 ? (
                   <SidebarMenuItem>
@@ -205,8 +204,7 @@ export function AppSidebar() {
                 {/* Loading-more spinner (for subsequent pages) */}
                 {isLoading && conversPagiStatus === "LoadingMore" && (
                   <SidebarMenuItem className="w-full flex justify-center items-center py-2">
-                    {/* <div className="w-6 h-6 animate-spin border-2 border-purple-800 rounded-full border-t-transparent"></div> */}
-                    <div className="w-6 h-6 animate-spin border-2 border-blue-800 rounded-full border-t-transparent"></div>
+                    <div className="w-5 h-5 animate-spin border-2 border-indigo-500/30 rounded-full border-t-indigo-400"></div>
                   </SidebarMenuItem>
                 )}
 
@@ -232,12 +230,12 @@ export function AppSidebar() {
           </SidebarGroup>
         </SidebarContent>
 
-        <SidebarFooter className="bg-gray-800 text-white">
+        <SidebarFooter className="bg-slate-900/50 text-white border-t border-white/5">
           <SidebarMenu>
             <SidebarMenuItem>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton className="hover:bg-white hover:text-black">
+                  <SidebarMenuButton className="hover:bg-white/10 transition-colors duration-200">
                     {/* // className="bg-gray-300 text-black"> */}
                     {/* <User2 />  */}
                     <UserButton />

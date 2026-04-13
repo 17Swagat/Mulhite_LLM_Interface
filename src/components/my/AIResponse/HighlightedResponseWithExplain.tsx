@@ -125,13 +125,13 @@ export function HighlightedResponseWithExplain({
 
     // From-Deepseek:
     const colorMap: Record<string, string> = {
-      yellow: "#b38f00", // Darker yellow that contrasts with white text
-      green: "#2e7d32", // Deeper green as background for white text
-      blue: "#1565c0", // Darker blue that works with white font
-      pink: "#ad1457", // Deeper pink as highlight background
-      orange: "#ef6c00", // Darker orange for white text contrast
-      red: "#c62828", // Darker red that doesn't wash out white text
-      purple: "#6a1b9a", // Deeper purple as highlight background
+      yellow: "#92780a",
+      green: "#1a6b3a",
+      blue: "#1d5ea8",
+      pink: "#9b2d5a",
+      orange: "#b85c1a",
+      red: "#a83232",
+      purple: "#6b3fa0",
     };
 
     const ensureStyleAndRule = (color: string) => {
@@ -222,15 +222,15 @@ export function HighlightedResponseWithExplain({
         style.id = styleId;
         document.head.appendChild(style);
       }
-      const bgColor = "#063663"; //"transparent"; //explainColorMap[color] || explainColorMap.blue;
+      const bgColor = "rgba(99, 102, 241, 0.15)";
       const cssRule = `::highlight(explain-${messageId}-${color}) { 
         background-color: ${bgColor};
         padding: 2px;
         border-radius: 3px; 
         text-decoration: underline solid;
-        text-decoration-color: #f03e76;
-        text-decoration-thickness: 4px;
-        text-underline-offset: 5px;
+        text-decoration-color: #818cf8;
+        text-decoration-thickness: 3px;
+        text-underline-offset: 4px;
       }`;
 
       if (!style.textContent?.includes(cssRule)) {
@@ -517,7 +517,7 @@ export function HighlightedResponseWithExplain({
         })()}
 
       {totalItems > 0 && (
-        <div className="mt-2 mx-auto rounded-lg flex flex-col lg:flex-row items-start justify-start gap-1 lg:gap-2">
+        <div className="mt-2 mx-auto rounded-lg flex flex-col lg:flex-row items-start justify-start gap-1.5 lg:gap-2">
           {/* #[1] */}
           {/* Highlights Menu Popup Menu */}
           {highlights.length > 0 && (
@@ -563,10 +563,10 @@ function ExplainSideChatMenuPopover({
         <Button
           variant="outline"
           style={{
-            backgroundColor: openExplainMenu ? "#5e055e" : "black",
+            backgroundColor: openExplainMenu ? "rgba(99, 102, 241, 0.15)" : "transparent",
           }}
         >
-          <MessageSquare size={14} className="text-pink-500" />
+          <MessageSquare size={14} className="text-indigo-400" />
           <span className="">{explainSideChats.length} Explains</span>
           <ChevronDown
             size={12}
@@ -576,29 +576,29 @@ function ExplainSideChatMenuPopover({
           />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 bg-transparent  text-white z-50 ">
+      <PopoverContent className="w-80 bg-transparent text-white z-50 ">
         {explainSideChats.length > 0 && (
-          <div className="bg-gray-800 rounded-[10px] border  border-gray-700 overflow-hidden">
-            <div className="px-3 py-2 bg-gray-900 text-xs text-gray-400 font-semibold">
+          <div className="bg-slate-900 rounded-xl border border-white/10 overflow-hidden shadow-xl">
+            <div className="px-3 py-2 bg-slate-800/80 text-xs text-slate-400 font-semibold">
               EXPLAIN CHATS (Click text to open)
             </div>
             {explainSideChats.map((e, idx) => (
               <div
                 key={e._id}
-                className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
+                className="px-3 py-2 border-b border-white/5 last:border-b-0 hover:bg-white/5 cursor-pointer group flex items-start gap-2 transition-colors duration-150"
                 onClick={() => onOpenExplainSideChat?.(e._id)}
               >
                 <MessageSquare
                   size={14}
-                  className={`mt-1 shrink-0 
-                            text-pink-500
+                    className={`mt-1 shrink-0 
+                            text-indigo-400
                           `}
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-gray-200 line-clamp-2">
+                  <p className="text-sm text-slate-200 line-clamp-2">
                     {e.selectedText}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-slate-500 mt-1">
                     Explain #{idx + 1}
                   </p>
                 </div>
@@ -643,7 +643,7 @@ function HighlightMenuPopover({
         <Button
           variant="outline"
           style={{
-            backgroundColor: openHighlightsMenu ? "#5e055e" : "black",
+            backgroundColor: openHighlightsMenu ? "rgba(99, 102, 241, 0.15)" : "transparent",
           }}
         >
           <HighlighterIcon size={14} className="text-yellow-500" />
@@ -657,18 +657,18 @@ function HighlightMenuPopover({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 bg-transparent text-white z-50">
-        <div className="mt-2 bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
-          <div className="px-3 py-2 bg-gray-900 border-b border-gray-600 flex items-center justify-between">
+        <div className="mt-2 bg-slate-900 border border-white/10 rounded-xl overflow-hidden shadow-xl">
+          <div className="px-3 py-2 bg-slate-800/80 border-b border-white/5 flex items-center justify-between">
             <span className="text-sm font-medium text-white">
               Your Highlights
             </span>
             <button
               type="button"
               onClick={() => setOpenHighlightsMenu(false)}
-              className="p-1 hover:bg-gray-600 rounded"
+              className="p-1 hover:bg-white/10 rounded transition-colors"
               aria-label="Close menu"
             >
-              <X size={20} className="text-gray-300" />
+              <X size={20} className="text-slate-400" />
             </button>
           </div>
 
@@ -683,7 +683,7 @@ function HighlightMenuPopover({
                 {highlights.map((h, idx) => (
                   <div
                     key={h._id}
-                    className="px-3 py-2 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 cursor-pointer group flex items-start gap-2"
+                    className="px-3 py-2 border-b border-white/5 last:border-b-0 hover:bg-white/5 cursor-pointer group flex items-start gap-2 transition-colors duration-150"
                     onClick={() => scrollToHighlight(h)}
                   >
                     <div
@@ -692,10 +692,10 @@ function HighlightMenuPopover({
                       )}`}
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-200 line-clamp-2">
+                      <p className="text-sm text-slate-200 line-clamp-2">
                         {h.text}
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">#{idx + 1}</p>
+                      <p className="text-xs text-slate-500 mt-1">#{idx + 1}</p>
                     </div>
                     <button
                       type="button"
@@ -703,7 +703,7 @@ function HighlightMenuPopover({
                         e.stopPropagation();
                         onDeleteHighlight?.(h._id);
                       }}
-                      className="p-1 hover:bg-red-900/40 rounded opacity-0 group-hover:opacity-100"
+                      className="p-1 hover:bg-red-900/30 rounded opacity-0 group-hover:opacity-100 transition-opacity"
                       aria-label="Delete highlight"
                     >
                       <Trash2

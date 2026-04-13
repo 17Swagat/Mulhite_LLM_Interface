@@ -53,8 +53,7 @@ export const APIKeys = memo(function APIKeys() {
     <KeyIcon
       size={38}
       // className="font-bold text-white bg-[#5d04c3ff] rounded-full mt-3 hover:brightness-120 active:brightness-90 transition duration-200 ease-in  hover:cursor-pointer"
-      className="font-bold text-white bg-blue-800 rounded-full mt-3 hover:brightness-120 active:brightness-90 transition duration-200 ease-in  hover:cursor-pointer"
-      // className="font-bold text-white bg-purple-800 rounded-full mt-3 hover:brightness-120 active:brightness-90 transition duration-200 ease-in  hover:cursor-pointer"
+      className="font-bold text-indigo-300 bg-indigo-500/15 border border-indigo-500/20 rounded-full mt-3 hover:bg-indigo-500/25 active:bg-indigo-500/10 transition-all duration-200 ease-in hover:cursor-pointer p-1.5"
     />
   );
 
@@ -72,15 +71,12 @@ export const APIKeys = memo(function APIKeys() {
       <PopoverContent
         side="bottom"
         align="end"
-        className="w-80 border-0 py-4 shadow-2xl"
-        style={{
-          background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
-        }}
+        className="w-80 border border-white/10 py-4 shadow-2xl bg-slate-900"
       >
         <div className="space-y-3">
           <div className="text-center">
             <h3 className="text-lg font-medium text-white">Secret API Key</h3>
-            <p className="text-start text-pink-300 text-sm">
+            <p className="text-start text-indigo-300/80 text-sm">
               Your API Key is stored in browser&apos;s local storage only.
             </p>
           </div>
@@ -98,7 +94,7 @@ export const APIKeys = memo(function APIKeys() {
                         strokeWidth={3}
                       />
                     </TooltipTrigger>
-                    <TooltipContent className="p-2 bg-purple-700">
+                    <TooltipContent className="p-2 bg-indigo-600">
                       <p className="font-semibold">
                         Get Vercel AI Gateway API Key
                       </p>
@@ -123,9 +119,9 @@ export const APIKeys = memo(function APIKeys() {
                     onClick={() => setApikeyVisible(!apikeyVisible)}
                   >
                     {apikeyVisible ? (
-                      <Eye className="hover:bg-pink-400 rounded-[3px] p-0.5 transition duration-100 ease-in" />
+                      <Eye className="hover:bg-indigo-500/30 rounded-[3px] p-0.5 transition duration-100 ease-in" />
                     ) : (
-                      <EyeClosed className="hover:bg-pink-400 rounded-[2px] p-0.5 transition duration-100 ease-in active:brightness-80" />
+                      <EyeClosed className="hover:bg-indigo-500/30 rounded-[2px] p-0.5 transition duration-100 ease-in active:brightness-80" />
                     )}
                   </div>
 
@@ -138,7 +134,7 @@ export const APIKeys = memo(function APIKeys() {
                       await navigator.clipboard.writeText(textToCopy);
                     }}
                   >
-                    <Copy className="hover:bg-pink-400 rounded-[3px] p-[3px] transition duration-100 ease-in active:brightness-80" />
+                    <Copy className="hover:bg-indigo-500/30 rounded-[3px] p-[3px] transition duration-100 ease-in active:brightness-80" />
                   </div>
 
                   {/* Remove API Key */}
@@ -166,16 +162,16 @@ export const APIKeys = memo(function APIKeys() {
               id="vercel-api-key"
               type="password"
               placeholder="Put Vercel AI Gateway API Key here..."
-              className="dark h-8 bg-gray-300  border-gray-600  placeholder:text-gray-600 font-semibold focus-visible:ring-1 focus-visible:ring-purple-500"
+              className="dark h-8 bg-slate-800 border border-white/10 placeholder:text-slate-500 font-semibold focus-visible:ring-1 focus-visible:ring-indigo-500 text-white"
               autoComplete="off"
             />
           </div>
 
           <Button
-            className="w-full h-9 bg-purple-600 
-            hover:bg-purple-700  
-            active:bg-purple-900
-            text-white font-medium"
+            className="w-full h-9 bg-indigo-500 
+            hover:bg-indigo-400  
+            active:bg-indigo-600
+            text-white font-medium shadow-lg shadow-indigo-500/20"
             onClick={() => {
               if (
                 vercelAPIKey.trim() !== ""

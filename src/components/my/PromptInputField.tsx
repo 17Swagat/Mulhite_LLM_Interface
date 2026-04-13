@@ -66,7 +66,7 @@ export const PromptInputField = memo(
 
   return (
     <PromptInput onSubmit={handleSubmit} className=" tablet:w-xl lg:w-3xl 
-    border-blue-800">
+    border-indigo-500/20">
     {/* border-t-purple-500 border-l-purple-700 border-r-purple-700 border-b-purple-600"> */}
       <PromptInputTextarea
         className={`max-h-[16lh] ${scrollbarStyle.promptInput_Scrollbar}`}
@@ -123,7 +123,7 @@ export const PromptInputField = memo(
         </PromptInputTools>
 
         <PromptInputSubmit
-          className="transition duration-300 ease-in hover:brightness-105 bg-purple-700 hover:bg-purple-400 active:bg-purple-900"
+          className="transition-all duration-200 ease-out bg-indigo-500 hover:bg-indigo-400 active:bg-indigo-600 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-400/30"
           disabled={
             (!isSideChat &&
               !inConversation &&

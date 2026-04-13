@@ -7,7 +7,7 @@ export default function HomeLayout({
 
   return (
     <>
-      <div className="min-h-screen bg-black">
+      <div className="min-h-screen bg-[#0a0b10]">
         <Navbar />
         {children}
       </div>

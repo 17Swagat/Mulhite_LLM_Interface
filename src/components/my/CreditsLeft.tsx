@@ -20,20 +20,17 @@ export function CreditsLeft({
 }) {
   const iconElement = (
     <CircleDollarSignIcon
-      size={38}
-      className="text-white bg-green-800 rounded-full mt-3 hover:opacity-80 transition-opacity"
+      size={34}
+      className="text-emerald-400 bg-emerald-500/15 border border-emerald-500/20 rounded-full mt-3 hover:bg-emerald-500/25 transition-all duration-200 p-1"
     />
   );
 
   const contentElement = (
     <div
-      className="flex gap-2 bg-black text-white text-[18px] p-1 rounded-sm"
-      style={{
-        background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
-      }}
+      className="flex gap-2 bg-slate-900 text-white text-[16px] p-2 rounded-lg border border-white/5"
     >
       <span className="underline underline-offset-3">Credits-Left</span>
-      <span className="text-green-500 font-semibold">
+      <span className="text-emerald-400 font-semibold">
         <span className="text-white">$</span>
         {credits ?? 0}
         {/* THIS FIXED THE ISSUE of getting nothing when putting an Invalid API KEY & showing 0 when API-KEY is removed.!! Now, for invalid and empty API Key it will show 0.*/}
@@ -48,10 +45,7 @@ export function CreditsLeft({
         {/* <PopoverContent className="w-full z-50000 p-1! bg-linear-to-r from-[#2dd4bf] to-[#95b5e0] border-0!"> */}
         {/* <PopoverContent className="w-full z-50000 p-1! bg-linear-to-r from-[#8e2dd4] to-[#95b5e0] border-0!"> */}
         <PopoverContent
-          className="w-full z-50000 p-1!  border-0!"
-          style={{
-            background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
-          }}
+          className="w-full z-50000 p-1! bg-slate-900 border border-white/10!"
         >
           {contentElement}
         </PopoverContent>
@@ -66,10 +60,7 @@ export function CreditsLeft({
       </HoverCardTrigger>
       {/* <HoverCardContent className="w-full z-50000 p-1! bg-linear-to-r from-[#2dd4bf] to-[#95b5e0] border-0!"> */}
       <HoverCardContent
-        style={{
-          background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
-        }}
-        className="w-full z-50000 p-1! bg-linear-to-r  from-[#8e2dd4] to-[#95b5e0] border-0!"
+        className="w-full z-50000 p-1! bg-slate-900 border border-white/10!"
       >
         {contentElement}
       </HoverCardContent>

@@ -1,19 +1,18 @@
 .highlight_scrollbar::-webkit-scrollbar {
-  width: 16px;
+  width: 6px;
 }
 
 .highlight_scrollbar::-webkit-scrollbar-track {
-  /* background: #f1f1f1; */
-  background: red;
+  background: transparent;
 }
 
 .highlight_scrollbar::-webkit-scrollbar-thumb {
-  background: pink;
-  border-radius: 3px;
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 8px;
 }
 
 .highlight_scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: rgba(148, 163, 184, 0.4);
 }
 
 /* Ensure default cursor is text inside assistant message blocks so pointer only shows on ::highlight ranges */
