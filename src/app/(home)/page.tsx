@@ -115,12 +115,27 @@ export default function Home() {
               preload="metadata"
             />*/}
 
+            {/* #1 */}
+            {/* <iframe */}
+            {/*   src="https://player.mux.com/gtznRPYZcJfKXjujpF00Kt9hTKWUaOT9iqaKl01DoHQFU" */}
+            {/*   style={{ width: "100%", border: "none", aspectRatio: "16/9" }} */}
+            {/*   allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;" */}
+            {/*   allowFullScreen */}
+            {/* ></iframe> */}
+
+            {/* #2 */}
             <iframe
+              title="Product demo video"
               src="https://player.mux.com/gtznRPYZcJfKXjujpF00Kt9hTKWUaOT9iqaKl01DoHQFU"
-              style={{ width: "100%", border: "none", aspectRatio: "16/9" }}
-              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+              style={{
+                width: "100%",
+                border: "none",
+                aspectRatio: "16 / 9",
+              }}
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
               allowFullScreen
-            ></iframe>
+              loading="eager"
+            />
 
             {/* <iframe
               src="https://player.mux.com/LZZ00U1tAEVIqcgnDa2NLcXbhwbp5QMo00JWQRvPiXwKw?accent-color=%23000000&primary-color=%237c33a3"
