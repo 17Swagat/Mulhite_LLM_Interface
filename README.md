@@ -1,6 +1,6 @@
 # 🤖 Mulhite
 
-> **WEB APP Available At: https://www.mulhite.com**
+> **WEB APP Available At: <a href="https://www.mulhite.com" target="_blank>https://www.mulhite.com</a>**
 
 **Mulhite** is an Multi-AI models chat application with AI models like GPT, Gemini, Claude, Deepseek, Mistral and Grok in one place. The 2 key features that **Mulhite** provides are:
 
